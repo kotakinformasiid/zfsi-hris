@@ -4,31 +4,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ZFSI HRIS - Employee Management</title>
+<title>Data Karyawan | ZFSI-HRIS</title>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-:root {
-  --primary:#2457d6;
-  --primary-dark:#1945b3;
-  --bg:#f4f6fa;
-  --text:#172033;
-  --muted:#778198;
-  --border:#e5e9f1;
-  --white:#fff;
-  --green:#16865b;
-  --red:#d43c48;
-  --orange:#c17b19;
-}
-
 *{box-sizing:border-box}
+
+:root{
+  --navy:#10243b;
+  --blue:#2879c7;
+  --bg:#f4f7fb;
+  --border:#e5eaf0;
+  --muted:#8290a2;
+  --text:#243449;
+  --green:#16865b;
+  --red:#c23a49;
+}
 
 body{
   margin:0;
-  font-family:Inter,Arial,sans-serif;
+  font-family:Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   font-size:14px;
@@ -36,139 +32,170 @@ body{
 
 button,input,select{font:inherit}
 
-.layout{display:flex;min-height:100vh}
-
 .sidebar{
   width:245px;
-  background:#14213d;
-  color:white;
   position:fixed;
   inset:0 auto 0 0;
-  padding:23px 15px;
+  background:var(--navy);
+  color:white;
+  padding:24px 15px;
   overflow-y:auto;
   z-index:10;
 }
 
 .brand{
-  font-size:19px;
-  font-weight:800;
-  padding:4px 12px 25px;
-  letter-spacing:.3px;
-}
-
-.brand small{
-  display:block;
-  color:#aab8d4;
-  font-size:10px;
-  font-weight:500;
-  margin-top:6px;
-  letter-spacing:1.4px;
-}
-
-.nav-label{
-  color:#8392b0;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:1.2px;
-  padding:16px 12px 8px;
-}
-
-.nav a{
   display:flex;
   align-items:center;
   gap:12px;
-  padding:12px;
-  border-radius:8px;
-  text-decoration:none;
-  color:#c5cee0;
-  margin-bottom:4px;
-  font-size:13px;
+  padding:5px 8px 30px;
 }
 
-.nav a:hover,.nav a.active{
-  background:#263b64;
+.brand-icon{
+  width:42px;
+  height:42px;
+  background:var(--blue);
+  border-radius:11px;
+  display:grid;
+  place-items:center;
+  font-size:23px;
+  font-weight:bold;
+  flex-shrink:0;
+}
+
+.brand h2{
+  font-size:17px;
+  margin:0 0 4px;
+}
+
+.brand small{
+  font-size:9px;
+  color:#afc2d5;
+}
+
+.section-label{
+  font-size:10px;
+  color:#8199b0;
+  padding:13px 10px 8px;
+  letter-spacing:1px;
+}
+
+.nav-link{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#cbd7e3;
+  text-decoration:none;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:4px;
+  font-size:13px;
+  cursor:pointer;
+}
+
+.nav-link:hover,.nav-link.active{
+  background:#1e3c59;
   color:white;
 }
 
-.nav a.active{border-left:3px solid #76a1ff}
-
-.sidebar-footer{
-  border-top:1px solid #344361;
-  margin-top:25px;
-  padding:18px 10px;
-  color:#b7c3d9;
-  font-size:11px;
-  line-height:1.7;
+.nav-link.active{
+  border-left:3px solid #65a9e8;
 }
+
+.logout{
+  width:100%;
+  margin-top:20px;
+  border:1px solid #486078;
+  background:transparent;
+  color:white;
+  padding:11px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.logout:hover{background:#1e3c59}
 
 .main{
   margin-left:245px;
-  width:calc(100% - 245px);
-  padding:28px 32px;
+  padding:25px;
+  min-height:100vh;
 }
 
 .topbar{
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
   gap:15px;
-  margin-bottom:27px;
+  margin-bottom:28px;
 }
 
-.page-title h1{
+.topbar h1{
   margin:0;
   font-size:24px;
-  letter-spacing:-.6px;
 }
 
-.page-title p{
+.topbar p{
   color:var(--muted);
+  font-size:13px;
   margin:7px 0 0;
+}
+
+.profile{
+  background:white;
+  border:1px solid var(--border);
+  padding:10px 14px;
+  border-radius:10px;
   font-size:12px;
+  overflow-wrap:anywhere;
+  min-width:170px;
 }
 
-.user-area{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  color:#536078;
-  font-size:12px;
+.profile-status{
+  display:inline-block;
+  background:#e8f6ef;
+  color:var(--green);
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  margin-top:7px;
 }
 
-.avatar{
-  width:36px;height:36px;
-  border-radius:50%;
-  background:#e4ebff;
-  color:var(--primary);
-  display:grid;
-  place-items:center;
-  font-weight:800;
-}
-
-.cards{
+.grid{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:16px;
-  margin-bottom:23px;
+  margin-bottom:20px;
 }
 
 .card{
   background:white;
   border:1px solid var(--border);
+  padding:20px;
   border-radius:12px;
-  padding:19px;
-  box-shadow:0 2px 8px rgba(25,40,70,.025);
+  min-width:0;
 }
 
-.stat-label{font-size:12px;color:var(--muted)}
-.stat-number{font-size:27px;font-weight:800;margin-top:12px}
-.stat-note{font-size:11px;color:var(--muted);margin-top:5px}
+.card-label{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.number{
+  font-size:27px;
+  font-weight:bold;
+  margin-top:15px;
+}
+
+.card-note{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:7px;
+}
 
 .panel{
   background:white;
   border:1px solid var(--border);
   border-radius:12px;
-  padding:21px;
+  padding:20px;
   margin-bottom:20px;
 }
 
@@ -178,34 +205,58 @@ button,input,select{font:inherit}
   justify-content:space-between;
   gap:15px;
   flex-wrap:wrap;
-  margin-bottom:18px;
+  margin-bottom:17px;
 }
 
-.panel-header h2{font-size:15px;margin:0}
-.panel-header p{font-size:11px;color:var(--muted);margin:6px 0 0}
+.panel-title{
+  font-size:16px;
+  font-weight:bold;
+  margin:0;
+}
 
-.actions{display:flex;gap:9px;flex-wrap:wrap}
+.panel-subtitle{
+  color:var(--muted);
+  font-size:12px;
+  margin:6px 0 0;
+}
+
+.actions,.filters{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
 
 .btn{
   border:0;
   border-radius:7px;
-  padding:10px 14px;
+  padding:10px 13px;
   cursor:pointer;
   font-size:12px;
   font-weight:600;
 }
 
-.btn-primary{background:var(--primary);color:white}
-.btn-primary:hover{background:var(--primary-dark)}
-.btn-light{background:#edf1f8;color:#34415b}
-.btn-danger{background:#fff0f0;color:var(--red)}
-.btn-small{padding:7px 10px;font-size:11px}
+.btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
 
-.filters{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:17px;
+.btn-primary{
+  background:var(--blue);
+  color:white;
+}
+
+.btn-primary:hover{background:#1d65a9}
+
+.btn-light{
+  background:#edf2f7;
+  color:#34465b;
+}
+
+.btn-light:hover{background:#e1e9f2}
+
+.btn-small{
+  padding:7px 10px;
+  font-size:11px;
 }
 
 .field{
@@ -215,14 +266,28 @@ button,input,select{font:inherit}
   padding:10px 12px;
   outline:none;
   color:var(--text);
-  min-width:150px;
+  min-width:145px;
   font-size:12px;
 }
 
-.field:focus{border-color:#8ba8f4}
-.search{flex:1;min-width:210px}
+.field:focus,
+.form-group input:focus,
+.form-group select:focus{
+  border-color:#79aee0;
+  box-shadow:0 0 0 2px #2879c71a;
+}
 
-.table-wrap{overflow-x:auto}
+.search{
+  flex:1;
+  min-width:220px;
+}
+
+.filters{margin-bottom:17px}
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;
+}
 
 table{
   width:100%;
@@ -232,8 +297,8 @@ table{
 
 th{
   text-align:left;
-  background:#f7f8fb;
-  color:#778198;
+  background:#f4f7fa;
+  color:#718096;
   font-size:10px;
   text-transform:uppercase;
   letter-spacing:.5px;
@@ -246,9 +311,9 @@ td{
   font-size:12px;
 }
 
-tbody tr:hover{background:#fafbfe}
+tbody tr:hover{background:#f9fbfd}
 
-.emp-name{font-weight:700}
+.emp-name{font-weight:bold}
 .emp-sub{font-size:10px;color:var(--muted);margin-top:4px}
 
 .status{
@@ -256,26 +321,40 @@ tbody tr:hover{background:#fafbfe}
   padding:5px 9px;
   border-radius:20px;
   font-size:10px;
-  font-weight:700;
+  font-weight:bold;
 }
 
-.status-active{background:#e6f6ef;color:#16865b}
+.status-active{background:#e8f6ef;color:#16865b}
 .status-inactive{background:#fff4df;color:#a46b0d}
 .status-resigned{background:#ffe9eb;color:#c23a49}
 
 .empty{
   text-align:center;
-  padding:40px 15px;
+  padding:35px 12px;
   color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
 }
 
 .pagination{
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
   margin-top:16px;
   color:var(--muted);
   font-size:11px;
+}
+
+.notice{
+  background:#eaf3fc;
+  border:1px solid #d4e7f8;
+  padding:13px 15px;
+  border-radius:9px;
+  margin-bottom:17px;
+  font-size:12px;
+  line-height:1.7;
+  color:#365777;
 }
 
 .modal-backdrop{
@@ -312,8 +391,9 @@ tbody tr:hover{background:#fafbfe}
 
 .close{
   border:0;
-  background:#f0f2f6;
-  width:32px;height:32px;
+  background:#edf1f6;
+  width:32px;
+  height:32px;
   border-radius:7px;
   cursor:pointer;
 }
@@ -327,12 +407,13 @@ tbody tr:hover{background:#fafbfe}
 .form-group label{
   display:block;
   font-size:11px;
-  font-weight:700;
+  font-weight:bold;
   margin-bottom:7px;
-  color:#58647b;
+  color:#58677b;
 }
 
-.form-group input,.form-group select{
+.form-group input,
+.form-group select{
   width:100%;
   border:1px solid var(--border);
   border-radius:7px;
@@ -341,8 +422,6 @@ tbody tr:hover{background:#fafbfe}
   background:white;
   font-size:12px;
 }
-
-.form-group input:focus,.form-group select:focus{border-color:#8ba8f4}
 
 .form-group.full{grid-column:1/-1}
 
@@ -355,25 +434,14 @@ tbody tr:hover{background:#fafbfe}
   border-top:1px solid var(--border);
 }
 
-.notice{
-  background:#eef4ff;
-  border:1px solid #dce7ff;
-  padding:12px;
-  border-radius:8px;
-  color:#38568e;
-  font-size:11px;
-  line-height:1.7;
-  margin-bottom:17px;
-}
-
 .toast{
   position:fixed;
-  bottom:22px;
-  right:22px;
-  background:#172c50;
+  bottom:20px;
+  right:20px;
+  background:var(--navy);
   color:white;
   padding:13px 18px;
-  border-radius:8px;
+  border-radius:9px;
   z-index:50;
   display:none;
   max-width:360px;
@@ -384,118 +452,150 @@ tbody tr:hover{background:#fafbfe}
 .toast.show{display:block}
 .loading{text-align:center;padding:35px;color:var(--muted)}
 
-@media(max-width:1050px){
-  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1000px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
-@media(max-width:720px){
-  .sidebar{width:65px;padding:18px 8px}
-  .brand{font-size:0;padding:8px}
-  .brand:after{content:"Z";font-size:21px}
-  .brand small,.nav-label,.nav a span,.sidebar-footer{display:none}
-  .nav a{justify-content:center;padding:13px 5px;font-size:18px}
-  .main{margin-left:65px;width:calc(100% - 65px);padding:20px 13px}
-  .topbar{align-items:flex-start}
-  .page-title h1{font-size:19px}
-  .user-area{font-size:0}
-  .cards{gap:9px}
+@media(max-width:650px){
+  .sidebar{width:65px;padding:15px 6px}
+  .brand{padding:0 5px 25px}
+  .brand h2,.brand small,.section-label,
+  .nav-link span:last-child,.logout span{display:none}
+  .brand-icon{width:42px;height:42px}
+  .nav-link{justify-content:center;padding:13px 5px}
+  .logout{font-size:0;padding:11px 5px}
+  .logout:after{content:"↪";font-size:18px}
+  .main{margin-left:65px;padding:15px}
+  .topbar{align-items:flex-start;flex-direction:column}
+  .topbar h1{font-size:21px}
+  .profile{width:100%}
+  .grid{gap:9px}
   .card{padding:13px}
-  .stat-number{font-size:22px}
+  .number{font-size:22px}
+  .panel{padding:14px}
   .form-grid{grid-template-columns:1fr}
   .form-group.full{grid-column:auto}
-  .panel{padding:14px}
+  .modal{padding:17px}
+  .search{min-width:100%}
 }
 </style>
 </head>
 
 <body>
 
-<div class="layout">
-
 <aside class="sidebar">
   <div class="brand">
-    ZFSI HRIS
-    <small>HUMAN RESOURCE SYSTEM</small>
+    <div class="brand-icon">Z</div>
+    <div>
+      <h2>ZFSI-HRIS</h2>
+      <small>HUMAN RESOURCE SYSTEM</small>
+    </div>
   </div>
 
-  <div class="nav">
-    <div class="nav-label">MAIN MENU</div>
-    <a href="dashboard.html"><span>▦</span><span>Dashboard</span></a>
-    <a href="employees.html" class="active"><span>♙</span><span>Data Karyawan</span></a>
-    <a href="attendance.html"><span>◷</span><span>Absensi</span></a>
-    <a href="leave.html"><span>▤</span><span>Cuti & Izin</span></a>
-    <a href="overtime.html"><span>◴</span><span>Lembur</span></a>
+  <div class="section-label">MAIN MENU</div>
 
-    <div class="nav-label">COMPENSATION</div>
-    <a href="payroll.html"><span>＄</span><span>Payroll</span></a>
-    <a href="payslips.html"><span>▧</span><span>Slip Gaji</span></a>
+  <a class="nav-link" href="dashboard.html">
+    <span>▦</span><span>Dashboard</span>
+  </a>
 
-    <div class="nav-label">MANAGEMENT</div>
-    <a href="announcements.html"><span>♢</span><span>Pengumuman</span></a>
-    <a href="reports.html"><span>▥</span><span>Laporan</span></a>
-    <a href="users.html"><span>♧</span><span>User Management</span></a>
-    <a href="audit.html"><span>◉</span><span>Audit Log</span></a>
-    <a href="settings.html"><span>⚙</span><span>Pengaturan</span></a>
-  </div>
+  <a class="nav-link active" href="employees.html">
+    <span>♙</span><span>Data Karyawan</span>
+  </a>
 
-  <div class="sidebar-footer">
-    Zheng Feng Steel Indonesia<br>
-    HR Information System<br>
-    Version 1.0
-  </div>
+  <a class="nav-link" href="#" data-module="Absensi">
+    <span>◷</span><span>Absensi</span>
+  </a>
+
+  <a class="nav-link" href="#" data-module="Cuti dan Izin">
+    <span>▣</span><span>Cuti & Izin</span>
+  </a>
+
+  <a class="nav-link" href="#" data-module="Lembur">
+    <span>◴</span><span>Lembur</span>
+  </a>
+
+  <div class="section-label">COMPENSATION</div>
+
+  <a class="nav-link" href="#" data-module="Payroll">
+    <span>＄</span><span>Payroll</span>
+  </a>
+
+  <a class="nav-link" href="#" data-module="Slip Gaji">
+    <span>▤</span><span>Slip Gaji</span>
+  </a>
+
+  <div class="section-label">MANAGEMENT</div>
+
+  <a class="nav-link" href="#" data-module="Pengumuman">
+    <span>♧</span><span>Pengumuman</span>
+  </a>
+
+  <a class="nav-link" href="#" data-module="Laporan">
+    <span>▥</span><span>Laporan</span>
+  </a>
+
+  <a class="nav-link" href="#" data-module="User Management">
+    <span>♙</span><span>User Management</span>
+  </a>
+
+  <a class="nav-link" href="#" data-module="Audit Log">
+    <span>◴</span><span>Audit Log</span>
+  </a>
+
+  <a class="nav-link" href="#" data-module="Pengaturan">
+    <span>⚙</span><span>Pengaturan</span>
+  </a>
+
+  <button class="logout" id="logoutButton">
+    <span>Keluar / Logout</span>
+  </button>
 </aside>
-
 
 <main class="main">
 
-  <div class="topbar">
-    <div class="page-title">
-      <h1>Employee Management</h1>
+  <header class="topbar">
+    <div>
+      <h1>Data Karyawan</h1>
       <p>Kelola informasi dan administrasi seluruh karyawan ZFSI.</p>
     </div>
 
-    <div class="user-area">
-      <div class="avatar">HR</div>
-      <div>
-        <strong id="userName">Loading...</strong><br>
-        <span id="userEmail">Checking account...</span>
-      </div>
+    <div class="profile">
+      <strong id="userEmail">Memeriksa akun...</strong>
+      <div class="profile-status">Terautentikasi</div>
     </div>
-  </div>
+  </header>
 
-
-  <section class="cards">
+  <section class="grid">
     <div class="card">
-      <div class="stat-label">Total Karyawan</div>
-      <div class="stat-number" id="totalEmployees">0</div>
-      <div class="stat-note">Seluruh data karyawan</div>
+      <div class="card-label">Total Karyawan</div>
+      <div class="number" id="totalEmployees">0</div>
+      <div class="card-note">Seluruh data karyawan</div>
     </div>
 
     <div class="card">
-      <div class="stat-label">Karyawan Aktif</div>
-      <div class="stat-number" id="activeEmployees">0</div>
-      <div class="stat-note">Status active</div>
+      <div class="card-label">Karyawan Aktif</div>
+      <div class="number" id="activeEmployees">0</div>
+      <div class="card-note">Status active</div>
     </div>
 
     <div class="card">
-      <div class="stat-label">Nonaktif</div>
-      <div class="stat-number" id="inactiveEmployees">0</div>
-      <div class="stat-note">Status inactive</div>
+      <div class="card-label">Nonaktif</div>
+      <div class="number" id="inactiveEmployees">0</div>
+      <div class="card-note">Status inactive</div>
     </div>
 
     <div class="card">
-      <div class="stat-label">Resigned</div>
-      <div class="stat-number" id="resignedEmployees">0</div>
-      <div class="stat-note">Tetap tersimpan untuk histori</div>
+      <div class="card-label">Resigned</div>
+      <div class="number" id="resignedEmployees">0</div>
+      <div class="card-note">Tetap tersimpan untuk histori</div>
     </div>
   </section>
-
 
   <section class="panel">
     <div class="panel-header">
       <div>
-        <h2>Employee Directory</h2>
-        <p>Master data karyawan perusahaan</p>
+        <h2 class="panel-title">Employee Directory</h2>
+        <p class="panel-subtitle">Master data karyawan perusahaan</p>
       </div>
 
       <div class="actions">
@@ -507,9 +607,12 @@ tbody tr:hover{background:#fafbfe}
     </div>
 
     <div class="filters">
-      <input id="searchInput" class="field search"
+      <input
+        id="searchInput"
+        class="field search"
         placeholder="Cari nama, Employee ID, email, departemen..."
-        oninput="renderTable()">
+        oninput="renderTable()"
+      >
 
       <select id="statusFilter" class="field" onchange="renderTable()">
         <option value="">Semua Status</option>
@@ -545,31 +648,25 @@ tbody tr:hover{background:#fafbfe}
       <span>Data perusahaan: ZFSI</span>
     </div>
   </section>
-
 </main>
-</div>
 
-
-<!-- EMPLOYEE FORM -->
-
+<!-- FORM KARYAWAN -->
 <div class="modal-backdrop" id="employeeModal">
   <div class="modal">
-
     <div class="modal-header">
       <h2 id="modalTitle">Tambah Karyawan</h2>
       <button class="close" onclick="closeModal()">✕</button>
     </div>
 
     <div class="notice">
-      Employee ID akan dibuat otomatis oleh sistem. Pastikan data yang dimasukkan benar.
-      Data karyawan yang resign tidak akan dihapus dari database.
+      Employee ID dibuat otomatis oleh sistem. Data karyawan yang resign
+      tetap disimpan untuk menjaga histori dan audit perusahaan.
     </div>
 
     <form id="employeeForm">
       <input type="hidden" id="editingId">
 
       <div class="form-grid">
-
         <div class="form-group">
           <label>Employee ID</label>
           <input id="employeeIdDisplay" value="AUTO GENERATED" disabled>
@@ -643,7 +740,6 @@ tbody tr:hover{background:#fafbfe}
           <label>Branch</label>
           <input value="hq" disabled>
         </div>
-
       </div>
 
       <div class="modal-footer">
@@ -651,25 +747,21 @@ tbody tr:hover{background:#fafbfe}
         <button type="submit" class="btn btn-primary" id="saveButton">Simpan Karyawan</button>
       </div>
     </form>
-
   </div>
 </div>
 
-
-<!-- IMPORT MODAL -->
-
+<!-- IMPORT EXCEL -->
 <div class="modal-backdrop" id="importModal">
   <div class="modal">
-
     <div class="modal-header">
       <h2>Import Employee Data</h2>
       <button class="close" onclick="closeImport()">✕</button>
     </div>
 
     <div class="notice">
-      Gunakan file Excel (.xlsx atau .xls). Maksimal 200 baris per proses.
-      Untuk penambahan karyawan, kosongkan Employee ID agar sistem membuat ID otomatis.
-      Untuk pembaruan, isi Employee ID yang sudah terdaftar.
+      Gunakan file Excel (.xlsx atau .xls) atau CSV. Maksimal 200 baris
+      per proses. Untuk ADD, kosongkan Employee ID agar sistem membuat ID
+      otomatis. Untuk UPDATE, isi Employee ID yang sudah terdaftar.
     </div>
 
     <div class="form-group">
@@ -691,278 +783,233 @@ tbody tr:hover{background:#fafbfe}
       <button class="btn btn-light" onclick="closeImport()">Batal</button>
       <button class="btn btn-primary" id="importButton" onclick="processImport()">Proses Import</button>
     </div>
-
   </div>
 </div>
 
-
-<div class="toast" id="toast"></div>
-
+<div class="toast" id="toast" role="status"></div>
 
 <script type="module">
-
-import { initializeApp, getApps, getApp }
+import {initializeApp,getApps,getApp}
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
 import {
-  getAuth,
-  onAuthStateChanged,
-  signOut
+  getAuth,onAuthStateChanged,signOut
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 import {
-  getFirestore,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  setDoc,
-  updateDoc,
-  runTransaction,
-  serverTimestamp
+  getFirestore,collection,doc,getDoc,getDocs,query,where,
+  setDoc,updateDoc,runTransaction,serverTimestamp,writeBatch
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-
-// ========================================
-// FIREBASE CONFIGURATION
-// ========================================
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
-  authDomain: "zfsi-hris.firebaseapp.com",
-  projectId: "zfsi-hris",
-  storageBucket: "zfsi-hris.firebasestorage.app",
-  messagingSenderId: "642441161494",
-  appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+const firebaseConfig={
+  apiKey:"AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+  authDomain:"zfsi-hris.firebaseapp.com",
+  projectId:"zfsi-hris",
+  storageBucket:"zfsi-hris.firebasestorage.app",
+  messagingSenderId:"642441161494",
+  appId:"1:642441161494:web:23ecd4832f89eac5893e37"
 };
 
-const app = getApps().length
-  ? getApp()
-  : initializeApp(firebaseConfig);
+const app=getApps().length?getApp():initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+const COMPANY_ID="zfsi-main";
+const BRANCH_ID="hq";
+const EMPLOYEE_PREFIX="ZFSI-EMP-";
 
+let currentUser=null;
+let currentUserData=null;
+let employees=[];
+let busy=false;
 
-// ========================================
-// COMPANY SETTINGS
-// ========================================
+const $=id=>document.getElementById(id);
 
-const COMPANY_ID = "zfsi-main";
-const BRANCH_ID = "hq";
-const EMPLOYEE_PREFIX = "ZFSI-EMP-";
-const COUNTER_PATH = "counters/employee";
-
-let currentUser = null;
-let currentUserData = null;
-let employees = [];
-let busy = false;
-
-
-// ========================================
-// UTILITIES
-// ========================================
-
-const $ = id => document.getElementById(id);
-
-function notify(message) {
-  const toast = $("toast");
-  toast.textContent = message;
+function notify(message){
+  const toast=$("toast");
+  toast.textContent=message;
   toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3500);
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>toast.classList.remove("show"),3500);
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#039;"
+function escapeHTML(value){
+  return String(value??"").replace(/[&<>"']/g,char=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
   })[char]);
 }
 
-function formatDate(value) {
-  if (!value) return "-";
-  const d = new Date(value + "T00:00:00");
-  if (isNaN(d)) return value;
-  return d.toLocaleDateString("id-ID", {
+function formatDate(value){
+  if(!value)return "-";
+  const d=new Date(value+"T00:00:00");
+  if(isNaN(d))return value;
+  return d.toLocaleDateString("id-ID",{
     day:"2-digit",month:"short",year:"numeric"
   });
 }
 
-function statusLabel(status) {
-  const labels = {
+function statusLabel(status){
+  return ({
     active:"Active",
     inactive:"Inactive",
     resigned:"Resigned"
-  };
-  return labels[status] || status || "-";
+  })[status]||status||"-";
 }
 
-function statusClass(status) {
-  return "status-" + (
-    ["active","inactive","resigned"].includes(status)
-      ? status : "inactive"
+function statusClass(status){
+  return "status-"+(
+    ["active","inactive","resigned"].includes(status)?status:"inactive"
   );
 }
 
-function hasEmployeePermission() {
-  const permissions = currentUserData?.permissions || [];
-  return currentUserData?.systemRole === "super_admin" ||
+function hasEmployeePermission(){
+  const permissions=currentUserData?.permissions||[];
+  return currentUserData?.systemRole==="super_admin"||
     permissions.includes("employees.manage");
 }
 
-function employeeDoc(id) {
-  return doc(db, "employees", id);
+function employeeDoc(id){
+  return doc(db,"employees",id);
 }
 
-
-// ========================================
 // AUTHENTICATION
-// ========================================
-
-onAuthStateChanged(auth, async user => {
-  if (!user) {
-    window.location.href = "index.html";
+onAuthStateChanged(auth,async user=>{
+  if(!user){
+    location.replace("index.html");
     return;
   }
 
-  currentUser = user;
+  currentUser=user;
 
-  try {
-    const userSnap = await getDoc(doc(db, "users", user.uid));
+  try{
+    const userSnap=await getDoc(doc(db,"users",user.uid));
 
-    if (!userSnap.exists()) {
+    if(!userSnap.exists()){
       alert("User profile tidak ditemukan.");
       await signOut(auth);
+      location.replace("index.html");
       return;
     }
 
-    currentUserData = userSnap.data();
+    currentUserData=userSnap.data();
 
-    if (
-      currentUserData.status !== "active" ||
-      !hasEmployeePermission()
-    ) {
+    if(currentUserData.status!=="active"||!hasEmployeePermission()){
       alert("Anda tidak memiliki akses untuk mengelola data karyawan.");
-      window.location.href = "dashboard.html";
+      location.replace("dashboard.html");
       return;
     }
 
-    $("userName").textContent =
-      currentUserData.name || "HR Administrator";
-
-    $("userEmail").textContent =
-      currentUserData.email || user.email || "";
+    $("userEmail").textContent=
+      currentUserData.email||user.email||"Pengguna ZFSI-HRIS";
 
     await loadEmployees();
 
-  } catch (error) {
+  }catch(error){
     console.error(error);
-    notify("Gagal memeriksa akses: " + error.message);
+    notify("Gagal memeriksa akses: "+error.message);
   }
 });
 
+// LOGOUT
+$("logoutButton").addEventListener("click",async()=>{
+  try{
+    await signOut(auth);
+    location.replace("index.html");
+  }catch(error){
+    notify("Gagal logout: "+error.message);
+  }
+});
 
-// ========================================
+// MENU PLACEHOLDER
+document.querySelectorAll("[data-module]").forEach(link=>{
+  link.addEventListener("click",event=>{
+    event.preventDefault();
+    notify("Modul "+link.dataset.module+" belum tersedia.");
+  });
+});
+
 // LOAD EMPLOYEES
-// ========================================
-
-async function loadEmployees() {
-  $("employeeTable").innerHTML =
+async function loadEmployees(){
+  $("employeeTable").innerHTML=
     '<tr><td colspan="7" class="loading">Memuat data karyawan...</td></tr>';
 
-  try {
-    const q = query(
-      collection(db, "employees"),
-      where("companyId", "==", COMPANY_ID)
+  try{
+    const q=query(
+      collection(db,"employees"),
+      where("companyId","==",COMPANY_ID)
     );
 
-    const snapshot = await getDocs(q);
+    const snapshot=await getDocs(q);
 
-    employees = snapshot.docs.map(item => ({
+    employees=snapshot.docs.map(item=>({
       id:item.id,
       ...item.data()
     }));
 
-    employees.sort((a,b) =>
-      String(a.employeeId || a.id).localeCompare(
-        String(b.employeeId || b.id)
-      )
+    employees.sort((a,b)=>
+      String(a.employeeId||a.id).localeCompare(String(b.employeeId||b.id))
     );
 
     updateStatistics();
     renderTable();
 
-  } catch (error) {
+  }catch(error){
     console.error(error);
-
-    $("employeeTable").innerHTML =
+    $("employeeTable").innerHTML=
       `<tr><td colspan="7" class="empty">
-        Gagal memuat data. Periksa Firestore Security Rules.
-        <br><br>${escapeHTML(error.message)}
+        Gagal memuat data karyawan.<br>
+        Periksa koneksi dan Firestore Security Rules.<br><br>
+        ${escapeHTML(error.message)}
       </td></tr>`;
   }
 }
 
+window.loadEmployees=loadEmployees;
 
-// ========================================
 // STATISTICS
-// ========================================
-
-function updateStatistics() {
-  $("totalEmployees").textContent = employees.length;
-
-  $("activeEmployees").textContent =
-    employees.filter(e => e.employmentStatus === "active").length;
-
-  $("inactiveEmployees").textContent =
-    employees.filter(e => e.employmentStatus === "inactive").length;
-
-  $("resignedEmployees").textContent =
-    employees.filter(e => e.employmentStatus === "resigned").length;
+function updateStatistics(){
+  $("totalEmployees").textContent=employees.length;
+  $("activeEmployees").textContent=
+    employees.filter(e=>e.employmentStatus==="active").length;
+  $("inactiveEmployees").textContent=
+    employees.filter(e=>e.employmentStatus==="inactive").length;
+  $("resignedEmployees").textContent=
+    employees.filter(e=>e.employmentStatus==="resigned").length;
 }
 
-
-// ========================================
 // TABLE
-// ========================================
+window.renderTable=function(){
+  const keyword=$("searchInput").value.toLowerCase().trim();
+  const status=$("statusFilter").value;
 
-window.renderTable = function() {
-  const keyword = $("searchInput").value.toLowerCase().trim();
-  const status = $("statusFilter").value;
-
-  const filtered = employees.filter(e => {
-    const text = [
-      e.employeeId,e.employeeName,e.email,
-      e.departmentId,e.positionId,e.phone
+  const filtered=employees.filter(e=>{
+    const text=[
+      e.employeeId,e.employeeName,e.email,e.departmentId,
+      e.positionId,e.phone
     ].join(" ").toLowerCase();
 
-    return text.includes(keyword) &&
-      (!status || e.employmentStatus === status);
+    return text.includes(keyword)&&
+      (!status||e.employmentStatus===status);
   });
 
-  $("recordCount").textContent =
+  $("recordCount").textContent=
     `${filtered.length} dari ${employees.length} karyawan`;
 
-  if (!filtered.length) {
-    $("employeeTable").innerHTML =
+  if(!filtered.length){
+    $("employeeTable").innerHTML=
       '<tr><td colspan="7" class="empty">Tidak ada data karyawan ditemukan.</td></tr>';
     return;
   }
 
-  $("employeeTable").innerHTML = filtered.map(e => `
+  $("employeeTable").innerHTML=filtered.map(e=>`
     <tr>
       <td>
         <div class="emp-name">${escapeHTML(e.employeeName)}</div>
-        <div class="emp-sub">${escapeHTML(e.employeeId || e.id)}</div>
+        <div class="emp-sub">${escapeHTML(e.employeeId||e.id)}</div>
       </td>
-      <td>${escapeHTML(e.departmentId || "-")}</td>
-      <td>${escapeHTML(e.positionId || "-")}</td>
-      <td>${escapeHTML(e.branchId || "-")}</td>
+      <td>${escapeHTML(e.departmentId||"-")}</td>
+      <td>${escapeHTML(e.positionId||"-")}</td>
+      <td>${escapeHTML(e.branchId||"-")}</td>
       <td>${formatDate(e.joinDate)}</td>
       <td>
         <span class="status ${statusClass(e.employmentStatus)}">
@@ -977,104 +1024,83 @@ window.renderTable = function() {
   `).join("");
 };
 
-
-// ========================================
 // EMPLOYEE ID GENERATOR
-// ========================================
+async function reserveEmployeeIds(count){
+  if(!count)return [];
 
-async function reserveEmployeeIds(count) {
-  if (!count) return [];
+  return await runTransaction(db,async transaction=>{
+    const counterRef=doc(db,"counters","employee");
+    const counterSnap=await transaction.get(counterRef);
 
-  return await runTransaction(db, async transaction => {
-    const counterRef = doc(db, COUNTER_PATH);
-    const counterSnap = await transaction.get(counterRef);
+    const lastNumber=counterSnap.exists()
+      ?Number(counterSnap.data().lastNumber||0):0;
 
-    const lastNumber = counterSnap.exists()
-      ? Number(counterSnap.data().lastNumber || 0)
-      : 0;
+    const newLastNumber=lastNumber+count;
 
-    const newLastNumber = lastNumber + count;
-
-    transaction.set(counterRef, {
+    transaction.set(counterRef,{
       companyId:COMPANY_ID,
       lastNumber:newLastNumber,
       updatedAt:serverTimestamp()
-    }, {merge:true});
+    },{merge:true});
 
-    return Array.from({length:count}, (_, index) =>
-      EMPLOYEE_PREFIX +
-      String(lastNumber + index + 1).padStart(6,"0")
+    return Array.from({length:count},(_,index)=>
+      EMPLOYEE_PREFIX+String(lastNumber+index+1).padStart(6,"0")
     );
   });
 }
 
-
-// ========================================
 // ADD EMPLOYEE
-// ========================================
-
-window.openAdd = function() {
+window.openAdd=function(){
   $("employeeForm").reset();
-  $("editingId").value = "";
-  $("employeeIdDisplay").value = "AUTO GENERATED";
-  $("modalTitle").textContent = "Tambah Karyawan";
-  $("saveButton").textContent = "Simpan Karyawan";
+  $("editingId").value="";
+  $("employeeIdDisplay").value="AUTO GENERATED";
+  $("modalTitle").textContent="Tambah Karyawan";
+  $("saveButton").textContent="Simpan Karyawan";
   $("employeeModal").classList.add("show");
 };
 
-window.closeModal = function() {
+window.closeModal=function(){
   $("employeeModal").classList.remove("show");
 };
 
-
-// ========================================
 // EDIT EMPLOYEE
-// ========================================
-
-window.editEmployee = function(id) {
-  const e = employees.find(item => item.id === id);
-  if (!e) return;
+window.editEmployee=function(id){
+  const e=employees.find(item=>item.id===id);
+  if(!e)return;
 
   $("employeeForm").reset();
+  $("editingId").value=id;
+  $("employeeIdDisplay").value=e.employeeId||id;
+  $("employeeName").value=e.employeeName||"";
+  $("email").value=e.email||"";
+  $("phone").value=e.phone||"";
+  $("gender").value=e.gender||"";
+  $("birthDate").value=e.birthDate||"";
+  $("joinDate").value=e.joinDate||"";
+  $("departmentId").value=e.departmentId||"";
+  $("positionId").value=e.positionId||"";
+  $("employmentType").value=e.employmentType||"Permanent";
+  $("employmentStatus").value=e.employmentStatus||"active";
 
-  $("editingId").value = id;
-  $("employeeIdDisplay").value = e.employeeId || id;
-  $("employeeName").value = e.employeeName || "";
-  $("email").value = e.email || "";
-  $("phone").value = e.phone || "";
-  $("gender").value = e.gender || "";
-  $("birthDate").value = e.birthDate || "";
-  $("joinDate").value = e.joinDate || "";
-  $("departmentId").value = e.departmentId || "";
-  $("positionId").value = e.positionId || "";
-  $("employmentType").value = e.employmentType || "Permanent";
-  $("employmentStatus").value = e.employmentStatus || "active";
-
-  $("modalTitle").textContent = "Edit Data Karyawan";
-  $("saveButton").textContent = "Update Karyawan";
-
+  $("modalTitle").textContent="Edit Data Karyawan";
+  $("saveButton").textContent="Update Karyawan";
   $("employeeModal").classList.add("show");
 };
 
-
-// ========================================
 // SAVE EMPLOYEE
-// ========================================
-
-$("employeeForm").addEventListener("submit", async event => {
+$("employeeForm").addEventListener("submit",async event=>{
   event.preventDefault();
+  if(busy)return;
 
-  if (busy) return;
-  busy = true;
+  busy=true;
+  const button=$("saveButton");
+  button.disabled=true;
+  button.textContent="Menyimpan...";
 
-  const button = $("saveButton");
-  button.disabled = true;
-  button.textContent = "Menyimpan...";
+  const editingId=$("editingId").value;
 
-  try {
-    const editingId = $("editingId").value;
-
-    const employeeData = {
+  try{
+    const employeeData={
       companyId:COMPANY_ID,
       branchId:BRANCH_ID,
       employeeName:$("employeeName").value.trim(),
@@ -1090,15 +1116,14 @@ $("employeeForm").addEventListener("submit", async event => {
       updatedAt:serverTimestamp()
     };
 
-    if (editingId) {
-      await updateDoc(employeeDoc(editingId), employeeData);
+    if(editingId){
+      await updateDoc(employeeDoc(editingId),employeeData);
       notify("Data karyawan berhasil diperbarui.");
+    }else{
+      const ids=await reserveEmployeeIds(1);
+      const newId=ids[0];
 
-    } else {
-      const ids = await reserveEmployeeIds(1);
-      const newId = ids[0];
-
-      await setDoc(employeeDoc(newId), {
+      await setDoc(employeeDoc(newId),{
         ...employeeData,
         employeeId:newId,
         userId:null,
@@ -1106,31 +1131,25 @@ $("employeeForm").addEventListener("submit", async event => {
         createdBy:currentUser.uid
       });
 
-      notify("Karyawan berhasil ditambahkan: " + newId);
+      notify("Karyawan berhasil ditambahkan: "+newId);
     }
 
     closeModal();
     await loadEmployees();
 
-  } catch (error) {
+  }catch(error){
     console.error(error);
-    alert("Gagal menyimpan data: " + error.message);
-
-  } finally {
-    busy = false;
-    button.disabled = false;
-    button.textContent =
-      $("editingId").value ? "Update Karyawan" : "Simpan Karyawan";
+    alert("Gagal menyimpan data: "+error.message);
+  }finally{
+    busy=false;
+    button.disabled=false;
+    button.textContent=editingId?"Update Karyawan":"Simpan Karyawan";
   }
 });
 
-
-// ========================================
 // EXCEL TEMPLATE
-// ========================================
-
-window.downloadTemplate = function() {
-  const rows = [{
+window.downloadTemplate=function(){
+  const rows=[{
     EmployeeID:"",
     EmployeeName:"Nama Karyawan",
     Email:"",
@@ -1144,79 +1163,63 @@ window.downloadTemplate = function() {
     EmploymentStatus:"active"
   }];
 
-  const ws = XLSX.utils.json_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
-
-  XLSX.utils.book_append_sheet(wb, ws, "Employees");
-
-  XLSX.writeFile(wb, "ZFSI_Employee_Import_Template.xlsx");
+  const ws=XLSX.utils.json_to_sheet(rows);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Employees");
+  XLSX.writeFile(wb,"ZFSI_Employee_Import_Template.xlsx");
 };
 
-
-// ========================================
 // EXPORT EXCEL
-// ========================================
-
-window.exportExcel = function() {
-  if (!employees.length) {
+window.exportExcel=function(){
+  if(!employees.length){
     notify("Belum ada data untuk diexport.");
     return;
   }
 
-  const rows = employees.map(e => ({
-    EmployeeID:e.employeeId || e.id,
-    EmployeeName:e.employeeName || "",
-    Email:e.email || "",
-    Phone:e.phone || "",
-    Gender:e.gender || "",
-    BirthDate:e.birthDate || "",
-    JoinDate:e.joinDate || "",
-    Department:e.departmentId || "",
-    Position:e.positionId || "",
-    EmploymentType:e.employmentType || "",
-    EmploymentStatus:e.employmentStatus || "",
-    Branch:e.branchId || ""
+  const rows=employees.map(e=>({
+    EmployeeID:e.employeeId||e.id,
+    EmployeeName:e.employeeName||"",
+    Email:e.email||"",
+    Phone:e.phone||"",
+    Gender:e.gender||"",
+    BirthDate:e.birthDate||"",
+    JoinDate:e.joinDate||"",
+    Department:e.departmentId||"",
+    Position:e.positionId||"",
+    EmploymentType:e.employmentType||"",
+    EmploymentStatus:e.employmentStatus||"",
+    Branch:e.branchId||""
   }));
 
-  const ws = XLSX.utils.json_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
-
-  XLSX.utils.book_append_sheet(wb, ws, "Employees");
-
-  XLSX.writeFile(wb, "ZFSI_Employee_Data.xlsx");
+  const ws=XLSX.utils.json_to_sheet(rows);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Employees");
+  XLSX.writeFile(wb,"ZFSI_Employee_Data.xlsx");
 };
 
-
-// ========================================
-// IMPORT EXCEL MODAL
-// ========================================
-
-window.openImport = function() {
-  $("excelFile").value = "";
-  $("importResult").textContent = "";
+// IMPORT MODAL
+window.openImport=function(){
+  $("excelFile").value="";
+  $("importResult").textContent="";
   $("importModal").classList.add("show");
 };
 
-window.closeImport = function() {
+window.closeImport=function(){
   $("importModal").classList.remove("show");
 };
 
+// NORMALIZE EXCEL ROW
+function normalizeRow(row){
+  const result={};
 
-// ========================================
-// IMPORT EXCEL PROCESS
-// ========================================
-
-function normalizeRow(row) {
-  const result = {};
-
-  Object.keys(row).forEach(key => {
-    result[String(key).toLowerCase().replace(/[\s_-]/g,"")] = row[key];
+  Object.keys(row).forEach(key=>{
+    result[String(key).toLowerCase().replace(/[\s_-]/g,"")]=row[key];
   });
 
-  function pick(...keys) {
-    for (const key of keys) {
-      const value = result[key.toLowerCase().replace(/[\s_-]/g,"")];
-      if (value !== undefined && value !== null && String(value).trim() !== "") {
+  function pick(...keys){
+    for(const key of keys){
+      const value=result[key.toLowerCase().replace(/[\s_-]/g,"")];
+      if(value!==undefined&&value!==null&&String(value).trim()!==""){
         return String(value).trim();
       }
     }
@@ -1238,12 +1241,12 @@ function normalizeRow(row) {
   };
 }
 
-function excelDate(value) {
-  if (!value) return "";
+function excelDate(value){
+  if(!value)return "";
 
-  if (typeof value === "number") {
-    const parsed = XLSX.SSF.parse_date_code(value);
-    if (!parsed) return "";
+  if(typeof value==="number"){
+    const parsed=XLSX.SSF.parse_date_code(value);
+    if(!parsed)return "";
     return [
       parsed.y,
       String(parsed.m).padStart(2,"0"),
@@ -1251,88 +1254,85 @@ function excelDate(value) {
     ].join("-");
   }
 
-  const text = String(value).trim();
+  const text=String(value).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(text))return text;
 
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const parts=text.split(/[\/.-]/);
 
-  const parts = text.split(/[\/.-]/);
-
-  if (parts.length === 3) {
-    if (parts[0].length === 4) {
+  if(parts.length===3){
+    if(parts[0].length===4){
       return `${parts[0]}-${parts[1].padStart(2,"0")}-${parts[2].padStart(2,"0")}`;
     }
-
     return `${parts[2]}-${parts[1].padStart(2,"0")}-${parts[0].padStart(2,"0")}`;
   }
 
   return "";
 }
 
-window.processImport = async function() {
-  const file = $("excelFile").files[0];
-  const mode = $("importMode").value;
+// PROCESS IMPORT
+window.processImport=async function(){
+  const file=$("excelFile").files[0];
+  const mode=$("importMode").value;
 
-  if (!file) {
+  if(!file){
     notify("Silakan pilih file Excel terlebih dahulu.");
     return;
   }
 
-  if (file.size > 5 * 1024 * 1024) {
+  if(file.size>5*1024*1024){
     notify("Ukuran file maksimal 5 MB.");
     return;
   }
 
-  const button = $("importButton");
-  button.disabled = true;
-  button.textContent = "Memproses...";
+  const button=$("importButton");
+  button.disabled=true;
+  button.textContent="Memproses...";
 
-  try {
-    const data = await file.arrayBuffer();
-    const workbook = XLSX.read(data, {type:"array", cellDates:false});
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const rawRows = XLSX.utils.sheet_to_json(sheet, {defval:""});
+  try{
+    const data=await file.arrayBuffer();
+    const workbook=XLSX.read(data,{type:"array",cellDates:false});
+    const sheet=workbook.Sheets[workbook.SheetNames[0]];
+    const rawRows=XLSX.utils.sheet_to_json(sheet,{defval:""});
 
-    if (!rawRows.length) throw new Error("File Excel kosong.");
+    if(!rawRows.length)throw new Error("File Excel kosong.");
+    if(rawRows.length>200)throw new Error("Maksimal 200 baris per proses import.");
 
-    if (rawRows.length > 200) {
-      throw new Error("Maksimal 200 baris dalam satu proses import.");
-    }
+    const rows=rawRows.map(normalizeRow).filter(row=>row.employeeName);
 
-    const rows = rawRows
-      .map(normalizeRow)
-      .filter(row => row.employeeName);
+    if(!rows.length)throw new Error("Tidak ditemukan data dengan EmployeeName.");
 
-    if (!rows.length) {
-      throw new Error("Tidak ditemukan data dengan EmployeeName.");
-    }
+    let success=0;
+    let failed=0;
+    const errors=[];
 
-    let success = 0;
-    let failed = 0;
-    const errors = [];
+    if(mode==="ADD"){
+      const rowsWithoutId=rows.filter(r=>!r.employeeId);
+      const generatedIds=await reserveEmployeeIds(rowsWithoutId.length);
+      let generatedIndex=0;
+      const batchItems=[];
+      const usedIds=new Set();
 
-    if (mode === "ADD") {
-      const rowsWithId = rows.filter(r => r.employeeId);
-      const rowsWithoutId = rows.filter(r => !r.employeeId);
+      for(const row of rows){
+        try{
+          const id=row.employeeId||generatedIds[generatedIndex++];
 
-      const generatedIds = await reserveEmployeeIds(rowsWithoutId.length);
+          if(usedIds.has(id)){
+            failed++;
+            errors.push(`${id}: Employee ID duplikat di file import`);
+            continue;
+          }
+          usedIds.add(id);
 
-      let generatedIndex = 0;
-      const batch = [];
+          const ref=employeeDoc(id);
+          const existing=await getDoc(ref);
 
-      for (const row of rows) {
-        try {
-          const id = row.employeeId || generatedIds[generatedIndex++];
-
-          const ref = employeeDoc(id);
-          const existing = await getDoc(ref);
-
-          if (existing.exists()) {
+          if(existing.exists()){
             failed++;
             errors.push(`${id}: Employee ID sudah digunakan`);
             continue;
           }
 
-          batch.push({
+          batchItems.push({
             ref,
             data:{
               employeeId:id,
@@ -1346,8 +1346,8 @@ window.processImport = async function() {
               joinDate:excelDate(row.joinDate),
               departmentId:row.departmentId,
               positionId:row.positionId,
-              employmentType:row.employmentType || "Permanent",
-              employmentStatus:row.employmentStatus || "active",
+              employmentType:row.employmentType||"Permanent",
+              employmentStatus:row.employmentStatus||"active",
               userId:null,
               createdBy:currentUser.uid,
               createdAt:serverTimestamp(),
@@ -1355,59 +1355,60 @@ window.processImport = async function() {
             }
           });
 
-        } catch (error) {
+        }catch(error){
           failed++;
           errors.push(`${row.employeeName}: ${error.message}`);
         }
       }
 
-      for (let i = 0; i < batch.length; i += 400) {
-        const writeBatch = await import(
-          "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"
-        );
-
-        const firestoreBatch = writeBatch.writeBatch(db);
-        const group = batch.slice(i, i + 400);
-
-        group.forEach(item => firestoreBatch.set(item.ref, item.data));
-
+      for(let i=0;i<batchItems.length;i+=400){
+        const firestoreBatch=writeBatch(db);
+        const group=batchItems.slice(i,i+400);
+        group.forEach(item=>firestoreBatch.set(item.ref,item.data));
         await firestoreBatch.commit();
-        success += group.length;
+        success+=group.length;
       }
 
-    } else {
-      const updates = [];
+    }else{
+      const updates=[];
+      const seenIds=new Set();
 
-      for (const row of rows) {
-        if (!row.employeeId) {
+      for(const row of rows){
+        if(!row.employeeId){
           failed++;
           errors.push(`${row.employeeName}: Employee ID wajib diisi`);
           continue;
         }
 
-        try {
-          const ref = employeeDoc(row.employeeId);
-          const existing = await getDoc(ref);
+        if(seenIds.has(row.employeeId)){
+          failed++;
+          errors.push(`${row.employeeId}: Employee ID duplikat di file import`);
+          continue;
+        }
+        seenIds.add(row.employeeId);
 
-          if (!existing.exists()) {
+        try{
+          const ref=employeeDoc(row.employeeId);
+          const existing=await getDoc(ref);
+
+          if(!existing.exists()){
             failed++;
             errors.push(`${row.employeeId}: Data tidak ditemukan`);
             continue;
           }
 
-          const oldData = existing.data();
+          const oldData=existing.data();
 
-          if (oldData.companyId !== COMPANY_ID) {
+          if(oldData.companyId!==COMPANY_ID){
             failed++;
             errors.push(`${row.employeeId}: Company ID tidak sesuai`);
             continue;
           }
 
-          const update = {};
-
-          const mapping = {
+          const update={};
+          const mapping={
             employeeName:row.employeeName,
-            email:row.email ? row.email.toLowerCase() : "",
+            email:row.email?row.email.toLowerCase():"",
             phone:row.phone,
             gender:row.gender,
             birthDate:excelDate(row.birthDate),
@@ -1418,71 +1419,53 @@ window.processImport = async function() {
             employmentStatus:row.employmentStatus
           };
 
-          Object.entries(mapping).forEach(([key,value]) => {
-            if (value !== "") update[key] = value;
+          Object.entries(mapping).forEach(([key,value])=>{
+            if(value!=="")update[key]=value;
           });
 
-          update.updatedAt = serverTimestamp();
-
+          update.updatedAt=serverTimestamp();
           updates.push({ref,update});
 
-        } catch (error) {
+        }catch(error){
           failed++;
           errors.push(`${row.employeeId}: ${error.message}`);
         }
       }
 
-      for (let i = 0; i < updates.length; i += 400) {
-        const writeBatch = await import(
-          "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"
-        );
-
-        const firestoreBatch = writeBatch.writeBatch(db);
-        const group = updates.slice(i, i + 400);
-
-        group.forEach(item =>
-          firestoreBatch.update(item.ref, item.update)
-        );
-
+      for(let i=0;i<updates.length;i+=400){
+        const firestoreBatch=writeBatch(db);
+        const group=updates.slice(i,i+400);
+        group.forEach(item=>firestoreBatch.update(item.ref,item.update));
         await firestoreBatch.commit();
-        success += group.length;
+        success+=group.length;
       }
     }
 
-    $("importResult").innerHTML = `
+    $("importResult").innerHTML=`
       <div style="padding:12px;background:#e9f8f0;border-radius:8px;color:#14764c">
         <strong>Import selesai</strong><br>
         Berhasil: ${success}<br>
         Gagal: ${failed}
       </div>
-      ${errors.length ? `
+      ${errors.length?`
         <div style="margin-top:12px;color:#b23a45">
           <strong>Detail kesalahan:</strong><br>
-          ${errors.slice(0,20).map(e => escapeHTML(e)).join("<br>")}
+          ${errors.slice(0,20).map(e=>escapeHTML(e)).join("<br>")}
         </div>
-      ` : ""}
+      `:""}
     `;
 
     await loadEmployees();
     notify("Proses import selesai.");
 
-  } catch (error) {
+  }catch(error){
     console.error(error);
-    $("importResult").textContent = "Import gagal: " + error.message;
-
-  } finally {
-    button.disabled = false;
-    button.textContent = "Proses Import";
+    $("importResult").textContent="Import gagal: "+error.message;
+  }finally{
+    button.disabled=false;
+    button.textContent="Proses Import";
   }
 };
-
-
-// ========================================
-// GLOBAL REFRESH
-// ========================================
-
-window.loadEmployees = loadEmployees;
-
 </script>
 
 </body>
