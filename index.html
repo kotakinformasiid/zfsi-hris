@@ -150,8 +150,7 @@
 
     onAuthStateChanged(auth, user => {
       if (user) {
-        message.textContent =
-          "Anda sudah login: " + user.email;
+        location.replace("dashboard.html");
       }
     });
 
