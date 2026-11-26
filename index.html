@@ -121,67 +121,84 @@
     </div>
   </main>
 
-  <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+<script type="module">
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-    // GANTI DENGAN KONFIGURASI DARI FIREBASE
-    const firebaseConfig = {
-      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
-      authDomain: "zfsi-hris.firebaseapp.com",
-      projectId: "zfsi-hris",
-      storageBucket: "zfsi-hris.firebasestorage.app",
-      messagingSenderId: "642441161494",
-      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
-    };
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  const firebaseConfig = {
+    apiKey: "MASUKKAN_API_KEY_ASLI",
+    authDomain: "zfsi-hris.firebaseapp.com",
+    projectId: "zfsi-hris",
+    storageBucket: "MASUKKAN_STORAGE_BUCKET_ASLI",
+    messagingSenderId: "MASUKKAN_SENDER_ID_ASLI",
+    appId: "MASUKKAN_APP_ID_ASLI"
+  };
 
-    const form = document.getElementById("loginForm");
-    const button = document.getElementById("loginButton");
-    const message = document.getElementById("message");
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        location.replace("dashboard.html");
-      }
-    });
+  const form = document.getElementById("loginForm");
+  const button = document.getElementById("loginButton");
+  const message = document.getElementById("message");
 
-    form.addEventListener("submit", async event => {
-      event.preventDefault();
+  // Jika sesi sebelumnya masih aktif, buka dashboard.
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      window.location.replace("./dashboard.html");
+    }
+  });
 
-      button.disabled = true;
-      button.textContent = "Memproses...";
-      message.textContent = "";
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
 
-      try {
-        await signInWithEmailAndPassword(
-          auth,
-          document.getElementById("email").value,
-          document.getElementById("password").value
-        );
+    button.disabled = true;
+    button.textContent = "Memproses...";
+    message.textContent = "";
 
+    try {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      const result = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (result.user) {
         message.style.color = "green";
-        message.textContent = "Login berhasil.";
+        message.textContent = "Login berhasil. Membuka dashboard...";
 
-      } catch (error) {
-        message.style.color = "#c03939";
-        message.textContent =
-          "Login gagal. Periksa email dan password.";
-
-        console.error(error);
+        window.location.assign("./dashboard.html");
       }
 
+    } catch (error) {
+      console.error("Firebase Login Error:", error.code);
+
+      message.style.color = "#c03939";
+
+      const errors = {
+        "auth/invalid-credential": "Email atau password salah.",
+        "auth/user-disabled": "Akun dinonaktifkan.",
+        "auth/too-many-requests": "Terlalu banyak percobaan. Coba lagi nanti.",
+        "auth/network-request-failed": "Periksa koneksi internet."
+      };
+
+      message.textContent =
+        errors[error.code] || "Login gagal. Kode: " + error.code;
+
+    } finally {
       button.disabled = false;
       button.textContent = "Login";
-    });
-  </script>
+    }
+  });
+</script>
 </body>
 </html>
