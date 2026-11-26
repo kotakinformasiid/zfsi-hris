@@ -1,1 +1,30 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10243b">
+  <title>ZFSI-HRIS</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <main class="loading-screen">
+    <div class="brand-mark">Z</div>
+    <h1>ZFSI-HRIS</h1>
+    <p>Human Resource Information System</p>
+    <div class="loader"></div>
+  </main>
+
+  <script type="module">
+    import { auth } from "./assets/js/firebase.js";
+    import { onAuthStateChanged } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    onAuthStateChanged(auth, user => {
+      location.replace(user ? "dashboard.html" : "login.html");
+    });
+  </script>
+</body>
+</html>
+
