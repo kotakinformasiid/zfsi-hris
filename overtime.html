@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lembur | ZFSI-HRIS</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #10243b;
+      --blue: #2879c7;
+      --bg: #f4f7fb;
+      --border: #e5eaf0;
+      --muted: #8290a2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #243449;
+    }
+
+    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    .sidebar {
+      width: 245px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--navy);
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 8px 30px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .brand small {
+      font-size: 9px;
+      color: #afc2d5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      color: #8199b0;
+      padding: 13px 10px 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #cbd7e3;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1e3c59;
+      color: white;
+    }
+
+    .main {
+      margin-left: 245px;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 7px 0 0;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e8f6ef;
+      color: #16865b;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #486078;
+      background: transparent;
+      color: white;
+      padding: 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* KOMPONEN HALAMAN */
+    .notice {
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+      padding: 15px 17px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 19px;
+      border-radius: 12px;
+      min-width: 0;
+    }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .number {
+      font-size: 27px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 17px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid var(--border);
+    }
+
+    .button-success {
+      background: #e8f6ef;
+      color: #16865b;
+      border: 1px solid #c9e9d8;
+    }
+
+    .button-danger {
+      background: #fff0f0;
+      color: #a83232;
+      border: 1px solid #f0cccc;
+    }
+
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    input, select, textarea {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #243449;
+    }
+
+    .filter-input,
+    .filter-select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      min-width: 155px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 12px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #65758a;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .employee-name {
+      font-weight: bold;
+    }
+
+    .subtext {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .badge-pending {
+      background: #fff5dc;
+      color: #9a6b11;
+    }
+
+    .badge-approved {
+      background: #e8f6ef;
+      color: #16865b;
+    }
+
+    .badge-rejected {
+      background: #fdeaea;
+      color: #a33c3c;
+    }
+
+    .badge-cancelled {
+      background: #eef0f3;
+      color: #65758a;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 7px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #2879c7;
+    }
+
+    .action-button.approve {
+      color: #16865b;
+    }
+
+    .action-button.reject {
+      color: #a83232;
+    }
+
+    .empty {
+      padding: 38px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #a83232;
+      background: #fff0f0;
+      border: 1px solid #f0cccc;
+    }
+
+    .message.success {
+      display: block;
+      color: #176b4b;
+      background: #eaf8f1;
+      border: 1px solid #cdebdc;
+    }
+
+    .message.info {
+      display: block;
+      color: #225a8d;
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #10243b99;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 650px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px #0003;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .close-button {
+      border: 0;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .form-body {
+      padding: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      min-width: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #536579;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #dce3eb;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .form-group textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    .form-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .calculated-hours {
+      padding: 11px 12px;
+      border: 1px solid #d4e7f8;
+      border-radius: 8px;
+      background: #eaf3fc;
+      color: #225a8d;
+      font-size: 13px;
+      font-weight: bold;
+      min-height: 40px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 15px 22px;
+      border-top: 1px solid var(--border);
+      position: sticky;
+      bottom: 0;
+      background: white;
+    }
+
+    #toast {
+      position: fixed;
+      right: 20px;
+      bottom: 15px;
+      z-index: 80;
+      max-width: 380px;
+      margin: 0;
+    }
+
+    @media(max-width: 1000px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media(max-width: 650px) {
+      .sidebar { width: 65px; padding: 15px 6px; }
+      .brand { padding: 0 5px 25px; }
+      .brand h2, .brand small,
+      .nav-link span, .section-label { display: none; }
+      .nav-link { justify-content: center; }
+      .main { margin-left: 65px; padding: 15px; }
+      .stats { gap: 9px; }
+      .card { padding: 13px; }
+      .number { font-size: 21px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: auto; }
+      .toolbar, .toolbar-group { width: 100%; }
+      .toolbar .button { flex: 1; }
+      .filters { width: 100%; }
+      .filters > * { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div>
+        <h2>ZFSI-HRIS</h2>
+        <small>HUMAN RESOURCE SYSTEM</small>
+      </div>
+    </div>
+
+    <div class="section-label">MAIN MENU</div>
+
+    <a class="nav-link" href="dashboard.html">
+      <span>▦</span><span>Dashboard</span>
+    </a>
+
+    <a class="nav-link" href="employees.html">
+      <span>♙</span><span>Data Karyawan</span>
+    </a>
+
+    <a class="nav-link" href="attendance.html">
+      <span>◷</span><span>Absensi</span>
+    </a>
+
+    <a class="nav-link" href="leave.html">
+      <span>▣</span><span>Cuti & Izin</span>
+    </a>
+
+    <a class="nav-link active" href="overtime.html">
+      <span>◴</span><span>Lembur</span>
+    </a>
+
+    <div class="section-label">COMPENSATION</div>
+
+    <a class="nav-link" href="payroll.html">
+      <span>＄</span><span>Payroll</span>
+    </a>
+
+    <a class="nav-link" href="payslip.html">
+      <span>▤</span><span>Slip Gaji</span>
+    </a>
+
+    <div class="section-label">MANAGEMENT</div>
+
+    <a class="nav-link" href="announcements.html">
+      <span>♧</span><span>Pengumuman</span>
+    </a>
+
+    <a class="nav-link" href="reports.html">
+      <span>▥</span><span>Laporan</span>
+    </a>
+
+    <a class="nav-link" href="users.html">
+      <span>♙</span><span>User Management</span>
+    </a>
+
+    <a class="nav-link" href="audit-log.html">
+      <span>◴</span><span>Audit Log</span>
+    </a>
+
+    <a class="nav-link" href="settings.html">
+      <span>⚙</span><span>Pengaturan</span>
+    </a>
+
+    <button class="logout" id="logoutButton">
+      Keluar / Logout
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1>Pengajuan Lembur</h1>
+        <p>Pencatatan, pemantauan, dan persetujuan jam lembur karyawan ZFSI.</p>
+      </div>
+
+      <div class="profile">
+        <strong id="userEmail">Memeriksa akun...</strong>
+        <div class="status">Terautentikasi</div>
+      </div>
+    </header>
+
+    <div id="pageMessage" class="message"></div>
+
+    <div class="notice">
+      <strong>Modul Lembur — Tahap Penyusunan Halaman</strong><br>
+      Tampilan pengajuan dan persetujuan lembur sedang disiapkan. Data yang
+      dimasukkan saat ini hanya tersimpan sementara di browser dan akan hilang
+      saat halaman dimuat ulang. Integrasi Firestore, hak persetujuan atasan,
+      dan perhitungan komponen lembur Payroll akan dibuat pada tahap database.
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="card-label">Total Pengajuan</div>
+        <div class="number" id="totalRequests">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Menunggu Persetujuan</div>
+        <div class="number" id="pendingRequests">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Disetujui</div>
+        <div class="number" id="approvedRequests">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Total Jam Disetujui</div>
+        <div class="number" id="approvedHours">0</div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="button button-primary" id="addButton">
+          + Buat Pengajuan Lembur
+        </button>
+
+        <button class="button button-secondary" id="exportButton">
+          Export CSV
+        </button>
+      </div>
+
+      <div class="toolbar-group">
+        <button class="button button-secondary" id="refreshButton">
+          ↻ Reset Tampilan
+        </button>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Daftar Pengajuan Lembur</h3>
+
+        <div class="filters">
+          <input
+            type="date"
+            class="filter-input"
+            id="dateFilter"
+          >
+
+          <input
+            type="search"
+            class="filter-input"
+            id="searchInput"
+            placeholder="Cari ID / nama karyawan..."
+          >
+
+          <select class="filter-select" id="statusFilter">
+            <option value="">Semua Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Karyawan</th>
+              <th>Tanggal Lembur</th>
+              <th>Jam Mulai</th>
+              <th>Jam Selesai</th>
+              <th>Istirahat</th>
+              <th>Jam Bersih</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="overtimeTableBody">
+            <tr>
+              <td colspan="9">
+                <div class="empty">
+                  Belum ada pengajuan lembur pada sesi ini.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- FORM PENGAJUAN / EDIT -->
+  <div class="modal" id="overtimeModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modalTitle">Buat Pengajuan Lembur</h2>
+        <button class="close-button" id="closeModalButton" type="button">×</button>
+      </div>
+
+      <form id="overtimeForm">
+        <div class="form-body">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label>Employee ID *</label>
+              <input
+                type="text"
+                id="employeeId"
+                required
+                maxlength="50"
+                placeholder="Contoh: ZFSI-EMP-000001"
+              >
+              <div class="form-help">
+                Pada tahap integrasi, pilihan karyawan akan diambil dari
+                Master Data Karyawan.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Nama Karyawan *</label>
+              <input
+                type="text"
+                id="employeeName"
+                required
+                maxlength="120"
+                placeholder="Nama lengkap karyawan"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Tanggal Lembur *</label>
+              <input type="date" id="overtimeDate" required>
+            </div>
+
+            <div class="form-group">
+              <label>Tanggal Pengajuan</label>
+              <input type="date" id="requestDate" readonly>
+            </div>
+
+            <div class="form-group">
+              <label>Jam Mulai *</label>
+              <input type="time" id="startTime" required>
+            </div>
+
+            <div class="form-group">
+              <label>Jam Selesai *</label>
+              <input type="time" id="endTime" required>
+            </div>
+
+            <div class="form-group">
+              <label>Istirahat (menit)</label>
+              <input
+                type="number"
+                id="breakMinutes"
+                min="0"
+                max="1440"
+                step="1"
+                value="0"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Estimasi Jam Lembur Bersih</label>
+              <div class="calculated-hours" id="calculatedHours">
+                0 jam
+              </div>
+              <div class="form-help">
+                Perhitungan dikurangi waktu istirahat. Jika jam selesai lebih
+                awal daripada jam mulai, sistem menganggap lembur melewati
+                tengah malam.
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label>Alasan Lembur *</label>
+              <textarea
+                id="reason"
+                required
+                maxlength="500"
+                placeholder="Jelaskan alasan pekerjaan lembur..."
+              ></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label>Deskripsi Pekerjaan yang Dilakukan</label>
+              <textarea
+                id="workDescription"
+                maxlength="1000"
+                placeholder="Jelaskan pekerjaan atau target yang harus diselesaikan..."
+              ></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="button button-secondary" type="button" id="cancelButton">
+            Batal
+          </button>
+
+          <button class="button button-primary" type="submit" id="saveButton">
+            Simpan Pengajuan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL PERSETUJUAN / PENOLAKAN -->
+  <div class="modal" id="decisionModal">
+    <div class="modal-box" style="max-width:480px">
+      <div class="modal-header">
+        <h2 id="decisionTitle">Proses Pengajuan Lembur</h2>
+        <button class="close-button" id="closeDecisionButton" type="button">×</button>
+      </div>
+
+      <div class="form-body">
+        <p
+          id="decisionDescription"
+          style="font-size:13px;line-height:1.6;color:#536579"
+        ></p>
+
+        <div class="form-group">
+          <label>Catatan Persetujuan / Penolakan</label>
+          <textarea
+            id="decisionNotes"
+            maxlength="500"
+            placeholder="Masukkan catatan (opsional)..."
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="button button-secondary" type="button" id="cancelDecisionButton">
+          Batal
+        </button>
+
+        <button class="button button-primary" type="button" id="confirmDecisionButton">
+          Konfirmasi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="message"></div>
+
+  <script type="module">
+    import {
+      initializeApp,
+      getApps,
+      getApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+      authDomain: "zfsi-hris.firebaseapp.com",
+      projectId: "zfsi-hris",
+      storageBucket: "zfsi-hris.firebasestorage.app",
+      messagingSenderId: "642441161494",
+      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let authHandled = false;
+    let overtimeRequests = [];
+    let editingRequestId = null;
+    let decisionRequestId = null;
+    let decisionAction = null;
+
+    const $ = id => document.getElementById(id);
+
+    function localDateString() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function showMessage(text, type = "info") {
+      const element = $("pageMessage");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+    }
+
+    function showToast(text, type = "success") {
+      const element = $("toast");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+
+      window.setTimeout(() => {
+        element.style.display = "none";
+      }, 3500);
+    }
+
+    function statusText(status) {
+      const labels = {
+        pending: "Pending",
+        approved: "Approved",
+        rejected: "Rejected",
+        cancelled: "Cancelled"
+      };
+
+      return labels[status] || status || "—";
+    }
+
+    function statusBadge(status) {
+      const allowed = [
+        "pending",
+        "approved",
+        "rejected",
+        "cancelled"
+      ];
+
+      const safeStatus = allowed.includes(status) ? status : "pending";
+
+      return `
+        <span class="badge badge-${safeStatus}">
+          ${escapeHTML(statusText(safeStatus))}
+        </span>
+      `;
+    }
+
+    function formatDate(value) {
+      if (!value) return "—";
+
+      const parts = value.split("-");
+      if (parts.length !== 3) return value;
+
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    function timeToMinutes(value) {
+      if (!value || !/^\d{2}:\d{2}$/.test(value)) return null;
+
+      const [hours, minutes] = value.split(":").map(Number);
+
+      if (
+        !Number.isInteger(hours) ||
+        !Number.isInteger(minutes) ||
+        hours < 0 ||
+        hours > 23 ||
+        minutes < 0 ||
+        minutes > 59
+      ) {
+        return null;
+      }
+
+      return hours * 60 + minutes;
+    }
+
+    function calculateOvertime(startTime, endTime, breakMinutes) {
+      const start = timeToMinutes(startTime);
+      const end = timeToMinutes(endTime);
+      const rest = Number(breakMinutes || 0);
+
+      if (start === null || end === null) return null;
+
+      if (!Number.isInteger(rest) || rest < 0 || rest > 1440) {
+        return null;
+      }
+
+      let grossMinutes = end - start;
+
+      // Jika jam selesai lebih awal, dianggap melewati tengah malam.
+      if (grossMinutes < 0) {
+        grossMinutes += 1440;
+      }
+
+      if (grossMinutes <= 0 || grossMinutes > 1440) {
+        return null;
+      }
+
+      if (rest >= grossMinutes) {
+        return null;
+      }
+
+      const netMinutes = grossMinutes - rest;
+
+      return {
+        grossMinutes,
+        netMinutes,
+        hours: Math.round((netMinutes / 60) * 100) / 100
+      };
+    }
+
+    function updateCalculatedHours() {
+      const result = calculateOvertime(
+        $("startTime").value,
+        $("endTime").value,
+        $("breakMinutes").value
+      );
+
+      if (!result) {
+        $("calculatedHours").textContent = "Periksa jam dan istirahat";
+        return null;
+      }
+
+      $("calculatedHours").textContent =
+        `${result.hours.toFixed(2)} jam`;
+
+      return result;
+    }
+
+    function updateStatistics() {
+      $("totalRequests").textContent = overtimeRequests.length;
+
+      $("pendingRequests").textContent =
+        overtimeRequests.filter(item => item.status === "pending").length;
+
+      $("approvedRequests").textContent =
+        overtimeRequests.filter(item => item.status === "approved").length;
+
+      const totalHours = overtimeRequests
+        .filter(item => item.status === "approved")
+        .reduce((sum, item) => sum + Number(item.overtimeHours || 0), 0);
+
+      $("approvedHours").textContent = totalHours.toFixed(2);
+    }
+
+    function renderRequests() {
+      const search = $("searchInput").value.trim().toLowerCase();
+      const selectedDate = $("dateFilter").value;
+      const selectedStatus = $("statusFilter").value;
+
+      const filtered = overtimeRequests.filter(item => {
+        const searchable = [
+          item.requestId,
+          item.employeeId,
+          item.employeeName,
+          item.reason,
+          item.workDescription
+        ].join(" ").toLowerCase();
+
+        return (!search || searchable.includes(search)) &&
+          (!selectedDate || item.overtimeDate === selectedDate) &&
+          (!selectedStatus || item.status === selectedStatus);
+      });
+
+      const tbody = $("overtimeTableBody");
+
+      if (!filtered.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9">
+              <div class="empty">
+                Tidak ada pengajuan lembur yang sesuai dengan filter.
+              </div>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => {
+        let actions = "";
+
+        if (item.status === "pending") {
+          actions = `
+            <div class="action-group">
+              <button class="action-button" type="button"
+                data-edit="${escapeHTML(item.requestId)}">Edit</button>
+              <button class="action-button approve" type="button"
+                data-approve="${escapeHTML(item.requestId)}">Setujui</button>
+              <button class="action-button reject" type="button"
+                data-reject="${escapeHTML(item.requestId)}">Tolak</button>
+              <button class="action-button" type="button"
+                data-cancel="${escapeHTML(item.requestId)}">Batalkan</button>
+            </div>
+          `;
+        } else {
+          actions = `
+            <button class="action-button" type="button"
+              data-view="${escapeHTML(item.requestId)}">Detail</button>
+          `;
+        }
+
+        return `
+          <tr>
+            <td><strong>${escapeHTML(item.requestId)}</strong></td>
+            <td>
+              <div class="employee-name">${escapeHTML(item.employeeName)}</div>
+              <div class="subtext">${escapeHTML(item.employeeId)}</div>
+            </td>
+            <td>${escapeHTML(formatDate(item.overtimeDate))}</td>
+            <td>${escapeHTML(item.startTime)}</td>
+            <td>${escapeHTML(item.endTime)}</td>
+            <td>${Number(item.breakMinutes || 0)} menit</td>
+            <td><strong>${Number(item.overtimeHours || 0).toFixed(2)} jam</strong></td>
+            <td>${statusBadge(item.status)}</td>
+            <td>${actions}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function openAddModal() {
+      editingRequestId = null;
+
+      $("overtimeForm").reset();
+      $("modalTitle").textContent = "Buat Pengajuan Lembur";
+      $("overtimeDate").value = localDateString();
+      $("requestDate").value = localDateString();
+      $("breakMinutes").value = "0";
+      $("calculatedHours").textContent = "0 jam";
+
+      $("overtimeModal").classList.add("show");
+    }
+
+    function openEditModal(item) {
+      if (item.status !== "pending") {
+        showToast(
+          "Hanya pengajuan berstatus Pending yang dapat diedit.",
+          "error"
+        );
+        return;
+      }
+
+      editingRequestId = item.requestId;
+
+      $("modalTitle").textContent = "Edit Pengajuan Lembur";
+      $("employeeId").value = item.employeeId || "";
+      $("employeeName").value = item.employeeName || "";
+      $("overtimeDate").value = item.overtimeDate || "";
+      $("requestDate").value = item.requestDate || localDateString();
+      $("startTime").value = item.startTime || "";
+      $("endTime").value = item.endTime || "";
+      $("breakMinutes").value = item.breakMinutes ?? 0;
+      $("reason").value = item.reason || "";
+      $("workDescription").value = item.workDescription || "";
+
+      updateCalculatedHours();
+      $("overtimeModal").classList.add("show");
+    }
+
+    function closeModal() {
+      $("overtimeModal").classList.remove("show");
+      editingRequestId = null;
+    }
+
+    function saveRequest(event) {
+      event.preventDefault();
+
+      const button = $("saveButton");
+      button.disabled = true;
+      button.textContent = "Memproses...";
+
+      try {
+        const data = {
+          employeeId: $("employeeId").value.trim(),
+          employeeName: $("employeeName").value.trim(),
+          overtimeDate: $("overtimeDate").value,
+          requestDate: $("requestDate").value || localDateString(),
+          startTime: $("startTime").value,
+          endTime: $("endTime").value,
+          breakMinutes: Number($("breakMinutes").value || 0),
+          reason: $("reason").value.trim(),
+          workDescription: $("workDescription").value.trim(),
+          submittedBy: currentUser?.uid || ""
+        };
+
+        if (
+          !data.employeeId ||
+          !data.employeeName ||
+          !data.overtimeDate ||
+          !data.startTime ||
+          !data.endTime ||
+          !data.reason
+        ) {
+          throw new Error("Lengkapi seluruh kolom wajib.");
+        }
+
+        if (
+          !Number.isInteger(data.breakMinutes) ||
+          data.breakMinutes < 0
+        ) {
+          throw new Error("Waktu istirahat harus berupa angka bulat minimal 0.");
+        }
+
+        const duration = calculateOvertime(
+          data.startTime,
+          data.endTime,
+          data.breakMinutes
+        );
+
+        if (!duration) {
+          throw new Error(
+            "Jam lembur atau waktu istirahat tidak valid. Pastikan durasi lebih dari nol dan istirahat lebih pendek daripada durasi lembur."
+          );
+        }
+
+        data.grossMinutes = duration.grossMinutes;
+        data.netMinutes = duration.netMinutes;
+        data.overtimeHours = duration.hours;
+
+        const duplicate = overtimeRequests.find(item =>
+          item.employeeId.toLowerCase() === data.employeeId.toLowerCase() &&
+          item.overtimeDate === data.overtimeDate &&
+          item.requestId !== editingRequestId &&
+          item.status !== "cancelled" &&
+          item.status !== "rejected"
+        );
+
+        if (duplicate) {
+          throw new Error(
+            "Pengajuan lembur untuk karyawan dan tanggal tersebut sudah ada."
+          );
+        }
+
+        if (editingRequestId) {
+          overtimeRequests = overtimeRequests.map(item =>
+            item.requestId === editingRequestId && item.status === "pending"
+              ? { ...item, ...data }
+              : item
+          );
+
+          showToast("Pengajuan lembur diperbarui pada sesi ini.");
+        } else {
+          const requestId =
+            "OT-TEMP-" + Date.now().toString().slice(-8);
+
+          overtimeRequests.push({
+            ...data,
+            requestId,
+            status: "pending",
+            decisionNotes: "",
+            approverUid: "",
+            decisionDate: ""
+          });
+
+          showToast("Pengajuan lembur ditambahkan pada sesi ini.");
+        }
+
+        closeModal();
+        updateStatistics();
+        renderRequests();
+
+      } catch (error) {
+        showToast(
+          error.message || "Gagal memproses pengajuan lembur.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Simpan Pengajuan";
+      }
+    }
+
+    function openDecisionModal(requestId, action) {
+      const item = overtimeRequests.find(
+        request => request.requestId === requestId
+      );
+
+      if (!item || item.status !== "pending") {
+        showToast(
+          "Pengajuan ini tidak lagi berstatus Pending.",
+          "error"
+        );
+        return;
+      }
+
+      decisionRequestId = requestId;
+      decisionAction = action;
+
+      const isApprove = action === "approved";
+
+      $("decisionTitle").textContent =
+        isApprove ? "Setujui Pengajuan Lembur" : "Tolak Pengajuan Lembur";
+
+      $("decisionDescription").textContent =
+        `${isApprove ? "Kamu akan menyetujui" : "Kamu akan menolak"} pengajuan ${item.requestId} dari ${item.employeeName}, tanggal ${formatDate(item.overtimeDate)}, selama ${Number(item.overtimeHours).toFixed(2)} jam.`;
+
+      $("decisionNotes").value = "";
+
+      $("confirmDecisionButton").textContent =
+        isApprove ? "Setujui Pengajuan" : "Tolak Pengajuan";
+
+      $("confirmDecisionButton").className =
+        isApprove
+          ? "button button-success"
+          : "button button-danger";
+
+      $("decisionModal").classList.add("show");
+    }
+
+    function confirmDecision() {
+      const item = overtimeRequests.find(
+        request => request.requestId === decisionRequestId
+      );
+
+      if (!item || item.status !== "pending") {
+        showToast("Pengajuan tidak dapat diproses.", "error");
+        closeDecisionModal();
+        return;
+      }
+
+      item.status = decisionAction;
+      item.decisionNotes = $("decisionNotes").value.trim();
+      item.approverUid = currentUser?.uid || "";
+      item.decisionDate = localDateString();
+
+      showToast(
+        decisionAction === "approved"
+          ? "Pengajuan lembur disetujui pada sesi ini."
+          : "Pengajuan lembur ditolak pada sesi ini."
+      );
+
+      closeDecisionModal();
+      updateStatistics();
+      renderRequests();
+    }
+
+    function cancelRequest(requestId) {
+      const item = overtimeRequests.find(
+        request => request.requestId === requestId
+      );
+
+      if (!item || item.status !== "pending") {
+        showToast("Pengajuan tidak dapat dibatalkan.", "error");
+        return;
+      }
+
+      const confirmed = window.confirm(
+        `Batalkan pengajuan lembur ${requestId} dari ${item.employeeName}?`
+      );
+
+      if (!confirmed) return;
+
+      item.status = "cancelled";
+      item.cancelledBy = currentUser?.uid || "";
+      item.cancelledDate = localDateString();
+
+      showToast("Pengajuan lembur dibatalkan pada sesi ini.");
+      updateStatistics();
+      renderRequests();
+    }
+
+    function closeDecisionModal() {
+      $("decisionModal").classList.remove("show");
+      decisionRequestId = null;
+      decisionAction = null;
+    }
+
+    function viewRequest(requestId) {
+      const item = overtimeRequests.find(
+        request => request.requestId === requestId
+      );
+
+      if (!item) return;
+
+      const details = [
+        "Request ID: " + item.requestId,
+        "Nama: " + item.employeeName,
+        "Employee ID: " + item.employeeId,
+        "Tanggal lembur: " + formatDate(item.overtimeDate),
+        "Jam mulai: " + item.startTime,
+        "Jam selesai: " + item.endTime,
+        "Istirahat: " + item.breakMinutes + " menit",
+        "Durasi kotor: " + item.grossMinutes + " menit",
+        "Durasi bersih: " + Number(item.overtimeHours).toFixed(2) + " jam",
+        "Alasan: " + item.reason,
+        "Pekerjaan: " + (item.workDescription || "-"),
+        "Status: " + item.status,
+        "Catatan keputusan: " + (item.decisionNotes || "-"),
+        "Tanggal keputusan: " + (item.decisionDate || "-")
+      ].join("\n");
+
+      window.alert(details);
+    }
+
+    function exportCSV() {
+      if (!overtimeRequests.length) {
+        showToast("Belum ada pengajuan lembur untuk diekspor.", "info");
+        return;
+      }
+
+      const headers = [
+        "Request ID",
+        "Employee ID",
+        "Nama Karyawan",
+        "Tanggal Lembur",
+        "Tanggal Pengajuan",
+        "Jam Mulai",
+        "Jam Selesai",
+        "Istirahat Menit",
+        "Durasi Kotor Menit",
+        "Durasi Bersih Menit",
+        "Jam Lembur",
+        "Alasan",
+        "Deskripsi Pekerjaan",
+        "Status",
+        "Catatan Keputusan",
+        "Tanggal Keputusan"
+      ];
+
+      const rows = overtimeRequests.map(item => [
+        item.requestId,
+        item.employeeId,
+        item.employeeName,
+        item.overtimeDate,
+        item.requestDate,
+        item.startTime,
+        item.endTime,
+        item.breakMinutes,
+        item.grossMinutes,
+        item.netMinutes,
+        item.overtimeHours,
+        item.reason,
+        item.workDescription,
+        statusText(item.status),
+        item.decisionNotes,
+        item.decisionDate
+      ]);
+
+      const csv = [
+        headers,
+        ...rows
+      ].map(row =>
+        row.map(value =>
+          `"${String(value ?? "").replace(/"/g, '""')}"`
+        ).join(",")
+      ).join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "ZFSI-HRIS-Overtime.csv";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    onAuthStateChanged(auth, user => {
+      if (authHandled) return;
+      authHandled = true;
+
+      if (!user) {
+        location.replace("index.html");
+        return;
+      }
+
+      currentUser = user;
+
+      $("userEmail").textContent =
+        user.email || "Pengguna ZFSI-HRIS";
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        location.replace("index.html");
+      } catch (error) {
+        showMessage(
+          "Gagal logout: " + (error.message || error.code),
+          "error"
+        );
+      }
+    });
+
+    $("addButton").addEventListener("click", openAddModal);
+    $("exportButton").addEventListener("click", exportCSV);
+
+    $("refreshButton").addEventListener("click", () => {
+      overtimeRequests = [];
+      $("searchInput").value = "";
+      $("dateFilter").value = "";
+      $("statusFilter").value = "";
+
+      updateStatistics();
+      renderRequests();
+
+      showToast(
+        "Data sementara pada sesi ini telah dikosongkan.",
+        "info"
+      );
+    });
+
+    $("searchInput").addEventListener("input", renderRequests);
+    $("dateFilter").addEventListener("change", renderRequests);
+    $("statusFilter").addEventListener("change", renderRequests);
+
+    $("startTime").addEventListener("change", updateCalculatedHours);
+    $("endTime").addEventListener("change", updateCalculatedHours);
+    $("breakMinutes").addEventListener("input", updateCalculatedHours);
+
+    $("overtimeForm").addEventListener("submit", saveRequest);
+    $("closeModalButton").addEventListener("click", closeModal);
+    $("cancelButton").addEventListener("click", closeModal);
+
+    $("closeDecisionButton").addEventListener("click", closeDecisionModal);
+    $("cancelDecisionButton").addEventListener("click", closeDecisionModal);
+    $("confirmDecisionButton").addEventListener("click", confirmDecision);
+
+    $("overtimeTableBody").addEventListener("click", event => {
+      const editButton = event.target.closest("[data-edit]");
+      const approveButton = event.target.closest("[data-approve]");
+      const rejectButton = event.target.closest("[data-reject]");
+      const cancelButton = event.target.closest("[data-cancel]");
+      const viewButton = event.target.closest("[data-view]");
+
+      if (editButton) {
+        const item = overtimeRequests.find(
+          request => request.requestId === editButton.dataset.edit
+        );
+        if (item) openEditModal(item);
+      }
+
+      if (approveButton) {
+        openDecisionModal(approveButton.dataset.approve, "approved");
+      }
+
+      if (rejectButton) {
+        openDecisionModal(rejectButton.dataset.reject, "rejected");
+      }
+
+      if (cancelButton) {
+        cancelRequest(cancelButton.dataset.cancel);
+      }
+
+      if (viewButton) {
+        viewRequest(viewButton.dataset.view);
+      }
+    });
+
+    $("overtimeModal").addEventListener("click", event => {
+      if (event.target === $("overtimeModal")) closeModal();
+    });
+
+    $("decisionModal").addEventListener("click", event => {
+      if (event.target === $("decisionModal")) closeDecisionModal();
+    });
+
+    updateStatistics();
+    renderRequests();
+    $("requestDate").value = localDateString();
+  </script>
+
+</body>
+</html>
