@@ -32,7 +32,7 @@ body {
 }
 
 /* =========================
-   SIDEBAR
+   SIDEBAR - SAMA DENGAN DASHBOARD.HTML
 ========================= */
 
 .sidebar {
@@ -43,7 +43,6 @@ body {
   color: white;
   padding: 24px 15px;
   overflow-y: auto;
-  z-index: 100;
 }
 
 .brand {
@@ -92,7 +91,6 @@ body {
   margin-bottom: 4px;
   font-size: 13px;
   cursor: pointer;
-  transition: .2s;
 }
 
 .nav-link:hover,
@@ -103,18 +101,13 @@ body {
 
 .logout {
   width: 100%;
-  margin-top: 25px;
-  padding: 12px;
-  border: 1px solid #456078;
-  border-radius: 8px;
+  margin-top: 20px;
+  border: 1px solid #486078;
   background: transparent;
-  color: #e1eaf2;
-  font-size: 12px;
+  color: white;
+  padding: 11px;
+  border-radius: 8px;
   cursor: pointer;
-}
-
-.logout:hover {
-  background: #29465f;
 }
 
 /* =========================
@@ -124,7 +117,6 @@ body {
 .main {
   margin-left: 245px;
   padding: 25px;
-  min-height: 100vh;
 }
 
 .topbar {
@@ -661,6 +653,7 @@ body {
 }
 
 @media(max-width: 650px) {
+  /* Sidebar mobile mengikuti dashboard.html */
   .sidebar {
     width: 65px;
     padding: 15px 6px;
@@ -672,24 +665,13 @@ body {
 
   .brand h2,
   .brand small,
-  .nav-link span:last-child,
+  .nav-link span,
   .section-label {
     display: none;
   }
 
   .nav-link {
     justify-content: center;
-    padding: 12px 8px;
-  }
-
-  .logout {
-    font-size: 0;
-    padding: 10px 3px;
-  }
-
-  .logout:after {
-    content: "↪";
-    font-size: 19px;
   }
 
   .main {
@@ -697,6 +679,7 @@ body {
     padding: 15px;
   }
 
+  /* Pengaturan khusus halaman Settings */
   .topbar {
     align-items: flex-start;
   }
