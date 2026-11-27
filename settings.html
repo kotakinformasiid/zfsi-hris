@@ -32,7 +32,7 @@ body {
 }
 
 /* =========================
-   SIDEBAR - SAMA DENGAN DASHBOARD.HTML
+   SIDEBAR - DASHBOARD STANDARD
 ========================= */
 
 .sidebar {
@@ -98,6 +98,8 @@ body {
   background: #1e3c59;
   color: white;
 }
+
+/* TOMBOL LOGOUT - SAMA PERSIS DENGAN DASHBOARD */
 
 .logout {
   width: 100%;
@@ -653,7 +655,6 @@ body {
 }
 
 @media(max-width: 650px) {
-  /* Sidebar mobile mengikuti dashboard.html */
   .sidebar {
     width: 65px;
     padding: 15px 6px;
@@ -679,7 +680,6 @@ body {
     padding: 15px;
   }
 
-  /* Pengaturan khusus halaman Settings */
   .topbar {
     align-items: flex-start;
   }
@@ -735,15 +735,16 @@ body {
   .footer-actions .btn {
     flex: 1;
   }
+
+  /* PENTING:
+     Tidak ada aturan khusus untuk .logout di mobile.
+     Tombol Logout tetap mengikuti dashboard.html.
+  */
 }
 </style>
 </head>
 
 <body>
-
-<!-- =========================
-     SIDEBAR
-========================= -->
 
 <aside class="sidebar">
 
@@ -809,15 +810,12 @@ body {
     <span>⚙</span><span>Pengaturan</span>
   </a>
 
+  <!-- Tombol Logout sama dengan dashboard.html -->
   <button class="logout" id="logoutButton">
     Keluar / Logout
   </button>
 
 </aside>
-
-<!-- =========================
-     MAIN CONTENT
-========================= -->
 
 <main class="main">
 
@@ -838,8 +836,6 @@ body {
     </div>
   </div>
 
-  <!-- NOTICE -->
-
   <div class="notice">
     <div class="notice-icon">ⓘ</div>
     <div>
@@ -853,13 +849,9 @@ body {
     </div>
   </div>
 
-  <!-- SETTINGS FORM -->
-
   <form id="settingsForm" novalidate>
 
     <div class="settings-layout">
-
-      <!-- SETTINGS MENU -->
 
       <div class="settings-menu">
 
@@ -902,13 +894,9 @@ body {
 
       </div>
 
-      <!-- SETTINGS CONTENT -->
-
       <div class="settings-content">
 
-        <!-- =========================
-             TAB 1: COMPANY
-        ========================== -->
+        <!-- TAB COMPANY -->
 
         <section class="tab-panel active" id="tab-company">
 
@@ -1124,9 +1112,7 @@ body {
           </div>
         </section>
 
-        <!-- =========================
-             TAB 2: ATTENDANCE
-        ========================== -->
+        <!-- TAB ATTENDANCE -->
 
         <section class="tab-panel" id="tab-attendance">
 
@@ -1150,73 +1136,36 @@ body {
 
                 <div class="form-group">
                   <label for="workStart">Jam Masuk</label>
-                  <input
-                    type="time"
-                    id="workStart"
-                    name="workStart"
-                    value="08:00"
-                  >
+                  <input type="time" id="workStart" name="workStart" value="08:00">
                 </div>
 
                 <div class="form-group">
                   <label for="workEnd">Jam Pulang</label>
-                  <input
-                    type="time"
-                    id="workEnd"
-                    name="workEnd"
-                    value="17:00"
-                  >
+                  <input type="time" id="workEnd" name="workEnd" value="17:00">
                 </div>
 
                 <div class="form-group">
                   <label for="breakStart">Mulai Istirahat</label>
-                  <input
-                    type="time"
-                    id="breakStart"
-                    name="breakStart"
-                    value="12:00"
-                  >
+                  <input type="time" id="breakStart" name="breakStart" value="12:00">
                 </div>
 
                 <div class="form-group">
                   <label for="breakEnd">Selesai Istirahat</label>
-                  <input
-                    type="time"
-                    id="breakEnd"
-                    name="breakEnd"
-                    value="13:00"
-                  >
+                  <input type="time" id="breakEnd" name="breakEnd" value="13:00">
                 </div>
 
                 <div class="form-group">
                   <label for="gracePeriod">Toleransi Keterlambatan</label>
-                  <input
-                    type="number"
-                    id="gracePeriod"
-                    name="gracePeriod"
-                    value="10"
-                    min="0"
-                    max="180"
-                  >
-                  <div class="field-help">
-                    Dalam menit.
-                  </div>
+                  <input type="number" id="gracePeriod" name="gracePeriod"
+                    value="10" min="0" max="180">
+                  <div class="field-help">Dalam menit.</div>
                 </div>
 
                 <div class="form-group">
                   <label for="dailyWorkHours">Target Jam Kerja Harian</label>
-                  <input
-                    type="number"
-                    id="dailyWorkHours"
-                    name="dailyWorkHours"
-                    value="8"
-                    min="1"
-                    max="24"
-                    step="0.5"
-                  >
-                  <div class="field-help">
-                    Dalam jam kerja.
-                  </div>
+                  <input type="number" id="dailyWorkHours" name="dailyWorkHours"
+                    value="8" min="1" max="24" step="0.5">
+                  <div class="field-help">Dalam jam kerja.</div>
                 </div>
 
               </div>
@@ -1366,9 +1315,7 @@ body {
           </div>
         </section>
 
-        <!-- =========================
-             TAB 3: LEAVE
-        ========================== -->
+        <!-- TAB LEAVE -->
 
         <section class="tab-panel" id="tab-leave">
 
@@ -1392,25 +1339,15 @@ body {
 
                 <div class="form-group">
                   <label for="annualLeave">Kuota Cuti Tahunan</label>
-                  <input
-                    type="number"
-                    id="annualLeave"
-                    name="annualLeave"
-                    value="12"
-                    min="0"
-                    max="365"
-                  >
-                  <div class="field-help">
-                    Dalam hari per tahun.
-                  </div>
+                  <input type="number" id="annualLeave" name="annualLeave"
+                    value="12" min="0" max="365">
+                  <div class="field-help">Dalam hari per tahun.</div>
                 </div>
 
                 <div class="form-group">
                   <label for="leaveYearStart">Awal Periode Cuti</label>
                   <select id="leaveYearStart" name="leaveYearStart">
-                    <option value="calendar" selected>
-                      Januari - Desember
-                    </option>
+                    <option value="calendar" selected>Januari - Desember</option>
                     <option value="anniversary">
                       Berdasarkan tanggal masuk karyawan
                     </option>
@@ -1419,32 +1356,16 @@ body {
 
                 <div class="form-group">
                   <label for="leaveCarryForward">Maksimum Cuti Dibawa</label>
-                  <input
-                    type="number"
-                    id="leaveCarryForward"
-                    name="leaveCarryForward"
-                    value="0"
-                    min="0"
-                    max="365"
-                  >
-                  <div class="field-help">
-                    Dalam hari.
-                  </div>
+                  <input type="number" id="leaveCarryForward"
+                    name="leaveCarryForward" value="0" min="0" max="365">
+                  <div class="field-help">Dalam hari.</div>
                 </div>
 
                 <div class="form-group">
                   <label for="leaveNotice">Minimal Pengajuan Sebelumnya</label>
-                  <input
-                    type="number"
-                    id="leaveNotice"
-                    name="leaveNotice"
-                    value="3"
-                    min="0"
-                    max="365"
-                  >
-                  <div class="field-help">
-                    Dalam hari kalender.
-                  </div>
+                  <input type="number" id="leaveNotice" name="leaveNotice"
+                    value="3" min="0" max="365">
+                  <div class="field-help">Dalam hari kalender.</div>
                 </div>
 
               </div>
@@ -1465,16 +1386,10 @@ body {
                 <div class="switch-item">
                   <div class="switch-info">
                     <strong>Persetujuan Atasan Langsung</strong>
-                    <small>
-                      Permohonan perlu diperiksa oleh atasan langsung.
-                    </small>
+                    <small>Permohonan perlu diperiksa oleh atasan langsung.</small>
                   </div>
                   <label class="switch">
-                    <input
-                      type="checkbox"
-                      name="leaveSupervisorApproval"
-                      checked
-                    >
+                    <input type="checkbox" name="leaveSupervisorApproval" checked>
                     <span class="switch-slider"></span>
                   </label>
                 </div>
@@ -1482,16 +1397,10 @@ body {
                 <div class="switch-item">
                   <div class="switch-info">
                     <strong>Persetujuan HR</strong>
-                    <small>
-                      Permohonan perlu diverifikasi oleh HR.
-                    </small>
+                    <small>Permohonan perlu diverifikasi oleh HR.</small>
                   </div>
                   <label class="switch">
-                    <input
-                      type="checkbox"
-                      name="leaveHrApproval"
-                      checked
-                    >
+                    <input type="checkbox" name="leaveHrApproval" checked>
                     <span class="switch-slider"></span>
                   </label>
                 </div>
@@ -1504,11 +1413,7 @@ body {
                     </small>
                   </div>
                   <label class="switch">
-                    <input
-                      type="checkbox"
-                      name="leaveCancellation"
-                      checked
-                    >
+                    <input type="checkbox" name="leaveCancellation" checked>
                     <span class="switch-slider"></span>
                   </label>
                 </div>
@@ -1527,9 +1432,7 @@ body {
           </div>
         </section>
 
-        <!-- =========================
-             TAB 4: PAYROLL
-        ========================== -->
+        <!-- TAB PAYROLL -->
 
         <section class="tab-panel" id="tab-payroll">
 
@@ -1562,14 +1465,8 @@ body {
 
                 <div class="form-group">
                   <label for="paymentDate">Tanggal Pembayaran</label>
-                  <input
-                    type="number"
-                    id="paymentDate"
-                    name="paymentDate"
-                    value="25"
-                    min="1"
-                    max="31"
-                  >
+                  <input type="number" id="paymentDate" name="paymentDate"
+                    value="25" min="1" max="31">
                   <div class="field-help">
                     Tanggal pembayaran gaji untuk periode bulanan.
                   </div>
@@ -1707,9 +1604,7 @@ body {
           </div>
         </section>
 
-        <!-- =========================
-             TAB 5: SYSTEM
-        ========================== -->
+        <!-- TAB SYSTEM -->
 
         <section class="tab-panel" id="tab-system">
 
@@ -1734,16 +1629,10 @@ body {
                 <div class="switch-item">
                   <div class="switch-info">
                     <strong>Notifikasi Pengajuan Cuti</strong>
-                    <small>
-                      Pemberitahuan ketika ada permohonan cuti baru.
-                    </small>
+                    <small>Pemberitahuan ketika ada permohonan cuti baru.</small>
                   </div>
                   <label class="switch">
-                    <input
-                      type="checkbox"
-                      name="notifyLeave"
-                      checked
-                    >
+                    <input type="checkbox" name="notifyLeave" checked>
                     <span class="switch-slider"></span>
                   </label>
                 </div>
@@ -1751,16 +1640,10 @@ body {
                 <div class="switch-item">
                   <div class="switch-info">
                     <strong>Notifikasi Lembur</strong>
-                    <small>
-                      Pemberitahuan permohonan dan persetujuan lembur.
-                    </small>
+                    <small>Pemberitahuan permohonan dan persetujuan lembur.</small>
                   </div>
                   <label class="switch">
-                    <input
-                      type="checkbox"
-                      name="notifyOvertime"
-                      checked
-                    >
+                    <input type="checkbox" name="notifyOvertime" checked>
                     <span class="switch-slider"></span>
                   </label>
                 </div>
@@ -1768,16 +1651,10 @@ body {
                 <div class="switch-item">
                   <div class="switch-info">
                     <strong>Notifikasi Payroll</strong>
-                    <small>
-                      Pemberitahuan proses dan status penggajian.
-                    </small>
+                    <small>Pemberitahuan proses dan status penggajian.</small>
                   </div>
                   <label class="switch">
-                    <input
-                      type="checkbox"
-                      name="notifyPayroll"
-                      checked
-                    >
+                    <input type="checkbox" name="notifyPayroll" checked>
                     <span class="switch-slider"></span>
                   </label>
                 </div>
@@ -1785,16 +1662,10 @@ body {
                 <div class="switch-item">
                   <div class="switch-info">
                     <strong>Notifikasi Pengumuman</strong>
-                    <small>
-                      Pemberitahuan ketika terdapat pengumuman baru.
-                    </small>
+                    <small>Pemberitahuan ketika terdapat pengumuman baru.</small>
                   </div>
                   <label class="switch">
-                    <input
-                      type="checkbox"
-                      name="notifyAnnouncement"
-                      checked
-                    >
+                    <input type="checkbox" name="notifyAnnouncement" checked>
                     <span class="switch-slider"></span>
                   </label>
                 </div>
@@ -1902,9 +1773,7 @@ body {
                   <div class="quick-link-icon">◴</div>
                   <div>
                     <strong>Audit Log</strong>
-                    <small>
-                      Lihat riwayat aktivitas pengguna dan sistem.
-                    </small>
+                    <small>Lihat riwayat aktivitas pengguna dan sistem.</small>
                   </div>
                 </a>
 
@@ -1912,9 +1781,7 @@ body {
                   <div class="quick-link-icon">♙</div>
                   <div>
                     <strong>User Management</strong>
-                    <small>
-                      Lihat pengelolaan akun dan hak akses pengguna.
-                    </small>
+                    <small>Lihat pengelolaan akun dan hak akses pengguna.</small>
                   </div>
                 </a>
 
@@ -1961,10 +1828,6 @@ body {
 
 <div class="toast" id="toast"></div>
 
-<!-- =========================
-     FIREBASE AUTHENTICATION
-========================= -->
-
 <script type="module">
 
 import {
@@ -1979,8 +1842,6 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-/* Firebase Configuration */
-
 const firebaseConfig = {
   apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
   authDomain: "zfsi-hris.firebaseapp.com",
@@ -1989,8 +1850,6 @@ const firebaseConfig = {
   messagingSenderId: "642441161494",
   appId: "1:642441161494:web:23ecd4832f89eac5893e37"
 };
-
-/* Initialize Firebase */
 
 const app = getApps().length
   ? getApp()
@@ -2037,9 +1896,7 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
 
 });
 
-/* =========================
-   TOAST NOTIFICATION
-========================= */
+/* TOAST NOTIFICATION */
 
 let toastTimer;
 
@@ -2058,9 +1915,7 @@ function showToast(message) {
 
 }
 
-/* =========================
-   SETTINGS TAB NAVIGATION
-========================= */
+/* SETTINGS TAB NAVIGATION */
 
 const tabButtons = document.querySelectorAll(".settings-tab");
 const tabPanels = document.querySelectorAll(".tab-panel");
@@ -2091,20 +1946,13 @@ tabButtons.forEach(button => {
 
 });
 
-/* =========================
-   VALIDATION & SIMULATED SAVE
-========================= */
+/* VALIDATION & SIMULATED SAVE */
 
 const settingsForm = document.getElementById("settingsForm");
 
 settingsForm.addEventListener("submit", (event) => {
 
   event.preventDefault();
-
-  /*
-    Validasi hanya bagian tab yang sedang dibuka.
-    Penyimpanan permanen belum diaktifkan.
-  */
 
   const activePanel = document.querySelector(".tab-panel.active");
 
@@ -2130,20 +1978,13 @@ settingsForm.addEventListener("submit", (event) => {
 
   }
 
-  /*
-    Tidak ada penulisan ke Firestore atau localStorage.
-    Hanya memberikan informasi bahwa formulir telah diperiksa.
-  */
-
   showToast(
     "Pemeriksaan berhasil. Pengaturan belum disimpan permanen ke Firebase."
   );
 
 });
 
-/* =========================
-   RESET TO DEFAULT
-========================= */
+/* RESET TO DEFAULT */
 
 document.getElementById("resetButton").addEventListener("click", () => {
 
