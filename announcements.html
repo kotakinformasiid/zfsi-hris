@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pengumuman | ZFSI-HRIS</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #10243b;
+      --blue: #2879c7;
+      --bg: #f4f7fb;
+      --border: #e5eaf0;
+      --muted: #8290a2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #243449;
+    }
+
+    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    .sidebar {
+      width: 245px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--navy);
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 8px 30px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .brand small {
+      font-size: 9px;
+      color: #afc2d5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      color: #8199b0;
+      padding: 13px 10px 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #cbd7e3;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1e3c59;
+      color: white;
+    }
+
+    .main {
+      margin-left: 245px;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 7px 0 0;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e8f6ef;
+      color: #16865b;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #486078;
+      background: transparent;
+      color: white;
+      padding: 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* KOMPONEN HALAMAN */
+    .notice {
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+      padding: 15px 17px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 19px;
+      border-radius: 12px;
+      min-width: 0;
+    }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .number {
+      font-size: 27px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 17px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid var(--border);
+    }
+
+    .button-success {
+      background: #e8f6ef;
+      color: #16865b;
+      border: 1px solid #c9e9d8;
+    }
+
+    .button-danger {
+      background: #fff0f0;
+      color: #a83232;
+      border: 1px solid #f0cccc;
+    }
+
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    input, select, textarea {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #243449;
+    }
+
+    .filter-input,
+    .filter-select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      min-width: 155px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #65758a;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .announcement-title {
+      font-weight: bold;
+      max-width: 280px;
+      line-height: 1.5;
+    }
+
+    .subtext {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .badge-draft {
+      background: #eef0f3;
+      color: #65758a;
+    }
+
+    .badge-published {
+      background: #e8f6ef;
+      color: #16865b;
+    }
+
+    .badge-archived {
+      background: #eaf3fc;
+      color: #2879c7;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 7px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #2879c7;
+    }
+
+    .action-button.publish {
+      color: #16865b;
+    }
+
+    .action-button.archive {
+      color: #9a6b11;
+    }
+
+    .empty {
+      padding: 38px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #a83232;
+      background: #fff0f0;
+      border: 1px solid #f0cccc;
+    }
+
+    .message.success {
+      display: block;
+      color: #176b4b;
+      background: #eaf8f1;
+      border: 1px solid #cdebdc;
+    }
+
+    .message.info {
+      display: block;
+      color: #225a8d;
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+    }
+
+    /* MODAL FORM DAN PREVIEW */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #10243b99;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 720px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px #0003;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .close-button {
+      border: 0;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .form-body {
+      padding: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      min-width: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #536579;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #dce3eb;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .form-group textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .form-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .readonly {
+      background: #f4f7fb !important;
+      color: #66788a !important;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 15px 22px;
+      border-top: 1px solid var(--border);
+      position: sticky;
+      bottom: 0;
+      background: white;
+    }
+
+    .preview-content {
+      padding: 24px;
+    }
+
+    .announcement-preview {
+      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: 10px;
+      background: white;
+    }
+
+    .preview-category {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      color: #2879c7;
+      background: #eaf3fc;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .announcement-preview h2 {
+      margin: 16px 0 10px;
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .preview-meta {
+      font-size: 11px;
+      color: var(--muted);
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.8;
+    }
+
+    .preview-body {
+      font-size: 13px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin-top: 20px;
+    }
+
+    #toast {
+      position: fixed;
+      right: 20px;
+      bottom: 15px;
+      z-index: 80;
+      max-width: 380px;
+      margin: 0;
+    }
+
+    @media(max-width: 1000px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media(max-width: 650px) {
+      .sidebar { width: 65px; padding: 15px 6px; }
+      .brand { padding: 0 5px 25px; }
+      .brand h2, .brand small,
+      .nav-link span, .section-label { display: none; }
+      .nav-link { justify-content: center; }
+      .main { margin-left: 65px; padding: 15px; }
+      .stats { gap: 9px; }
+      .card { padding: 13px; }
+      .number { font-size: 21px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: auto; }
+      .toolbar, .toolbar-group { width: 100%; }
+      .toolbar .button { flex: 1; }
+      .filters { width: 100%; }
+      .filters > * { width: 100%; }
+      .announcement-preview { padding: 16px; }
+      .announcement-preview h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR - STRUKTUR DAN TAMPILAN MENGIKUTI DASHBOARD.HTML -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div>
+        <h2>ZFSI-HRIS</h2>
+        <small>HUMAN RESOURCE SYSTEM</small>
+      </div>
+    </div>
+
+    <div class="section-label">MAIN MENU</div>
+
+    <a class="nav-link" href="dashboard.html">
+      <span>▦</span><span>Dashboard</span>
+    </a>
+
+    <a class="nav-link" href="employees.html">
+      <span>♙</span><span>Data Karyawan</span>
+    </a>
+
+    <a class="nav-link" href="attendance.html">
+      <span>◷</span><span>Absensi</span>
+    </a>
+
+    <a class="nav-link" href="leave.html">
+      <span>▣</span><span>Cuti & Izin</span>
+    </a>
+
+    <a class="nav-link" href="overtime.html">
+      <span>◴</span><span>Lembur</span>
+    </a>
+
+    <div class="section-label">COMPENSATION</div>
+
+    <a class="nav-link" href="payroll.html">
+      <span>＄</span><span>Payroll</span>
+    </a>
+
+    <a class="nav-link" href="payslip.html">
+      <span>▤</span><span>Slip Gaji</span>
+    </a>
+
+    <div class="section-label">MANAGEMENT</div>
+
+    <a class="nav-link active" href="announcements.html">
+      <span>♧</span><span>Pengumuman</span>
+    </a>
+
+    <a class="nav-link" href="reports.html">
+      <span>▥</span><span>Laporan</span>
+    </a>
+
+    <a class="nav-link" href="users.html">
+      <span>♙</span><span>User Management</span>
+    </a>
+
+    <a class="nav-link" href="audit-log.html">
+      <span>◴</span><span>Audit Log</span>
+    </a>
+
+    <a class="nav-link" href="settings.html">
+      <span>⚙</span><span>Pengaturan</span>
+    </a>
+
+    <button class="logout" id="logoutButton">
+      Keluar / Logout
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1>Pengumuman Perusahaan</h1>
+        <p>Penyampaian informasi dan kebijakan kepada karyawan ZFSI.</p>
+      </div>
+
+      <div class="profile">
+        <strong id="userEmail">Memeriksa akun...</strong>
+        <div class="status">Terautentikasi</div>
+      </div>
+    </header>
+
+    <div id="pageMessage" class="message"></div>
+
+    <div class="notice">
+      <strong>Modul Pengumuman — Tahap Penyusunan Halaman</strong><br>
+      Data pengumuman saat ini hanya tersimpan sementara di browser dan akan
+      hilang saat halaman dimuat ulang. Publikasi belum mengirim notifikasi
+      kepada karyawan. Pengaturan target penerima dan distribusi pengumuman
+      akan diaktifkan pada tahap integrasi database.
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="card-label">Total Pengumuman</div>
+        <div class="number" id="totalAnnouncements">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Draft</div>
+        <div class="number" id="draftAnnouncements">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Published</div>
+        <div class="number" id="publishedAnnouncements">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Archived</div>
+        <div class="number" id="archivedAnnouncements">0</div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="button button-primary" id="addButton">
+          + Buat Pengumuman
+        </button>
+
+        <button class="button button-secondary" id="exportButton">
+          Export CSV
+        </button>
+      </div>
+
+      <div class="toolbar-group">
+        <button class="button button-secondary" id="resetButton">
+          ↻ Reset Tampilan
+        </button>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Daftar Pengumuman</h3>
+
+        <div class="filters">
+          <input
+            type="search"
+            class="filter-input"
+            id="searchInput"
+            placeholder="Cari judul / isi pengumuman..."
+          >
+
+          <select class="filter-select" id="categoryFilter">
+            <option value="">Semua Kategori</option>
+            <option value="General">General</option>
+            <option value="HR">HR</option>
+            <option value="Policy">Policy</option>
+            <option value="Holiday">Holiday</option>
+            <option value="Payroll">Payroll</option>
+            <option value="Safety">Safety</option>
+            <option value="Event">Event</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <select class="filter-select" id="statusFilter">
+            <option value="">Semua Status</option>
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Announcement ID</th>
+              <th>Judul Pengumuman</th>
+              <th>Kategori</th>
+              <th>Target Penerima</th>
+              <th>Periode Publikasi</th>
+              <th>Dibuat Oleh</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="announcementTableBody">
+            <tr>
+              <td colspan="8">
+                <div class="empty">
+                  Belum ada pengumuman pada sesi ini.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- FORM TAMBAH / EDIT PENGUMUMAN -->
+  <div class="modal" id="announcementModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modalTitle">Buat Pengumuman</h2>
+        <button class="close-button" id="closeModalButton" type="button">×</button>
+      </div>
+
+      <form id="announcementForm">
+        <div class="form-body">
+          <div class="form-grid">
+
+            <div class="form-group full">
+              <label>Judul Pengumuman *</label>
+              <input
+                type="text"
+                id="title"
+                maxlength="180"
+                required
+                placeholder="Masukkan judul pengumuman"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Kategori *</label>
+              <select id="category" required>
+                <option value="General">General</option>
+                <option value="HR">HR</option>
+                <option value="Policy">Policy</option>
+                <option value="Holiday">Holiday</option>
+                <option value="Payroll">Payroll</option>
+                <option value="Safety">Safety</option>
+                <option value="Event">Event</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Target Penerima *</label>
+              <select id="targetAudience" required>
+                <option value="all">Seluruh Karyawan</option>
+                <option value="department">Departemen Tertentu</option>
+                <option value="management">Management</option>
+                <option value="hr">HR / Human Resources</option>
+              </select>
+            </div>
+
+            <div class="form-group full" id="departmentTargetGroup" style="display:none">
+              <label>Department ID / Nama Departemen *</label>
+              <input
+                type="text"
+                id="targetDepartment"
+                maxlength="100"
+                placeholder="Contoh: ZFSI_FIN atau Finance Accounting & Tax"
+              >
+              <div class="form-help">
+                Pada tahap integrasi, pilihan departemen akan diambil dari
+                Master Data Departemen.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Tanggal Mulai Publikasi *</label>
+              <input type="date" id="startDate" required>
+            </div>
+
+            <div class="form-group">
+              <label>Tanggal Berakhir Publikasi</label>
+              <input type="date" id="endDate">
+              <div class="form-help">
+                Kosongkan jika pengumuman tidak memiliki tanggal berakhir.
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label>Isi Pengumuman *</label>
+              <textarea
+                id="content"
+                required
+                maxlength="10000"
+                placeholder="Tuliskan isi pengumuman secara lengkap..."
+              ></textarea>
+            </div>
+
+            <div class="form-group full">
+              <label>Catatan Internal</label>
+              <textarea
+                id="internalNotes"
+                maxlength="1000"
+                placeholder="Catatan untuk pembuat atau administrator (tidak ditujukan kepada karyawan)..."
+                style="min-height:75px"
+              ></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="button button-secondary" type="button" id="cancelButton">
+            Batal
+          </button>
+
+          <button class="button button-primary" type="submit" id="saveButton">
+            Simpan sebagai Draft
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PREVIEW PENGUMUMAN -->
+  <div class="modal" id="previewModal">
+    <div class="modal-box" style="max-width:650px">
+      <div class="modal-header">
+        <h2>Pratinjau Pengumuman</h2>
+        <button class="close-button" id="closePreviewButton" type="button">×</button>
+      </div>
+
+      <div class="preview-content">
+        <article class="announcement-preview">
+          <span class="preview-category" id="previewCategory">General</span>
+          <h2 id="previewTitle">Judul Pengumuman</h2>
+          <div class="preview-meta" id="previewMeta"></div>
+          <div class="preview-body" id="previewBody"></div>
+        </article>
+      </div>
+
+      <div class="modal-footer">
+        <button class="button button-secondary" type="button" id="closePreviewFooter">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="message"></div>
+
+  <script type="module">
+    import {
+      initializeApp,
+      getApps,
+      getApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+      authDomain: "zfsi-hris.firebaseapp.com",
+      projectId: "zfsi-hris",
+      storageBucket: "zfsi-hris.firebasestorage.app",
+      messagingSenderId: "642441161494",
+      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let authHandled = false;
+    let announcements = [];
+    let editingId = null;
+
+    const $ = id => document.getElementById(id);
+
+    function localDateString() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function formatDate(value) {
+      if (!value) return "Tidak ditentukan";
+      const parts = value.split("-");
+      if (parts.length !== 3) return value;
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    function showMessage(text, type = "info") {
+      const element = $("pageMessage");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+    }
+
+    function showToast(text, type = "success") {
+      const element = $("toast");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+
+      window.setTimeout(() => {
+        element.style.display = "none";
+      }, 3500);
+    }
+
+    function statusText(status) {
+      const labels = {
+        draft: "Draft",
+        published: "Published",
+        archived: "Archived"
+      };
+
+      return labels[status] || status || "—";
+    }
+
+    function statusBadge(status) {
+      const allowed = ["draft", "published", "archived"];
+      const safeStatus = allowed.includes(status) ? status : "draft";
+
+      return `
+        <span class="badge badge-${safeStatus}">
+          ${escapeHTML(statusText(safeStatus))}
+        </span>
+      `;
+    }
+
+    function targetText(item) {
+      if (item.targetAudience === "all") return "Seluruh Karyawan";
+      if (item.targetAudience === "management") return "Management";
+      if (item.targetAudience === "hr") return "HR / Human Resources";
+
+      if (item.targetAudience === "department") {
+        return "Departemen: " + (item.targetDepartment || "Belum ditentukan");
+      }
+
+      return item.targetAudience || "—";
+    }
+
+    function updateStatistics() {
+      $("totalAnnouncements").textContent = announcements.length;
+
+      $("draftAnnouncements").textContent =
+        announcements.filter(item => item.status === "draft").length;
+
+      $("publishedAnnouncements").textContent =
+        announcements.filter(item => item.status === "published").length;
+
+      $("archivedAnnouncements").textContent =
+        announcements.filter(item => item.status === "archived").length;
+    }
+
+    function filteredAnnouncements() {
+      const search = $("searchInput").value.trim().toLowerCase();
+      const category = $("categoryFilter").value;
+      const status = $("statusFilter").value;
+
+      return announcements.filter(item => {
+        const searchable = [
+          item.announcementId,
+          item.title,
+          item.content,
+          item.category,
+          item.targetDepartment
+        ].join(" ").toLowerCase();
+
+        return (!search || searchable.includes(search)) &&
+          (!category || item.category === category) &&
+          (!status || item.status === status);
+      });
+    }
+
+    function renderAnnouncements() {
+      const filtered = filteredAnnouncements();
+      const tbody = $("announcementTableBody");
+
+      if (!filtered.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div class="empty">
+                Tidak ada pengumuman yang sesuai dengan filter.
+              </div>
+            </td>
+          </tr>`;
+
+        updateStatistics();
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => {
+        let actions = `
+          <button class="action-button" type="button"
+            data-preview="${escapeHTML(item.announcementId)}">Lihat</button>
+        `;
+
+        if (item.status === "draft") {
+          actions += `
+            <button class="action-button" type="button"
+              data-edit="${escapeHTML(item.announcementId)}">Edit</button>
+            <button class="action-button publish" type="button"
+              data-publish="${escapeHTML(item.announcementId)}">Publish</button>
+          `;
+        } else if (item.status === "published") {
+          actions += `
+            <button class="action-button archive" type="button"
+              data-archive="${escapeHTML(item.announcementId)}">Archive</button>
+          `;
+        } else if (item.status === "archived") {
+          actions += `
+            <button class="action-button" type="button"
+              data-restore="${escapeHTML(item.announcementId)}">Kembalikan ke Draft</button>
+          `;
+        }
+
+        const period = item.endDate
+          ? `${formatDate(item.startDate)} s/d ${formatDate(item.endDate)}`
+          : `${formatDate(item.startDate)} s/d Tanpa batas akhir`;
+
+        return `
+          <tr>
+            <td><strong>${escapeHTML(item.announcementId)}</strong></td>
+            <td>
+              <div class="announcement-title">${escapeHTML(item.title)}</div>
+              <div class="subtext">${escapeHTML(item.content.slice(0, 75))}${item.content.length > 75 ? "..." : ""}</div>
+            </td>
+            <td>${escapeHTML(item.category)}</td>
+            <td>${escapeHTML(targetText(item))}</td>
+            <td>${escapeHTML(period)}</td>
+            <td>${escapeHTML(item.createdByEmail || "—")}</td>
+            <td>${statusBadge(item.status)}</td>
+            <td>
+              <div class="action-group">${actions}</div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      updateStatistics();
+    }
+
+    function toggleDepartmentField() {
+      const isDepartment = $("targetAudience").value === "department";
+
+      $("departmentTargetGroup").style.display =
+        isDepartment ? "block" : "none";
+
+      $("targetDepartment").required = isDepartment;
+
+      if (!isDepartment) {
+        $("targetDepartment").value = "";
+      }
+    }
+
+    function resetForm() {
+      $("announcementForm").reset();
+
+      $("category").value = "General";
+      $("targetAudience").value = "all";
+      $("startDate").value = localDateString();
+      $("endDate").value = "";
+      $("internalNotes").value = "";
+
+      toggleDepartmentField();
+    }
+
+    function openAddModal() {
+      editingId = null;
+      resetForm();
+
+      $("modalTitle").textContent = "Buat Pengumuman";
+      $("saveButton").textContent = "Simpan sebagai Draft";
+
+      $("announcementModal").classList.add("show");
+    }
+
+    function openEditModal(item) {
+      if (item.status !== "draft") {
+        showToast(
+          "Untuk mengubah pengumuman yang sudah dipublikasikan, arsipkan terlebih dahulu.",
+          "error"
+        );
+        return;
+      }
+
+      editingId = item.announcementId;
+
+      $("modalTitle").textContent = "Edit Pengumuman";
+      $("title").value = item.title || "";
+      $("category").value = item.category || "General";
+      $("targetAudience").value = item.targetAudience || "all";
+      $("targetDepartment").value = item.targetDepartment || "";
+      $("startDate").value = item.startDate || "";
+      $("endDate").value = item.endDate || "";
+      $("content").value = item.content || "";
+      $("internalNotes").value = item.internalNotes || "";
+
+      toggleDepartmentField();
+
+      $("announcementModal").classList.add("show");
+    }
+
+    function closeModal() {
+      $("announcementModal").classList.remove("show");
+      editingId = null;
+    }
+
+    function saveAnnouncement(event) {
+      event.preventDefault();
+
+      const button = $("saveButton");
+      button.disabled = true;
+      button.textContent = "Menyimpan...";
+
+      try {
+        const data = {
+          title: $("title").value.trim(),
+          category: $("category").value,
+          targetAudience: $("targetAudience").value,
+          targetDepartment: $("targetDepartment").value.trim(),
+          startDate: $("startDate").value,
+          endDate: $("endDate").value,
+          content: $("content").value.trim(),
+          internalNotes: $("internalNotes").value.trim(),
+          updatedAt: new Date().toISOString(),
+          updatedBy: currentUser?.uid || ""
+        };
+
+        if (
+          !data.title ||
+          !data.category ||
+          !data.targetAudience ||
+          !data.startDate ||
+          !data.content
+        ) {
+          throw new Error("Lengkapi semua kolom wajib.");
+        }
+
+        if (
+          data.targetAudience === "department" &&
+          !data.targetDepartment
+        ) {
+          throw new Error("Isi Department ID atau nama departemen penerima.");
+        }
+
+        if (
+          data.endDate &&
+          data.endDate < data.startDate
+        ) {
+          throw new Error("Tanggal akhir publikasi tidak boleh lebih awal dari tanggal mulai.");
+        }
+
+        if (editingId) {
+          const oldItem = announcements.find(
+            item => item.announcementId === editingId
+          );
+
+          if (!oldItem || oldItem.status !== "draft") {
+            throw new Error("Pengumuman tidak dapat diedit dalam status saat ini.");
+          }
+
+          announcements = announcements.map(item =>
+            item.announcementId === editingId
+              ? { ...item, ...data }
+              : item
+          );
+
+          showToast("Pengumuman berhasil diperbarui pada sesi ini.");
+        } else {
+          const announcementId =
+            "ANN-TEMP-" + Date.now().toString().slice(-8);
+
+          announcements.push({
+            ...data,
+            announcementId,
+            status: "draft",
+            createdAt: new Date().toISOString(),
+            createdBy: currentUser?.uid || "",
+            createdByEmail: currentUser?.email || ""
+          });
+
+          showToast("Pengumuman disimpan sebagai Draft pada sesi ini.");
+        }
+
+        closeModal();
+        renderAnnouncements();
+
+      } catch (error) {
+        showToast(error.message || "Gagal menyimpan pengumuman.", "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = editingId
+          ? "Simpan Perubahan"
+          : "Simpan sebagai Draft";
+      }
+    }
+
+    function publishAnnouncement(id) {
+      const item = announcements.find(
+        announcement => announcement.announcementId === id
+      );
+
+      if (!item || item.status !== "draft") {
+        showToast("Hanya pengumuman Draft yang dapat dipublikasikan.", "error");
+        return;
+      }
+
+      if (item.startDate > localDateString()) {
+        const confirmed = window.confirm(
+          "Tanggal mulai publikasi masih di masa depan. Pengumuman akan berstatus Published, tetapi belum waktunya ditampilkan kepada penerima. Lanjutkan?"
+        );
+
+        if (!confirmed) return;
+      } else {
+        const confirmed = window.confirm(
+          "Publikasikan pengumuman ini? Pada tahap ini publikasi hanya mengubah status sementara di browser."
+        );
+
+        if (!confirmed) return;
+      }
+
+      item.status = "published";
+      item.publishedAt = new Date().toISOString();
+      item.publishedBy = currentUser?.uid || "";
+
+      showToast("Status pengumuman menjadi Published pada sesi ini.");
+      renderAnnouncements();
+    }
+
+    function archiveAnnouncement(id) {
+      const item = announcements.find(
+        announcement => announcement.announcementId === id
+      );
+
+      if (!item || item.status !== "published") {
+        showToast("Hanya pengumuman Published yang dapat diarsipkan.", "error");
+        return;
+      }
+
+      if (!window.confirm("Arsipkan pengumuman ini?")) return;
+
+      item.status = "archived";
+      item.archivedAt = new Date().toISOString();
+      item.archivedBy = currentUser?.uid || "";
+
+      showToast("Pengumuman diarsipkan pada sesi ini.");
+      renderAnnouncements();
+    }
+
+    function restoreAnnouncement(id) {
+      const item = announcements.find(
+        announcement => announcement.announcementId === id
+      );
+
+      if (!item || item.status !== "archived") return;
+
+      if (!window.confirm("Kembalikan pengumuman ini menjadi Draft?")) return;
+
+      item.status = "draft";
+      item.restoredAt = new Date().toISOString();
+
+      showToast("Pengumuman dikembalikan ke Draft pada sesi ini.");
+      renderAnnouncements();
+    }
+
+    function previewAnnouncement(id) {
+      const item = announcements.find(
+        announcement => announcement.announcementId === id
+      );
+
+      if (!item) return;
+
+      $("previewCategory").textContent = item.category;
+      $("previewTitle").textContent = item.title;
+      $("previewBody").textContent = item.content;
+
+      $("previewMeta").textContent = [
+        "ID: " + item.announcementId,
+        "Target: " + targetText(item),
+        "Publikasi: " + formatDate(item.startDate) +
+          (item.endDate ? " s/d " + formatDate(item.endDate) : ""),
+        "Dibuat oleh: " + (item.createdByEmail || "—"),
+        "Status: " + statusText(item.status)
+      ].join(" | ");
+
+      $("previewModal").classList.add("show");
+    }
+
+    function closePreview() {
+      $("previewModal").classList.remove("show");
+    }
+
+    function exportCSV() {
+      const records = filteredAnnouncements();
+
+      if (!records.length) {
+        showToast("Tidak ada pengumuman untuk diekspor.", "info");
+        return;
+      }
+
+      const headers = [
+        "Announcement ID",
+        "Judul",
+        "Kategori",
+        "Target Penerima",
+        "Department ID / Nama",
+        "Tanggal Mulai",
+        "Tanggal Akhir",
+        "Isi Pengumuman",
+        "Catatan Internal",
+        "Status",
+        "Dibuat Oleh",
+        "Tanggal Dibuat"
+      ];
+
+      const rows = records.map(item => [
+        item.announcementId,
+        item.title,
+        item.category,
+        targetText(item),
+        item.targetDepartment,
+        item.startDate,
+        item.endDate,
+        item.content,
+        item.internalNotes,
+        statusText(item.status),
+        item.createdByEmail,
+        item.createdAt
+      ]);
+
+      const csv = [
+        headers,
+        ...rows
+      ].map(row =>
+        row.map(value =>
+          `"${String(value ?? "").replace(/"/g, '""')}"`
+        ).join(",")
+      ).join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "ZFSI-HRIS-Announcements.csv";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    function resetTemporaryData() {
+      if (!window.confirm(
+        "Reset akan menghapus seluruh pengumuman sementara pada halaman ini. Lanjutkan?"
+      )) return;
+
+      announcements = [];
+      $("searchInput").value = "";
+      $("categoryFilter").value = "";
+      $("statusFilter").value = "";
+
+      renderAnnouncements();
+
+      showToast("Pengumuman sementara telah dikosongkan.", "info");
+    }
+
+    onAuthStateChanged(auth, user => {
+      if (authHandled) return;
+      authHandled = true;
+
+      if (!user) {
+        location.replace("index.html");
+        return;
+      }
+
+      currentUser = user;
+
+      $("userEmail").textContent =
+        user.email || "Pengguna ZFSI-HRIS";
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        location.replace("index.html");
+      } catch (error) {
+        showMessage(
+          "Gagal logout: " + (error.message || error.code),
+          "error"
+        );
+      }
+    });
+
+    $("addButton").addEventListener("click", openAddModal);
+    $("exportButton").addEventListener("click", exportCSV);
+    $("resetButton").addEventListener("click", resetTemporaryData);
+
+    $("searchInput").addEventListener("input", renderAnnouncements);
+    $("categoryFilter").addEventListener("change", renderAnnouncements);
+    $("statusFilter").addEventListener("change", renderAnnouncements);
+
+    $("targetAudience").addEventListener("change", toggleDepartmentField);
+
+    $("announcementForm").addEventListener("submit", saveAnnouncement);
+
+    $("closeModalButton").addEventListener("click", closeModal);
+    $("cancelButton").addEventListener("click", closeModal);
+
+    $("closePreviewButton").addEventListener("click", closePreview);
+    $("closePreviewFooter").addEventListener("click", closePreview);
+
+    $("announcementTableBody").addEventListener("click", event => {
+      const editButton = event.target.closest("[data-edit]");
+      const publishButton = event.target.closest("[data-publish]");
+      const archiveButton = event.target.closest("[data-archive]");
+      const restoreButton = event.target.closest("[data-restore]");
+      const previewButton = event.target.closest("[data-preview]");
+
+      if (editButton) {
+        const item = announcements.find(
+          announcement => announcement.announcementId === editButton.dataset.edit
+        );
+        if (item) openEditModal(item);
+      }
+
+      if (publishButton) {
+        publishAnnouncement(publishButton.dataset.publish);
+      }
+
+      if (archiveButton) {
+        archiveAnnouncement(archiveButton.dataset.archive);
+      }
+
+      if (restoreButton) {
+        restoreAnnouncement(restoreButton.dataset.restore);
+      }
+
+      if (previewButton) {
+        previewAnnouncement(previewButton.dataset.preview);
+      }
+    });
+
+    $("announcementModal").addEventListener("click", event => {
+      if (event.target === $("announcementModal")) closeModal();
+    });
+
+    $("previewModal").addEventListener("click", event => {
+      if (event.target === $("previewModal")) closePreview();
+    });
+
+    renderAnnouncements();
+  </script>
+
+</body>
+</html>
