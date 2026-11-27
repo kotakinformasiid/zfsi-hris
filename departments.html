@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -23,7 +24,7 @@
       color: #243449;
     }
 
-    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    /* SIDEBAR - SAMA DENGAN DASHBOARD.HTML */
     .sidebar {
       width: 245px;
       position: fixed;
@@ -472,31 +473,79 @@
     }
 
     @media(max-width: 1000px) {
-      .stats { grid-template-columns: repeat(3, 1fr); }
+      .stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
 
+    /* MOBILE - SAMA DENGAN DASHBOARD.HTML */
     @media(max-width: 650px) {
-      .sidebar { width: 65px; padding: 15px 6px; }
-      .brand { padding: 0 5px 25px; }
-      .brand h2, .brand small,
-      .nav-link span, .section-label { display: none; }
-      .nav-link { justify-content: center; }
-      .main { margin-left: 65px; padding: 15px; }
-      .stats { grid-template-columns: 1fr; gap: 9px; }
-      .card { padding: 13px; }
-      .number { font-size: 21px; }
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .toolbar, .toolbar-group { width: 100%; }
-      .toolbar .button { flex: 1; }
-      .filters { width: 100%; }
-      .filters > * { width: 100%; }
+      .sidebar {
+        width: 65px;
+        padding: 15px 6px;
+      }
+
+      .brand {
+        padding: 0 5px 25px;
+      }
+
+      .brand h2,
+      .brand small,
+      .nav-link span,
+      .section-label {
+        display: none;
+      }
+
+      .nav-link {
+        justify-content: center;
+      }
+
+      .main {
+        margin-left: 65px;
+        padding: 15px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+
+      .card {
+        padding: 13px;
+      }
+
+      .number {
+        font-size: 21px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar,
+      .toolbar-group {
+        width: 100%;
+      }
+
+      .toolbar .button {
+        flex: 1;
+      }
+
+      .filters {
+        width: 100%;
+      }
+
+      .filters > * {
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <!-- SIDEBAR - SAMA DENGAN DASHBOARD.HTML -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-icon">Z</div>
@@ -556,7 +605,7 @@
       <span>◴</span><span>Audit Log</span>
     </a>
 
-    <a class="nav-link active" href="settings.html">
+    <a class="nav-link" href="settings.html">
       <span>⚙</span><span>Pengaturan</span>
     </a>
 
