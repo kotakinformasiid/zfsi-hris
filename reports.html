@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laporan HR | ZFSI-HRIS</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #10243b;
+      --blue: #2879c7;
+      --bg: #f4f7fb;
+      --border: #e5eaf0;
+      --muted: #8290a2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #243449;
+    }
+
+    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    .sidebar {
+      width: 245px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--navy);
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 8px 30px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .brand small {
+      font-size: 9px;
+      color: #afc2d5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      color: #8199b0;
+      padding: 13px 10px 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #cbd7e3;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1e3c59;
+      color: white;
+    }
+
+    .nav-link span:first-child {
+      width: 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .main {
+      margin-left: 245px;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 7px 0 0;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e8f6ef;
+      color: #16865b;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #486078;
+      background: transparent;
+      color: white;
+      padding: 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* HALAMAN */
+    .notice {
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+      padding: 15px 17px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .report-types {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .report-type {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 15px;
+      background: white;
+      text-align: left;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      min-width: 0;
+      transition: border-color .15s, background .15s;
+    }
+
+    .report-type:hover,
+    .report-type.active {
+      border-color: var(--blue);
+      background: #f4f9fe;
+    }
+
+    .report-type-icon {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .report-type strong {
+      display: block;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .report-type small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+      margin-top: 5px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .form-group {
+      min-width: 0;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #536579;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #dce3eb;
+      border-radius: 8px;
+      background: white;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #243449;
+    }
+
+    .form-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid var(--border);
+    }
+
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .report-description {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 13px 15px;
+      color: #536579;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 17px;
+    }
+
+    .report-meta {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 15px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #65758a;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .empty {
+      padding: 42px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .empty-icon {
+      display: block;
+      font-size: 31px;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #a83232;
+      background: #fff0f0;
+      border: 1px solid #f0cccc;
+    }
+
+    .message.success {
+      display: block;
+      color: #176b4b;
+      background: #eaf8f1;
+      border: 1px solid #cdebdc;
+    }
+
+    .message.info {
+      display: block;
+      color: #225a8d;
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+    }
+
+    .report-footnote {
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--muted);
+      padding: 15px 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media(max-width: 1100px) {
+      .report-types {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media(max-width: 800px) {
+      .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 650px) {
+      .sidebar {
+        width: 65px;
+        padding: 15px 6px;
+      }
+
+      .brand {
+        padding: 0 5px 25px;
+      }
+
+      .brand h2,
+      .brand small,
+      .nav-link span:not(:first-child),
+      .section-label {
+        display: none;
+      }
+
+      .nav-link {
+        justify-content: center;
+      }
+
+      .main {
+        margin-left: 65px;
+        padding: 15px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .report-types {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .report-type {
+        padding: 12px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar,
+      .toolbar-group {
+        width: 100%;
+      }
+
+      .toolbar .button {
+        flex: 1;
+      }
+
+      .panel-body {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div>
+        <h2>ZFSI-HRIS</h2>
+        <small>HUMAN RESOURCE SYSTEM</small>
+      </div>
+    </div>
+
+    <div class="section-label">MAIN MENU</div>
+
+    <a class="nav-link" href="dashboard.html">
+      <span>▦</span><span>Dashboard</span>
+    </a>
+
+    <a class="nav-link" href="employees.html">
+      <span>♙</span><span>Data Karyawan</span>
+    </a>
+
+    <a class="nav-link" href="attendance.html">
+      <span>◷</span><span>Absensi</span>
+    </a>
+
+    <a class="nav-link" href="leave.html">
+      <span>▣</span><span>Cuti & Izin</span>
+    </a>
+
+    <a class="nav-link" href="overtime.html">
+      <span>◴</span><span>Lembur</span>
+    </a>
+
+    <div class="section-label">COMPENSATION</div>
+
+    <a class="nav-link" href="payroll.html">
+      <span>＄</span><span>Payroll</span>
+    </a>
+
+    <a class="nav-link" href="payslip.html">
+      <span>▤</span><span>Slip Gaji</span>
+    </a>
+
+    <div class="section-label">MANAGEMENT</div>
+
+    <a class="nav-link" href="announcements.html">
+      <span>♧</span><span>Pengumuman</span>
+    </a>
+
+    <a class="nav-link active" href="reports.html">
+      <span>▥</span><span>Laporan</span>
+    </a>
+
+    <a class="nav-link" href="users.html">
+      <span>♙</span><span>User Management</span>
+    </a>
+
+    <a class="nav-link" href="audit-log.html">
+      <span>◴</span><span>Audit Log</span>
+    </a>
+
+    <a class="nav-link" href="settings.html">
+      <span>⚙</span><span>Pengaturan</span>
+    </a>
+
+    <button class="logout" id="logoutButton">
+      Keluar / Logout
+    </button>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>Laporan HR</h1>
+        <p>Pusat laporan dan analisis sumber daya manusia ZFSI.</p>
+      </div>
+
+      <div class="profile">
+        <strong id="userEmail">Memeriksa akun...</strong>
+        <div class="status">Terautentikasi</div>
+      </div>
+    </header>
+
+    <div id="pageMessage" class="message"></div>
+
+    <div class="notice">
+      <strong>Modul Laporan — Tahap Penyusunan Halaman</strong><br>
+      Halaman ini akan mengambil data dari modul sumber seperti Data Karyawan,
+      Absensi, Cuti, Lembur, dan Payroll. Saat ini belum terhubung dengan
+      Firestore, sehingga belum ada angka atau hasil laporan perusahaan
+      yang ditampilkan. Kita akan mengaktifkan pengambilan data dan ekspor
+      setelah seluruh halaman HTML selesai dibuat.
+    </div>
+
+    <section class="report-types" id="reportTypes">
+
+      <button class="report-type active" type="button" data-report="employees">
+        <div class="report-type-icon">♙</div>
+        <strong>Laporan Karyawan</strong>
+        <small>Daftar dan status karyawan</small>
+      </button>
+
+      <button class="report-type" type="button" data-report="attendance">
+        <div class="report-type-icon">◷</div>
+        <strong>Laporan Absensi</strong>
+        <small>Kehadiran dan keterlambatan</small>
+      </button>
+
+      <button class="report-type" type="button" data-report="leave">
+        <div class="report-type-icon">▣</div>
+        <strong>Laporan Cuti</strong>
+        <small>Pengajuan dan saldo cuti</small>
+      </button>
+
+      <button class="report-type" type="button" data-report="overtime">
+        <div class="report-type-icon">◴</div>
+        <strong>Laporan Lembur</strong>
+        <small>Jam lembur dan persetujuan</small>
+      </button>
+
+      <button class="report-type" type="button" data-report="payroll">
+        <div class="report-type-icon">＄</div>
+        <strong>Laporan Payroll</strong>
+        <small>Biaya dan penggajian</small>
+      </button>
+
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Parameter Laporan</h3>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="report-description" id="reportDescription">
+          Laporan daftar karyawan, departemen, jabatan, dan status hubungan kerja.
+        </div>
+
+        <form id="reportForm">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label>Jenis Laporan</label>
+              <select id="reportType">
+                <option value="employees">Laporan Karyawan</option>
+                <option value="attendance">Laporan Absensi</option>
+                <option value="leave">Laporan Cuti</option>
+                <option value="overtime">Laporan Lembur</option>
+                <option value="payroll">Laporan Payroll</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Dari Tanggal</label>
+              <input type="date" id="startDate">
+              <div class="form-help">
+                Digunakan sebagai filter periode laporan.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Sampai Tanggal</label>
+              <input type="date" id="endDate">
+            </div>
+
+            <div class="form-group">
+              <label>Department ID</label>
+              <input
+                type="text"
+                id="departmentId"
+                maxlength="50"
+                placeholder="Kosongkan untuk semua departemen"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Status</label>
+              <select id="statusFilter">
+                <option value="">Semua Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="resigned">Resigned</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="paid">Paid</option>
+                <option value="draft">Draft</option>
+              </select>
+              <div class="form-help">
+                Pilihan status disesuaikan dengan jenis laporan.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Format Laporan</label>
+              <select id="reportFormat">
+                <option value="table">Tabel di halaman</option>
+                <option value="csv">CSV / Excel compatible</option>
+                <option value="print">Cetak / PDF</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-group">
+              <button class="button button-primary" type="submit">
+                Generate Report
+              </button>
+
+              <button class="button button-secondary" type="button" id="resetButton">
+                Reset Filter
+              </button>
+            </div>
+
+            <div class="toolbar-group">
+              <button
+                class="button button-secondary"
+                type="button"
+                id="exportButton"
+                disabled
+              >
+                Export CSV
+              </button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h3 class="panel-title" id="resultTitle">Hasil Laporan Karyawan</h3>
+          <div class="subtext" id="resultSubtitle">
+            Belum ada laporan yang dihasilkan.
+          </div>
+        </div>
+
+        <div class="status" id="resultStatus">Belum tersedia</div>
+      </div>
+
+      <div class="panel-body">
+
+        <div class="report-meta">
+          <span id="resultPeriod">Periode: Belum dipilih</span>
+          <span id="resultDepartment">Departemen: Semua</span>
+          <span id="resultGenerated">Dihasilkan: —</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead id="reportTableHead">
+              <tr>
+                <th>Informasi</th>
+              </tr>
+            </thead>
+
+            <tbody id="reportTableBody">
+              <tr>
+                <td>
+                  <div class="empty">
+                    <span class="empty-icon">▥</span>
+                    Belum ada data laporan yang ditampilkan.<br>
+                    Pilih jenis laporan dan klik Generate Report.
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <div class="report-footnote">
+        Catatan: hasil laporan resmi akan menggunakan data Firestore yang
+        sudah tersimpan dan mengikuti hak akses pengguna. Laporan payroll
+        dapat berisi informasi gaji yang bersifat rahasia sehingga hanya
+        dapat diakses oleh pengguna yang memiliki izin terkait.
+      </div>
+    </section>
+
+  </main>
+
+  <div id="toast" class="message"></div>
+
+  <script type="module">
+    import {
+      initializeApp,
+      getApps,
+      getApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+      authDomain: "zfsi-hris.firebaseapp.com",
+      projectId: "zfsi-hris",
+      storageBucket: "zfsi-hris.firebasestorage.app",
+      messagingSenderId: "642441161494",
+      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let authHandled = false;
+    let reportRows = [];
+    let generatedReport = false;
+
+    const $ = id => document.getElementById(id);
+
+    const reportDefinitions = {
+      employees: {
+        title: "Laporan Karyawan",
+        description:
+          "Laporan daftar karyawan, departemen, jabatan, tanggal bergabung, dan status hubungan kerja.",
+        columns: [
+          "Employee ID",
+          "Nama Karyawan",
+          "Departemen",
+          "Jabatan",
+          "Tanggal Bergabung",
+          "Status Karyawan"
+        ],
+        source: "employees"
+      },
+
+      attendance: {
+        title: "Laporan Absensi",
+        description:
+          "Laporan kehadiran, keterlambatan, ketidakhadiran, jam masuk, dan jam pulang.",
+        columns: [
+          "Tanggal",
+          "Employee ID",
+          "Nama Karyawan",
+          "Jam Masuk",
+          "Jam Pulang",
+          "Status",
+          "Keterangan"
+        ],
+        source: "attendance"
+      },
+
+      leave: {
+        title: "Laporan Cuti dan Izin",
+        description:
+          "Laporan permohonan cuti, jenis cuti, periode, jumlah hari, dan status persetujuan.",
+        columns: [
+          "Request ID",
+          "Employee ID",
+          "Nama Karyawan",
+          "Jenis Pengajuan",
+          "Tanggal Mulai",
+          "Tanggal Selesai",
+          "Jumlah Hari",
+          "Status"
+        ],
+        source: "leaveRequests"
+      },
+
+      overtime: {
+        title: "Laporan Lembur",
+        description:
+          "Laporan pengajuan lembur, jam mulai dan selesai, durasi bersih, serta hasil persetujuan.",
+        columns: [
+          "Request ID",
+          "Employee ID",
+          "Nama Karyawan",
+          "Tanggal Lembur",
+          "Jam Mulai",
+          "Jam Selesai",
+          "Jam Lembur",
+          "Status"
+        ],
+        source: "overtimeRequests"
+      },
+
+      payroll: {
+        title: "Laporan Payroll",
+        description:
+          "Laporan gaji pokok, pendapatan bruto, potongan, gaji bersih, dan status pembayaran.",
+        columns: [
+          "Periode",
+          "Employee ID",
+          "Nama Karyawan",
+          "Gaji Pokok",
+          "Pendapatan Bruto",
+          "Total Potongan",
+          "Gaji Bersih",
+          "Status"
+        ],
+        source: "payroll"
+      }
+    };
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function showMessage(text, type = "info") {
+      const element = $("pageMessage");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+    }
+
+    function showToast(text, type = "success") {
+      const element = $("toast");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+
+      window.setTimeout(() => {
+        element.style.display = "none";
+      }, 3500);
+    }
+
+    function clearMessage() {
+      $("pageMessage").textContent = "";
+      $("pageMessage").className = "message";
+      $("pageMessage").style.display = "none";
+    }
+
+    function getSelectedReport() {
+      return reportDefinitions[$("reportType").value];
+    }
+
+    function setTableHeaders(columns) {
+      $("reportTableHead").innerHTML = `
+        <tr>
+          ${columns.map(column => `<th>${escapeHTML(column)}</th>`).join("")}
+        </tr>
+      `;
+    }
+
+    function selectReport(type) {
+      if (!reportDefinitions[type]) return;
+
+      $("reportType").value = type;
+
+      document.querySelectorAll("[data-report]").forEach(button => {
+        button.classList.toggle(
+          "active",
+          button.dataset.report === type
+        );
+      });
+
+      const definition = reportDefinitions[type];
+
+      $("reportDescription").textContent = definition.description;
+      $("resultTitle").textContent = "Hasil " + definition.title;
+      $("resultSubtitle").textContent = "Belum ada laporan yang dihasilkan.";
+
+      setTableHeaders(definition.columns);
+
+      reportRows = [];
+      generatedReport = false;
+      $("exportButton").disabled = true;
+
+      $("reportTableBody").innerHTML = `
+        <tr>
+          <td colspan="${definition.columns.length}">
+            <div class="empty">
+              <span class="empty-icon">▥</span>
+              Jenis laporan berubah menjadi ${escapeHTML(definition.title)}.<br>
+              Klik Generate Report untuk menyiapkan pratinjau.
+            </div>
+          </td>
+        </tr>
+      `;
+
+      $("resultStatus").textContent = "Belum tersedia";
+    }
+
+    function validateFilters() {
+      const startDate = $("startDate").value;
+      const endDate = $("endDate").value;
+
+      if (startDate && endDate && endDate < startDate) {
+        throw new Error(
+          "Tanggal akhir tidak boleh lebih awal daripada tanggal awal."
+        );
+      }
+    }
+
+    function generateReport() {
+      clearMessage();
+
+      try {
+        validateFilters();
+
+        const definition = getSelectedReport();
+        const startDate = $("startDate").value;
+        const endDate = $("endDate").value;
+        const department = $("departmentId").value.trim();
+        const status = $("statusFilter").value;
+
+        reportRows = [];
+        generatedReport = true;
+
+        setTableHeaders(definition.columns);
+
+        $("resultTitle").textContent = "Hasil " + definition.title;
+        $("resultSubtitle").textContent =
+          "Parameter laporan sudah dipilih. Data sumber belum terhubung.";
+
+        $("resultPeriod").textContent =
+          "Periode: " +
+          (startDate || "Tidak dibatasi") +
+          " sampai " +
+          (endDate || "Tidak dibatasi");
+
+        $("resultDepartment").textContent =
+          "Departemen: " + (department || "Semua");
+
+        $("resultGenerated").textContent =
+          "Waktu permintaan: " + new Date().toLocaleString("id-ID");
+
+        $("resultStatus").textContent = "Menunggu integrasi database";
+
+        $("reportTableBody").innerHTML = `
+          <tr>
+            <td colspan="${definition.columns.length}">
+              <div class="empty">
+                <span class="empty-icon">▥</span>
+                <strong>${escapeHTML(definition.title)}</strong><br>
+                Parameter laporan berhasil disiapkan.<br>
+                Data dari koleksi <strong>${escapeHTML(definition.source)}</strong>
+                belum dibaca karena integrasi Firestore belum diaktifkan.<br><br>
+                Setelah tahap database, hasil laporan akan tampil di tabel ini.
+              </div>
+            </td>
+          </tr>
+        `;
+
+        $("exportButton").disabled = true;
+
+        showMessage(
+          "Filter laporan berhasil disiapkan. Belum ada hasil data karena halaman ini masih menunggu integrasi Firestore.",
+          "info"
+        );
+
+      } catch (error) {
+        showMessage(error.message, "error");
+      }
+    }
+
+    function resetFilters() {
+      $("reportForm").reset();
+
+      $("startDate").value = "";
+      $("endDate").value = "";
+      $("departmentId").value = "";
+      $("statusFilter").value = "";
+      $("reportFormat").value = "table";
+
+      selectReport("employees");
+
+      $("resultPeriod").textContent = "Periode: Belum dipilih";
+      $("resultDepartment").textContent = "Departemen: Semua";
+      $("resultGenerated").textContent = "Dihasilkan: —";
+
+      $("resultSubtitle").textContent =
+        "Belum ada laporan yang dihasilkan.";
+
+      $("reportTableBody").innerHTML = `
+        <tr>
+          <td colspan="6">
+            <div class="empty">
+              <span class="empty-icon">▥</span>
+              Belum ada data laporan yang ditampilkan.<br>
+              Pilih jenis laporan dan klik Generate Report.
+            </div>
+          </td>
+        </tr>
+      `;
+
+      $("resultStatus").textContent = "Belum tersedia";
+      generatedReport = false;
+      reportRows = [];
+
+      $("exportButton").disabled = true;
+      clearMessage();
+    }
+
+    function exportCSV() {
+      if (!generatedReport || reportRows.length === 0) {
+        showToast(
+          "Belum ada data laporan yang dapat diekspor. Export CSV akan aktif setelah Firestore terhubung dan data tersedia.",
+          "info"
+        );
+        return;
+      }
+
+      const definition = getSelectedReport();
+
+      const csv = [
+        definition.columns,
+        ...reportRows
+      ].map(row =>
+        row.map(value =>
+          `"${String(value ?? "").replace(/"/g, '""')}"`
+        ).join(",")
+      ).join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download =
+        "ZFSI-HRIS-" +
+        definition.title.replace(/[^a-z0-9]/gi, "-") +
+        ".csv";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    onAuthStateChanged(auth, user => {
+      if (authHandled) return;
+      authHandled = true;
+
+      if (!user) {
+        location.replace("index.html");
+        return;
+      }
+
+      currentUser = user;
+
+      $("userEmail").textContent =
+        user.email || "Pengguna ZFSI-HRIS";
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        location.replace("index.html");
+      } catch (error) {
+        showMessage(
+          "Gagal logout: " + (error.message || error.code),
+          "error"
+        );
+      }
+    });
+
+    document.querySelectorAll("[data-report]").forEach(button => {
+      button.addEventListener("click", () => {
+        selectReport(button.dataset.report);
+        clearMessage();
+      });
+    });
+
+    $("reportType").addEventListener("change", event => {
+      selectReport(event.target.value);
+      clearMessage();
+    });
+
+    $("reportForm").addEventListener("submit", event => {
+      event.preventDefault();
+      generateReport();
+    });
+
+    $("resetButton").addEventListener("click", resetFilters);
+    $("exportButton").addEventListener("click", exportCSV);
+
+    selectReport("employees");
+  </script>
+
+</body>
+</html>
