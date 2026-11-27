@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Management | ZFSI-HRIS</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #10243b;
+      --blue: #2879c7;
+      --bg: #f4f7fb;
+      --border: #e5eaf0;
+      --muted: #8290a2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #243449;
+    }
+
+    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    .sidebar {
+      width: 245px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--navy);
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 8px 30px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .brand small {
+      font-size: 9px;
+      color: #afc2d5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      color: #8199b0;
+      padding: 13px 10px 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #cbd7e3;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1e3c59;
+      color: white;
+    }
+
+    .nav-link span:first-child {
+      width: 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .main {
+      margin-left: 245px;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 7px 0 0;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e8f6ef;
+      color: #16865b;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #486078;
+      background: transparent;
+      color: white;
+      padding: 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* HALAMAN */
+    .notice {
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+      padding: 15px 17px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .notice.warning {
+      background: #fff7e5;
+      border-color: #f3dfb4;
+      color: #815d16;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 19px;
+      border-radius: 12px;
+      min-width: 0;
+    }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .number {
+      font-size: 27px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 17px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid var(--border);
+    }
+
+    .button-danger {
+      background: #fff0f0;
+      color: #a83232;
+      border: 1px solid #f0cccc;
+    }
+
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    input, select, textarea {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #243449;
+    }
+
+    .filter-input,
+    .filter-select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      min-width: 165px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 950px;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #65758a;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .user-name {
+      font-weight: bold;
+    }
+
+    .subtext {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .badge-active {
+      background: #e8f6ef;
+      color: #16865b;
+    }
+
+    .badge-inactive {
+      background: #fff5dc;
+      color: #9a6b11;
+    }
+
+    .badge-super {
+      background: #eaf3fc;
+      color: #2879c7;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 7px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #2879c7;
+    }
+
+    .action-button.danger {
+      color: #a83232;
+    }
+
+    .empty {
+      padding: 38px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #a83232;
+      background: #fff0f0;
+      border: 1px solid #f0cccc;
+    }
+
+    .message.success {
+      display: block;
+      color: #176b4b;
+      background: #eaf8f1;
+      border: 1px solid #cdebdc;
+    }
+
+    .message.info {
+      display: block;
+      color: #225a8d;
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #10243b99;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 850px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px #0003;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .close-button {
+      border: 0;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .form-body {
+      padding: 22px;
+    }
+
+    .form-section-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #2879c7;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 9px;
+      margin: 5px 0 15px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .form-group {
+      min-width: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #536579;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #dce3eb;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .form-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .readonly {
+      background: #f4f7fb !important;
+      color: #66788a !important;
+    }
+
+    .permissions-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .permissions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .permission-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .permission-card h4 {
+      margin: 0 0 11px;
+      font-size: 12px;
+      color: #34495e;
+    }
+
+    .permission-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #536579;
+      margin: 9px 0;
+      line-height: 1.4;
+    }
+
+    .permission-option input {
+      width: auto;
+      margin: 0;
+      accent-color: var(--blue);
+    }
+
+    .permission-option span {
+      flex: 1;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 15px 22px;
+      border-top: 1px solid var(--border);
+      position: sticky;
+      bottom: 0;
+      background: white;
+    }
+
+    #toast {
+      position: fixed;
+      right: 20px;
+      bottom: 15px;
+      z-index: 80;
+      max-width: 380px;
+      margin: 0;
+    }
+
+    @media(max-width: 1100px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media(max-width: 800px) {
+      .permissions-grid { grid-template-columns: 1fr; }
+    }
+
+    @media(max-width: 650px) {
+      .sidebar { width: 65px; padding: 15px 6px; }
+      .brand { padding: 0 5px 25px; }
+      .brand h2, .brand small,
+      .nav-link span:not(:first-child), .section-label { display: none; }
+      .nav-link { justify-content: center; }
+      .main { margin-left: 65px; padding: 15px; }
+      .stats { gap: 9px; }
+      .card { padding: 13px; }
+      .number { font-size: 21px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: auto; }
+      .toolbar, .toolbar-group { width: 100%; }
+      .toolbar .button { flex: 1; }
+      .filters { width: 100%; }
+      .filters > * { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div>
+        <h2>ZFSI-HRIS</h2>
+        <small>HUMAN RESOURCE SYSTEM</small>
+      </div>
+    </div>
+
+    <div class="section-label">MAIN MENU</div>
+
+    <a class="nav-link" href="dashboard.html">
+      <span>▦</span><span>Dashboard</span>
+    </a>
+
+    <a class="nav-link" href="employees.html">
+      <span>♙</span><span>Data Karyawan</span>
+    </a>
+
+    <a class="nav-link" href="attendance.html">
+      <span>◷</span><span>Absensi</span>
+    </a>
+
+    <a class="nav-link" href="leave.html">
+      <span>▣</span><span>Cuti & Izin</span>
+    </a>
+
+    <a class="nav-link" href="overtime.html">
+      <span>◴</span><span>Lembur</span>
+    </a>
+
+    <div class="section-label">COMPENSATION</div>
+
+    <a class="nav-link" href="payroll.html">
+      <span>＄</span><span>Payroll</span>
+    </a>
+
+    <a class="nav-link" href="payslip.html">
+      <span>▤</span><span>Slip Gaji</span>
+    </a>
+
+    <div class="section-label">MANAGEMENT</div>
+
+    <a class="nav-link" href="announcements.html">
+      <span>♧</span><span>Pengumuman</span>
+    </a>
+
+    <a class="nav-link" href="reports.html">
+      <span>▥</span><span>Laporan</span>
+    </a>
+
+    <a class="nav-link active" href="users.html">
+      <span>♙</span><span>User Management</span>
+    </a>
+
+    <a class="nav-link" href="audit-log.html">
+      <span>◴</span><span>Audit Log</span>
+    </a>
+
+    <a class="nav-link" href="settings.html">
+      <span>⚙</span><span>Pengaturan</span>
+    </a>
+
+    <button class="logout" id="logoutButton">
+      Keluar / Logout
+    </button>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>User Management</h1>
+        <p>Pengelolaan pengguna, role, departemen, dan hak akses ZFSI-HRIS.</p>
+      </div>
+
+      <div class="profile">
+        <strong id="userEmail">Memeriksa akun...</strong>
+        <div class="status">Terautentikasi</div>
+      </div>
+    </header>
+
+    <div id="pageMessage" class="message"></div>
+
+    <div class="notice warning">
+      <strong>Mode Penyusunan HTML — Belum Terhubung ke Database</strong><br>
+      Pengguna, role, dan perubahan hak akses di halaman ini hanya simulasi
+      sementara di browser. Halaman ini belum membuat akun Firebase
+      Authentication dan belum menyimpan profil ke Firestore. Jangan
+      memberikan akses nyata berdasarkan perubahan pada halaman ini.
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="card-label">Total Pengguna</div>
+        <div class="number" id="totalUsers">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Pengguna Aktif</div>
+        <div class="number" id="activeUsers">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Pengguna Nonaktif</div>
+        <div class="number" id="inactiveUsers">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Super Admin</div>
+        <div class="number" id="superAdmins">0</div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="button button-primary" id="addButton">
+          + Tambah Profil Pengguna
+        </button>
+
+        <button class="button button-secondary" id="exportButton">
+          Export CSV
+        </button>
+      </div>
+
+      <div class="toolbar-group">
+        <button class="button button-secondary" id="resetButton">
+          ↻ Reset Data Percobaan
+        </button>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Daftar Pengguna</h3>
+
+        <div class="filters">
+          <input
+            type="search"
+            class="filter-input"
+            id="searchInput"
+            placeholder="Cari nama / email..."
+          >
+
+          <select class="filter-select" id="roleFilter">
+            <option value="">Semua Role</option>
+            <option value="super_admin">Super Admin</option>
+            <option value="hr_admin">HR Admin</option>
+            <option value="manager">Manager</option>
+            <option value="supervisor">Supervisor</option>
+            <option value="finance">Finance</option>
+            <option value="employee">Employee</option>
+          </select>
+
+          <select class="filter-select" id="statusFilter">
+            <option value="">Semua Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Nama Pengguna</th>
+              <th>Email</th>
+              <th>Departemen</th>
+              <th>Jabatan</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="userTableBody">
+            <tr>
+              <td colspan="8">
+                <div class="empty">
+                  Belum ada profil pengguna percobaan.<br>
+                  Klik Tambah Profil Pengguna untuk mencoba formulir.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FORM PROFIL PENGGUNA DAN HAK AKSES -->
+  <div class="modal" id="userModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modalTitle">Tambah Profil Pengguna</h2>
+        <button class="close-button" id="closeModalButton" type="button">×</button>
+      </div>
+
+      <form id="userForm">
+        <div class="form-body">
+
+          <div class="form-section-title">A. Identitas Pengguna</div>
+
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Nama Lengkap *</label>
+              <input
+                type="text"
+                id="displayName"
+                required
+                maxlength="120"
+                placeholder="Nama lengkap pengguna"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Email *</label>
+              <input
+                type="email"
+                id="email"
+                required
+                maxlength="160"
+                placeholder="nama@perusahaan.com"
+              >
+              <div class="form-help">
+                Email harus sesuai dengan akun Firebase Authentication
+                ketika tahap integrasi dilakukan.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>User ID / UID</label>
+              <input
+                type="text"
+                id="userId"
+                class="readonly"
+                readonly
+                placeholder="Dibuat saat integrasi Firebase"
+              >
+              <div class="form-help">
+                UID resmi akan berasal dari Firebase Authentication.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Department ID</label>
+              <input
+                type="text"
+                id="departmentId"
+                maxlength="50"
+                placeholder="Contoh: ZFSI_FIN"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Position ID</label>
+              <input
+                type="text"
+                id="positionId"
+                maxlength="50"
+                placeholder="Contoh: FIN_MANAGER"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Branch ID</label>
+              <input
+                type="text"
+                id="branchId"
+                maxlength="50"
+                value="hq"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Status Akun</label>
+              <select id="accountStatus">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-section-title">B. Role dan Tingkat Akses</div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Role Pengguna *</label>
+              <select id="roleId" required>
+                <option value="employee">Employee</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="manager">Manager</option>
+                <option value="hr_admin">HR Admin</option>
+                <option value="finance">Finance</option>
+                <option value="super_admin">Super Admin</option>
+              </select>
+              <div class="form-help">
+                Pemilihan role akan mengisi rekomendasi hak akses.
+                Hak akses masih dapat disesuaikan di bawah.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Company ID</label>
+              <input
+                type="text"
+                id="companyId"
+                value="zfsi-main"
+                readonly
+                class="readonly"
+              >
+            </div>
+          </div>
+
+          <div class="form-section-title">C. Hak Akses per Modul</div>
+
+          <div class="permissions-toolbar">
+            <div class="form-help">
+              Centang hak akses yang ingin diberikan kepada pengguna.
+            </div>
+
+            <div class="toolbar-group">
+              <button class="button button-secondary" type="button" id="selectAllPermissions">
+                Pilih Semua
+              </button>
+
+              <button class="button button-secondary" type="button" id="clearPermissions">
+                Kosongkan
+              </button>
+            </div>
+          </div>
+
+          <div class="permissions-grid" id="permissionsGrid">
+
+            <div class="permission-card">
+              <h4>Data Karyawan</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="employees.view">
+                <span>Melihat Data Karyawan</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="employees.manage">
+                <span>Tambah dan Edit Karyawan</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>Absensi</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="attendance.view">
+                <span>Melihat Absensi</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="attendance.manage">
+                <span>Mengelola Absensi</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>Cuti dan Izin</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="leave.view">
+                <span>Melihat Pengajuan Cuti</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="leave.manage">
+                <span>Membuat / Mengelola Pengajuan</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="leave.approve">
+                <span>Menyetujui / Menolak Cuti</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>Lembur</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="overtime.view">
+                <span>Melihat Pengajuan Lembur</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="overtime.manage">
+                <span>Membuat / Mengelola Pengajuan</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="overtime.approve">
+                <span>Menyetujui / Menolak Lembur</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>Payroll</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="payroll.view">
+                <span>Melihat Payroll</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="payroll.manage">
+                <span>Mengelola Payroll</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="payroll.approve">
+                <span>Menyetujui Payroll</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>Slip Gaji</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="payslips.view">
+                <span>Melihat Slip Gaji</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="payslips.manage">
+                <span>Mengelola Slip Gaji</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>Pengumuman</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="announcements.view">
+                <span>Melihat Pengumuman</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="announcements.manage">
+                <span>Membuat / Mengelola Pengumuman</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>Laporan</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="reports.view">
+                <span>Melihat Laporan HR</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="reports.payroll">
+                <span>Melihat Laporan Payroll</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>User Management</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="users.view">
+                <span>Melihat Pengguna</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="users.manage">
+                <span>Mengelola Pengguna dan Hak Akses</span>
+              </label>
+            </div>
+
+            <div class="permission-card">
+              <h4>Audit Log dan Pengaturan</h4>
+              <label class="permission-option">
+                <input type="checkbox" value="audit.view">
+                <span>Melihat Audit Log</span>
+              </label>
+              <label class="permission-option">
+                <input type="checkbox" value="settings.manage">
+                <span>Mengelola Pengaturan Sistem</span>
+              </label>
+            </div>
+
+          </div>
+
+          <p class="form-help" style="margin-top:15px">
+            Super Admin akan memiliki akses penuh. Pengamanan final role
+            dan permission akan diberlakukan melalui Firestore Security Rules
+            dan pemeriksaan pada setiap halaman.
+          </p>
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="button button-secondary" type="button" id="cancelButton">
+            Batal
+          </button>
+
+          <button class="button button-primary" type="submit" id="saveButton">
+            Simpan Profil Percobaan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="message"></div>
+
+  <script type="module">
+    import {
+      initializeApp,
+      getApps,
+      getApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+      authDomain: "zfsi-hris.firebaseapp.com",
+      projectId: "zfsi-hris",
+      storageBucket: "zfsi-hris.firebasestorage.app",
+      messagingSenderId: "642441161494",
+      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const COMPANY_ID = "zfsi-main";
+
+    let currentUser = null;
+    let authHandled = false;
+    let users = [];
+    let editingUserId = null;
+
+    const $ = id => document.getElementById(id);
+
+    const permissionValues = [
+      "employees.view",
+      "employees.manage",
+      "attendance.view",
+      "attendance.manage",
+      "leave.view",
+      "leave.manage",
+      "leave.approve",
+      "overtime.view",
+      "overtime.manage",
+      "overtime.approve",
+      "payroll.view",
+      "payroll.manage",
+      "payroll.approve",
+      "payslips.view",
+      "payslips.manage",
+      "announcements.view",
+      "announcements.manage",
+      "reports.view",
+      "reports.payroll",
+      "users.view",
+      "users.manage",
+      "audit.view",
+      "settings.manage"
+    ];
+
+    const rolePresets = {
+      employee: [
+        "employees.view",
+        "attendance.view",
+        "leave.view",
+        "leave.manage",
+        "overtime.view",
+        "overtime.manage",
+        "payslips.view",
+        "announcements.view"
+      ],
+
+      supervisor: [
+        "employees.view",
+        "attendance.view",
+        "attendance.manage",
+        "leave.view",
+        "leave.approve",
+        "overtime.view",
+        "overtime.approve",
+        "announcements.view"
+      ],
+
+      manager: [
+        "employees.view",
+        "attendance.view",
+        "leave.view",
+        "leave.approve",
+        "overtime.view",
+        "overtime.approve",
+        "reports.view",
+        "announcements.view"
+      ],
+
+      hr_admin: [
+        "employees.view",
+        "employees.manage",
+        "attendance.view",
+        "attendance.manage",
+        "leave.view",
+        "leave.manage",
+        "leave.approve",
+        "overtime.view",
+        "overtime.manage",
+        "overtime.approve",
+        "payslips.view",
+        "announcements.view",
+        "announcements.manage",
+        "reports.view",
+        "users.view"
+      ],
+
+      finance: [
+        "employees.view",
+        "payroll.view",
+        "payroll.manage",
+        "payslips.view",
+        "payslips.manage",
+        "reports.view",
+        "reports.payroll"
+      ],
+
+      super_admin: [...permissionValues]
+    };
+
+    const roleLabels = {
+      super_admin: "Super Admin",
+      hr_admin: "HR Admin",
+      manager: "Manager",
+      supervisor: "Supervisor",
+      finance: "Finance",
+      employee: "Employee"
+    };
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function showMessage(text, type = "info") {
+      const element = $("pageMessage");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+    }
+
+    function showToast(text, type = "success") {
+      const element = $("toast");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+
+      window.setTimeout(() => {
+        element.style.display = "none";
+      }, 3500);
+    }
+
+    function selectedPermissions() {
+      return Array.from(
+        document.querySelectorAll("#permissionsGrid input[type=checkbox]:checked")
+      ).map(input => input.value);
+    }
+
+    function setPermissions(values = []) {
+      const chosen = new Set(values);
+
+      document.querySelectorAll(
+        "#permissionsGrid input[type=checkbox]"
+      ).forEach(input => {
+        input.checked = chosen.has(input.value);
+      });
+    }
+
+    function applyRolePreset(roleId) {
+      setPermissions(rolePresets[roleId] || []);
+    }
+
+    function updateStatistics() {
+      $("totalUsers").textContent = users.length;
+
+      $("activeUsers").textContent =
+        users.filter(user => user.status === "active").length;
+
+      $("inactiveUsers").textContent =
+        users.filter(user => user.status === "inactive").length;
+
+      $("superAdmins").textContent =
+        users.filter(user => user.roleId === "super_admin").length;
+    }
+
+    function filteredUsers() {
+      const search = $("searchInput").value.trim().toLowerCase();
+      const role = $("roleFilter").value;
+      const status = $("statusFilter").value;
+
+      return users.filter(user => {
+        const searchable = [
+          user.displayName,
+          user.email,
+          user.userId,
+          user.departmentId,
+          user.positionId
+        ].join(" ").toLowerCase();
+
+        return (!search || searchable.includes(search)) &&
+          (!role || user.roleId === role) &&
+          (!status || user.status === status);
+      });
+    }
+
+    function renderUsers() {
+      const filtered = filteredUsers();
+      const tbody = $("userTableBody");
+
+      if (!filtered.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div class="empty">
+                Tidak ada profil pengguna yang sesuai dengan pencarian.
+              </div>
+            </td>
+          </tr>`;
+
+        updateStatistics();
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(user => {
+        const statusClass = user.status === "active"
+          ? "active"
+          : "inactive";
+
+        const roleClass = user.roleId === "super_admin"
+          ? "super"
+          : "";
+
+        const statusAction = user.status === "active"
+          ? `<button class="action-button danger" type="button" data-toggle="${escapeHTML(user.userId)}">Nonaktifkan</button>`
+          : `<button class="action-button" type="button" data-toggle="${escapeHTML(user.userId)}">Aktifkan</button>`;
+
+        return `
+          <tr>
+            <td>
+              <strong>${escapeHTML(user.userId)}</strong>
+              <div class="subtext">Profil simulasi</div>
+            </td>
+            <td>
+              <div class="user-name">${escapeHTML(user.displayName)}</div>
+              <div class="subtext">${escapeHTML(user.branchId || "hq")}</div>
+            </td>
+            <td>${escapeHTML(user.email)}</td>
+            <td>${escapeHTML(user.departmentId || "—")}</td>
+            <td>${escapeHTML(user.positionId || "—")}</td>
+            <td>
+              <span class="badge ${roleClass ? "badge-super" : "badge-active"}">
+                ${escapeHTML(roleLabels[user.roleId] || user.roleId)}
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-${statusClass}">
+                ${user.status === "active" ? "Active" : "Inactive"}
+              </span>
+            </td>
+            <td>
+              <div class="action-group">
+                <button class="action-button" type="button"
+                  data-edit="${escapeHTML(user.userId)}">Edit</button>
+                ${statusAction}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      updateStatistics();
+    }
+
+    function resetForm() {
+      $("userForm").reset();
+      $("userId").value = "";
+      $("companyId").value = COMPANY_ID;
+      $("branchId").value = "hq";
+      $("accountStatus").value = "active";
+      $("roleId").value = "employee";
+      setPermissions(rolePresets.employee);
+    }
+
+    function openAddModal() {
+      editingUserId = null;
+      resetForm();
+
+      $("modalTitle").textContent = "Tambah Profil Pengguna";
+      $("saveButton").textContent = "Simpan Profil Percobaan";
+
+      $("userModal").classList.add("show");
+    }
+
+    function openEditModal(user) {
+      editingUserId = user.userId;
+
+      $("modalTitle").textContent = "Edit Profil Pengguna";
+      $("saveButton").textContent = "Simpan Perubahan";
+
+      $("userId").value = user.userId;
+      $("displayName").value = user.displayName || "";
+      $("email").value = user.email || "";
+      $("departmentId").value = user.departmentId || "";
+      $("positionId").value = user.positionId || "";
+      $("branchId").value = user.branchId || "hq";
+      $("accountStatus").value = user.status || "active";
+      $("roleId").value = user.roleId || "employee";
+      $("companyId").value = user.companyId || COMPANY_ID;
+
+      setPermissions(user.permissions || []);
+
+      $("userModal").classList.add("show");
+    }
+
+    function closeModal() {
+      $("userModal").classList.remove("show");
+      editingUserId = null;
+    }
+
+    function saveUser(event) {
+      event.preventDefault();
+
+      const button = $("saveButton");
+      button.disabled = true;
+      button.textContent = "Menyimpan...";
+
+      try {
+        const data = {
+          displayName: $("displayName").value.trim(),
+          email: $("email").value.trim().toLowerCase(),
+          departmentId: $("departmentId").value.trim(),
+          positionId: $("positionId").value.trim(),
+          branchId: $("branchId").value.trim() || "hq",
+          companyId: COMPANY_ID,
+          roleId: $("roleId").value,
+          systemRole: $("roleId").value,
+          status: $("accountStatus").value,
+          active: $("accountStatus").value === "active",
+          permissions: selectedPermissions(),
+          updatedAt: new Date().toISOString(),
+          updatedBy: currentUser?.uid || ""
+        };
+
+        if (!data.displayName || !data.email) {
+          throw new Error("Nama lengkap dan email wajib diisi.");
+        }
+
+        if (!data.email.includes("@")) {
+          throw new Error("Format email tidak valid.");
+        }
+
+        const duplicateEmail = users.find(user =>
+          user.email.toLowerCase() === data.email &&
+          user.userId !== editingUserId
+        );
+
+        if (duplicateEmail) {
+          throw new Error("Email tersebut sudah digunakan pada profil percobaan.");
+        }
+
+        if (data.roleId === "super_admin" &&
+            !users.some(user =>
+              user.userId === editingUserId &&
+              user.roleId === "super_admin"
+            )) {
+          const confirmed = window.confirm(
+            "Kamu sedang memberikan role Super Admin dengan seluruh hak akses. Lanjutkan pada simulasi ini?"
+          );
+
+          if (!confirmed) return;
+        }
+
+        if (editingUserId) {
+          users = users.map(user =>
+            user.userId === editingUserId
+              ? { ...user, ...data }
+              : user
+          );
+
+          showToast("Profil pengguna diperbarui pada sesi ini.");
+        } else {
+          const userId =
+            "TEMP-USER-" + Date.now().toString().slice(-8);
+
+          users.push({
+            ...data,
+            userId,
+            uid: null,
+            createdAt: new Date().toISOString(),
+            createdBy: currentUser?.uid || ""
+          });
+
+          showToast(
+            "Profil simulasi dibuat. Belum ada akun Firebase Authentication yang dibuat."
+          );
+        }
+
+        closeModal();
+        renderUsers();
+
+      } catch (error) {
+        showToast(error.message || "Gagal memproses profil pengguna.", "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = editingUserId
+          ? "Simpan Perubahan"
+          : "Simpan Profil Percobaan";
+      }
+    }
+
+    function toggleUserStatus(userId) {
+      const user = users.find(item => item.userId === userId);
+      if (!user) return;
+
+      const nextStatus = user.status === "active"
+        ? "inactive"
+        : "active";
+
+      const actionText = nextStatus === "inactive"
+        ? "menonaktifkan"
+        : "mengaktifkan";
+
+      if (!window.confirm(
+        `Apakah kamu yakin ingin ${actionText} profil ${user.displayName}?`
+      )) return;
+
+      user.status = nextStatus;
+      user.active = nextStatus === "active";
+      user.updatedAt = new Date().toISOString();
+
+      showToast(
+        `Status profil ${user.displayName} menjadi ${nextStatus}. Ini hanya perubahan simulasi.`
+      );
+
+      renderUsers();
+    }
+
+    function exportCSV() {
+      const records = filteredUsers();
+
+      if (!records.length) {
+        showToast("Tidak ada profil pengguna untuk diekspor.", "info");
+        return;
+      }
+
+      const headers = [
+        "User ID",
+        "Nama",
+        "Email",
+        "Company ID",
+        "Branch ID",
+        "Department ID",
+        "Position ID",
+        "Role",
+        "Status",
+        "Permissions"
+      ];
+
+      const rows = records.map(user => [
+        user.userId,
+        user.displayName,
+        user.email,
+        user.companyId,
+        user.branchId,
+        user.departmentId,
+        user.positionId,
+        user.roleId,
+        user.status,
+        (user.permissions || []).join("; ")
+      ]);
+
+      const csv = [
+        headers,
+        ...rows
+      ].map(row =>
+        row.map(value =>
+          `"${String(value ?? "").replace(/"/g, '""')}"`
+        ).join(",")
+      ).join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "ZFSI-HRIS-User-Profiles.csv";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    function resetTemporaryData() {
+      if (!window.confirm(
+        "Reset akan menghapus semua profil percobaan yang dimasukkan pada halaman ini. Lanjutkan?"
+      )) return;
+
+      users = [];
+      $("searchInput").value = "";
+      $("roleFilter").value = "";
+      $("statusFilter").value = "";
+
+      renderUsers();
+
+      showToast("Seluruh profil percobaan telah dikosongkan.", "info");
+    }
+
+    onAuthStateChanged(auth, user => {
+      if (authHandled) return;
+      authHandled = true;
+
+      if (!user) {
+        location.replace("index.html");
+        return;
+      }
+
+      currentUser = user;
+
+      $("userEmail").textContent =
+        user.email || "Pengguna ZFSI-HRIS";
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        location.replace("index.html");
+      } catch (error) {
+        showMessage(
+          "Gagal logout: " + (error.message || error.code),
+          "error"
+        );
+      }
+    });
+
+    $("addButton").addEventListener("click", openAddModal);
+    $("exportButton").addEventListener("click", exportCSV);
+    $("resetButton").addEventListener("click", resetTemporaryData);
+
+    $("searchInput").addEventListener("input", renderUsers);
+    $("roleFilter").addEventListener("change", renderUsers);
+    $("statusFilter").addEventListener("change", renderUsers);
+
+    $("roleId").addEventListener("change", event => {
+      const roleId = event.target.value;
+
+      const confirmed = window.confirm(
+        "Gunakan rekomendasi hak akses standar untuk role " +
+        (roleLabels[roleId] || roleId) +
+        "? Hak akses yang sudah dipilih akan diganti."
+      );
+
+      if (confirmed) {
+        applyRolePreset(roleId);
+      }
+    });
+
+    $("selectAllPermissions").addEventListener("click", () => {
+      setPermissions(permissionValues);
+    });
+
+    $("clearPermissions").addEventListener("click", () => {
+      setPermissions([]);
+    });
+
+    $("userForm").addEventListener("submit", saveUser);
+    $("closeModalButton").addEventListener("click", closeModal);
+    $("cancelButton").addEventListener("click", closeModal);
+
+    $("userTableBody").addEventListener("click", event => {
+      const editButton = event.target.closest("[data-edit]");
+      const toggleButton = event.target.closest("[data-toggle]");
+
+      if (editButton) {
+        const user = users.find(item =>
+          item.userId === editButton.dataset.edit
+        );
+
+        if (user) openEditModal(user);
+      }
+
+      if (toggleButton) {
+        toggleUserStatus(toggleButton.dataset.toggle);
+      }
+    });
+
+    $("userModal").addEventListener("click", event => {
+      if (event.target === $("userModal")) closeModal();
+    });
+
+    renderUsers();
+  </script>
+
+</body>
+</html>
