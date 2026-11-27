@@ -23,7 +23,7 @@
       color: #243449;
     }
 
-    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    /* SIDEBAR - SAMA DENGAN DASHBOARD.HTML */
     .sidebar {
       width: 245px;
       position: fixed;
@@ -32,7 +32,6 @@
       color: white;
       padding: 24px 15px;
       overflow-y: auto;
-      z-index: 20;
     }
 
     .brand {
@@ -51,7 +50,6 @@
       place-items: center;
       font-size: 23px;
       font-weight: bold;
-      flex-shrink: 0;
     }
 
     .brand h2 {
@@ -88,12 +86,6 @@
     .nav-link.active {
       background: #1e3c59;
       color: white;
-    }
-
-    .nav-link span:first-child {
-      width: 16px;
-      text-align: center;
-      flex-shrink: 0;
     }
 
     .main {
@@ -534,35 +526,96 @@
     }
 
     @media(max-width: 1000px) {
-      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
+    /* MOBILE - SAMA DENGAN DASHBOARD.HTML */
     @media(max-width: 650px) {
-      .sidebar { width: 65px; padding: 15px 6px; }
-      .brand { padding: 0 5px 25px; }
-      .brand h2, .brand small,
-      .nav-link span:not(:first-child), .section-label { display: none; }
-      .nav-link { justify-content: center; }
-      .main { margin-left: 65px; padding: 15px; }
-      .stats { gap: 9px; }
-      .card { padding: 13px; }
-      .number { font-size: 21px; }
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .form-grid { grid-template-columns: 1fr; }
-      .form-group.full { grid-column: auto; }
-      .toolbar { align-items: stretch; }
-      .toolbar-left, .toolbar-right { width: 100%; }
-      .toolbar .button { flex: 1; }
-      .filter-input, .filter-select { width: 100%; }
-      .filters { width: 100%; }
-      .filters > * { flex: 1; min-width: 0; }
+      .sidebar {
+        width: 65px;
+        padding: 15px 6px;
+      }
+
+      .brand {
+        padding: 0 5px 25px;
+      }
+
+      .brand h2,
+      .brand small,
+      .nav-link span,
+      .section-label {
+        display: none;
+      }
+
+      .nav-link {
+        justify-content: center;
+      }
+
+      .main {
+        margin-left: 65px;
+        padding: 15px;
+      }
+
+      .stats {
+        gap: 9px;
+      }
+
+      .card {
+        padding: 13px;
+      }
+
+      .number {
+        font-size: 21px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .toolbar-left,
+      .toolbar-right {
+        width: 100%;
+      }
+
+      .toolbar .button {
+        flex: 1;
+      }
+
+      .filter-input,
+      .filter-select {
+        width: 100%;
+      }
+
+      .filters {
+        width: 100%;
+      }
+
+      .filters > * {
+        flex: 1;
+        min-width: 0;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- SIDEBAR - STRUKTUR MENGIKUTI DASHBOARD.HTML -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-icon">Z</div>
@@ -1342,7 +1395,6 @@
           createdAt: serverTimestamp()
         });
       } catch (error) {
-        // Kegagalan audit log tidak membatalkan penyimpanan data utama.
         console.warn("Audit log was not saved:", error.code || error.message);
       }
     }
@@ -1376,7 +1428,6 @@
 
           const updateData = { ...data };
 
-          // Kolom kosong pada saat edit mempertahankan nilai lama.
           const preserveFields = [
             "nik", "gender", "birthCity", "birthDate", "religion",
             "maritalStatus", "ktpAddress", "email", "phone",
@@ -1502,6 +1553,7 @@
             ". Hubungi Administrator HRIS untuk memeriksa profil akun.",
             "error"
           );
+
           $("employeeTableBody").innerHTML = `
             <tr><td colspan="7"><div class="empty">Profil pengguna belum tersedia.</div></td></tr>`;
           return;
@@ -1537,6 +1589,7 @@
             "Kamu berhasil login, tetapi tidak memiliki izin untuk melihat Data Karyawan.",
             "error"
           );
+
           $("employeeTableBody").innerHTML = `
             <tr><td colspan="7"><div class="empty">Akses ke modul Data Karyawan tidak diberikan.</div></td></tr>`;
           return;
@@ -1567,7 +1620,6 @@
       authHandled = true;
 
       if (!user) {
-        // Hanya arahkan ke login bila memang tidak ada sesi autentikasi.
         location.replace("index.html");
         return;
       }
