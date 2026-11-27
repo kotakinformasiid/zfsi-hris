@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audit Log | ZFSI-HRIS</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #10243b;
+      --blue: #2879c7;
+      --bg: #f4f7fb;
+      --border: #e5eaf0;
+      --muted: #8290a2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #243449;
+    }
+
+    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    .sidebar {
+      width: 245px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--navy);
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 8px 30px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .brand small {
+      font-size: 9px;
+      color: #afc2d5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      color: #8199b0;
+      padding: 13px 10px 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #cbd7e3;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1e3c59;
+      color: white;
+    }
+
+    .nav-link span:first-child {
+      width: 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .main {
+      margin-left: 245px;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 7px 0 0;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e8f6ef;
+      color: #16865b;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #486078;
+      background: transparent;
+      color: white;
+      padding: 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* HALAMAN */
+    .notice {
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+      padding: 15px 17px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .notice.warning {
+      background: #fff7e5;
+      border-color: #f3dfb4;
+      color: #815d16;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 19px;
+      border-radius: 12px;
+      min-width: 0;
+    }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .number {
+      font-size: 26px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 17px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid var(--border);
+    }
+
+    .button-danger {
+      background: #fff0f0;
+      color: #a83232;
+      border: 1px solid #f0cccc;
+    }
+
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    input, select {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #243449;
+    }
+
+    .filter-input,
+    .filter-select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      min-width: 150px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1050px;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #65758a;
+      font-size: 11px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .actor-name {
+      font-weight: bold;
+    }
+
+    .subtext {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .badge-success {
+      background: #e8f6ef;
+      color: #16865b;
+    }
+
+    .badge-failed {
+      background: #fdeaea;
+      color: #a33c3c;
+    }
+
+    .badge-info {
+      background: #eaf3fc;
+      color: #2879c7;
+    }
+
+    .badge-warning {
+      background: #fff5dc;
+      color: #9a6b11;
+    }
+
+    .badge-simulation {
+      background: #fff5dc;
+      color: #9a6b11;
+    }
+
+    .action-button {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 7px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #2879c7;
+    }
+
+    .empty {
+      padding: 42px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .empty-icon {
+      display: block;
+      font-size: 30px;
+      margin-bottom: 9px;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #a83232;
+      background: #fff0f0;
+      border: 1px solid #f0cccc;
+    }
+
+    .message.success {
+      display: block;
+      color: #176b4b;
+      background: #eaf8f1;
+      border: 1px solid #cdebdc;
+    }
+
+    .message.info {
+      display: block;
+      color: #225a8d;
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+    }
+
+    .table-footnote {
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    /* MODAL DETAIL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #10243b99;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 650px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px #0003;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .close-button {
+      border: 0;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .detail-item {
+      min-width: 0;
+      padding: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+    }
+
+    .detail-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: .5px;
+      margin-bottom: 7px;
+    }
+
+    .detail-value {
+      font-size: 13px;
+      color: #243449;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+
+    .detail-value.normal {
+      font-weight: normal;
+      white-space: pre-wrap;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 15px 22px;
+      border-top: 1px solid var(--border);
+      position: sticky;
+      bottom: 0;
+      background: white;
+    }
+
+    #toast {
+      position: fixed;
+      right: 20px;
+      bottom: 15px;
+      z-index: 80;
+      max-width: 380px;
+      margin: 0;
+    }
+
+    @media(max-width: 1000px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media(max-width: 650px) {
+      .sidebar {
+        width: 65px;
+        padding: 15px 6px;
+      }
+
+      .brand {
+        padding: 0 5px 25px;
+      }
+
+      .brand h2,
+      .brand small,
+      .nav-link span:not(:first-child),
+      .section-label {
+        display: none;
+      }
+
+      .nav-link {
+        justify-content: center;
+      }
+
+      .main {
+        margin-left: 65px;
+        padding: 15px;
+      }
+
+      .stats { gap: 9px; }
+      .card { padding: 13px; }
+      .number { font-size: 21px; }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar,
+      .toolbar-group {
+        width: 100%;
+      }
+
+      .toolbar .button {
+        flex: 1;
+      }
+
+      .filters {
+        width: 100%;
+      }
+
+      .filters > * {
+        width: 100%;
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-item.full {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div>
+        <h2>ZFSI-HRIS</h2>
+        <small>HUMAN RESOURCE SYSTEM</small>
+      </div>
+    </div>
+
+    <div class="section-label">MAIN MENU</div>
+
+    <a class="nav-link" href="dashboard.html">
+      <span>▦</span><span>Dashboard</span>
+    </a>
+
+    <a class="nav-link" href="employees.html">
+      <span>♙</span><span>Data Karyawan</span>
+    </a>
+
+    <a class="nav-link" href="attendance.html">
+      <span>◷</span><span>Absensi</span>
+    </a>
+
+    <a class="nav-link" href="leave.html">
+      <span>▣</span><span>Cuti & Izin</span>
+    </a>
+
+    <a class="nav-link" href="overtime.html">
+      <span>◴</span><span>Lembur</span>
+    </a>
+
+    <div class="section-label">COMPENSATION</div>
+
+    <a class="nav-link" href="payroll.html">
+      <span>＄</span><span>Payroll</span>
+    </a>
+
+    <a class="nav-link" href="payslip.html">
+      <span>▤</span><span>Slip Gaji</span>
+    </a>
+
+    <div class="section-label">MANAGEMENT</div>
+
+    <a class="nav-link" href="announcements.html">
+      <span>♧</span><span>Pengumuman</span>
+    </a>
+
+    <a class="nav-link" href="reports.html">
+      <span>▥</span><span>Laporan</span>
+    </a>
+
+    <a class="nav-link" href="users.html">
+      <span>♙</span><span>User Management</span>
+    </a>
+
+    <a class="nav-link active" href="audit-log.html">
+      <span>◴</span><span>Audit Log</span>
+    </a>
+
+    <a class="nav-link" href="settings.html">
+      <span>⚙</span><span>Pengaturan</span>
+    </a>
+
+    <button class="logout" id="logoutButton">
+      Keluar / Logout
+    </button>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <h1>Audit Log</h1>
+        <p>Riwayat aktivitas pengguna dan perubahan dalam sistem ZFSI-HRIS.</p>
+      </div>
+
+      <div class="profile">
+        <strong id="userEmail">Memeriksa akun...</strong>
+        <div class="status">Terautentikasi</div>
+      </div>
+    </header>
+
+    <div id="pageMessage" class="message"></div>
+
+    <div class="notice warning">
+      <strong>Audit Log — Menunggu Integrasi Firestore</strong><br>
+      Halaman ini belum membaca aktivitas nyata dari database. Riwayat
+      transaksi dan perubahan sistem nantinya akan dicatat otomatis oleh
+      setiap modul. Log resmi akan bersifat baca-saja dan tidak dapat
+      diedit atau dihapus melalui halaman ini.
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="card-label">Total Aktivitas</div>
+        <div class="number" id="totalLogs">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Login / Logout</div>
+        <div class="number" id="authLogs">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Perubahan Data</div>
+        <div class="number" id="changeLogs">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Persetujuan</div>
+        <div class="number" id="approvalLogs">0</div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="button button-primary" id="sampleButton">
+          Tampilkan Data Contoh
+        </button>
+
+        <button class="button button-secondary" id="exportButton" disabled>
+          Export CSV
+        </button>
+      </div>
+
+      <div class="toolbar-group">
+        <button class="button button-secondary" id="resetButton">
+          Reset Data Contoh
+        </button>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Riwayat Aktivitas</h3>
+        <span class="badge badge-simulation" id="dataMode">Belum ada data</span>
+      </div>
+
+      <div style="padding:17px 18px;border-bottom:1px solid #e5eaf0">
+        <div class="filters">
+          <input
+            type="date"
+            class="filter-input"
+            id="startDate"
+            aria-label="Tanggal awal"
+          >
+
+          <input
+            type="date"
+            class="filter-input"
+            id="endDate"
+            aria-label="Tanggal akhir"
+          >
+
+          <input
+            type="search"
+            class="filter-input"
+            id="searchInput"
+            placeholder="Cari pengguna / aktivitas / ID..."
+          >
+
+          <select class="filter-select" id="moduleFilter">
+            <option value="">Semua Modul</option>
+            <option value="Authentication">Authentication</option>
+            <option value="Employees">Data Karyawan</option>
+            <option value="Attendance">Absensi</option>
+            <option value="Leave">Cuti & Izin</option>
+            <option value="Overtime">Lembur</option>
+            <option value="Payroll">Payroll</option>
+            <option value="Users">User Management</option>
+            <option value="Settings">Pengaturan</option>
+          </select>
+
+          <select class="filter-select" id="actionFilter">
+            <option value="">Semua Aktivitas</option>
+            <option value="LOGIN">Login</option>
+            <option value="LOGOUT">Logout</option>
+            <option value="CREATE">Create</option>
+            <option value="UPDATE">Update</option>
+            <option value="APPROVE">Approve</option>
+            <option value="REJECT">Reject</option>
+            <option value="STATUS_CHANGE">Status Change</option>
+          </select>
+
+          <select class="filter-select" id="resultFilter">
+            <option value="">Semua Hasil</option>
+            <option value="success">Success</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Waktu</th>
+              <th>Pengguna</th>
+              <th>Modul</th>
+              <th>Aktivitas</th>
+              <th>Record ID</th>
+              <th>Hasil</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+
+          <tbody id="logTableBody">
+            <tr>
+              <td colspan="7">
+                <div class="empty">
+                  <span class="empty-icon">◴</span>
+                  Belum ada riwayat aktivitas yang ditampilkan.<br>
+                  Log resmi akan tampil setelah integrasi Firestore selesai.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footnote">
+        Audit Log resmi akan dirancang sebagai catatan yang tidak dapat
+        diubah atau dihapus oleh pengguna biasa. Akses untuk melihat log
+        juga akan mengikuti role dan permission.
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DETAIL AUDIT LOG -->
+  <div class="modal" id="detailModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2>Detail Aktivitas</h2>
+        <button class="close-button" id="closeModalButton" type="button">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-grid" id="detailContent"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="button button-secondary" type="button" id="closeFooterButton">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="message"></div>
+
+  <script type="module">
+    import {
+      initializeApp,
+      getApps,
+      getApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+      authDomain: "zfsi-hris.firebaseapp.com",
+      projectId: "zfsi-hris",
+      storageBucket: "zfsi-hris.firebasestorage.app",
+      messagingSenderId: "642441161494",
+      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let authHandled = false;
+    let auditLogs = [];
+    let sampleMode = false;
+
+    const $ = id => document.getElementById(id);
+
+    const moduleLabels = {
+      Authentication: "Authentication",
+      Employees: "Data Karyawan",
+      Attendance: "Absensi",
+      Leave: "Cuti & Izin",
+      Overtime: "Lembur",
+      Payroll: "Payroll",
+      Users: "User Management",
+      Settings: "Pengaturan"
+    };
+
+    const actionLabels = {
+      LOGIN: "Login",
+      LOGOUT: "Logout",
+      CREATE: "Create",
+      UPDATE: "Update",
+      APPROVE: "Approve",
+      REJECT: "Reject",
+      STATUS_CHANGE: "Status Change"
+    };
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function showMessage(text, type = "info") {
+      const element = $("pageMessage");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+    }
+
+    function clearMessage() {
+      $("pageMessage").textContent = "";
+      $("pageMessage").className = "message";
+      $("pageMessage").style.display = "none";
+    }
+
+    function showToast(text, type = "success") {
+      const element = $("toast");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+
+      window.setTimeout(() => {
+        element.style.display = "none";
+      }, 3500);
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "—";
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) return String(value);
+
+      return date.toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+
+    function datePart(value) {
+      if (!value) return "";
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) return "";
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    }
+
+    function resultBadge(result) {
+      if (result === "success") {
+        return '<span class="badge badge-success">Success</span>';
+      }
+
+      if (result === "failed") {
+        return '<span class="badge badge-failed">Failed</span>';
+      }
+
+      return '<span class="badge badge-info">Unknown</span>';
+    }
+
+    function getSampleLogs() {
+      return [
+        {
+          logId: "SIM-LOG-0001",
+          timestamp: "2026-11-26T09:15:00+07:00",
+          userId: "SIM-ADMIN-001",
+          userName: "HR Administrator",
+          email: "hr.admin@example.com",
+          module: "Authentication",
+          action: "LOGIN",
+          recordId: "SESSION-001",
+          result: "success",
+          description: "Pengguna berhasil login ke ZFSI-HRIS.",
+          ipAddress: "192.0.2.10",
+          changes: "Sesi pengguna berhasil dibuat.",
+          source: "Browser"
+        },
+        {
+          logId: "SIM-LOG-0002",
+          timestamp: "2026-11-26T09:28:00+07:00",
+          userId: "SIM-ADMIN-001",
+          userName: "HR Administrator",
+          email: "hr.admin@example.com",
+          module: "Employees",
+          action: "CREATE",
+          recordId: "ZFSI-EMP-000001",
+          result: "success",
+          description: "Penambahan data karyawan baru.",
+          ipAddress: "192.0.2.10",
+          changes: "Data karyawan dibuat pada simulasi.",
+          source: "Employee Data"
+        },
+        {
+          logId: "SIM-LOG-0003",
+          timestamp: "2026-11-26T10:05:00+07:00",
+          userId: "SIM-HR-002",
+          userName: "HR Staff",
+          email: "hr.staff@example.com",
+          module: "Attendance",
+          action: "UPDATE",
+          recordId: "ATT-SIM-001",
+          result: "success",
+          description: "Perubahan catatan jam masuk karyawan.",
+          ipAddress: "192.0.2.11",
+          changes: "Jam masuk disesuaikan dari 08:15 menjadi 08:00.",
+          source: "Attendance"
+        },
+        {
+          logId: "SIM-LOG-0004",
+          timestamp: "2026-11-26T11:30:00+07:00",
+          userId: "SIM-MANAGER-003",
+          userName: "Department Manager",
+          email: "manager@example.com",
+          module: "Leave",
+          action: "APPROVE",
+          recordId: "LEAVE-SIM-001",
+          result: "success",
+          description: "Persetujuan pengajuan cuti karyawan.",
+          ipAddress: "192.0.2.12",
+          changes: "Status pengajuan berubah dari Pending menjadi Approved.",
+          source: "Leave Management"
+        },
+        {
+          logId: "SIM-LOG-0005",
+          timestamp: "2026-11-26T13:45:00+07:00",
+          userId: "SIM-ADMIN-001",
+          userName: "HR Administrator",
+          email: "hr.admin@example.com",
+          module: "Users",
+          action: "UPDATE",
+          recordId: "SIM-USER-004",
+          result: "success",
+          description: "Perubahan profil pengguna.",
+          ipAddress: "192.0.2.10",
+          changes: "Role simulasi diperbarui.",
+          source: "User Management"
+        },
+        {
+          logId: "SIM-LOG-0006",
+          timestamp: "2026-11-26T14:10:00+07:00",
+          userId: "SIM-FIN-005",
+          userName: "Finance Staff",
+          email: "finance@example.com",
+          module: "Payroll",
+          action: "UPDATE",
+          recordId: "PAY-SIM-001",
+          result: "success",
+          description: "Pembaruan draft payroll.",
+          ipAddress: "192.0.2.13",
+          changes: "Komponen pendapatan dan potongan diperbarui.",
+          source: "Payroll"
+        },
+        {
+          logId: "SIM-LOG-0007",
+          timestamp: "2026-11-26T15:00:00+07:00",
+          userId: "SIM-MANAGER-003",
+          userName: "Department Manager",
+          email: "manager@example.com",
+          module: "Overtime",
+          action: "REJECT",
+          recordId: "OT-SIM-002",
+          result: "success",
+          description: "Penolakan pengajuan lembur.",
+          ipAddress: "192.0.2.12",
+          changes: "Status pengajuan berubah dari Pending menjadi Rejected.",
+          source: "Overtime"
+        },
+        {
+          logId: "SIM-LOG-0008",
+          timestamp: "2026-11-26T16:20:00+07:00",
+          userId: "SIM-ADMIN-001",
+          userName: "HR Administrator",
+          email: "hr.admin@example.com",
+          module: "Settings",
+          action: "STATUS_CHANGE",
+          recordId: "DEPT-SIM-001",
+          result: "failed",
+          description: "Percobaan perubahan status departemen gagal pada simulasi.",
+          ipAddress: "192.0.2.10",
+          changes: "Perubahan tidak diterapkan.",
+          source: "Settings"
+        },
+        {
+          logId: "SIM-LOG-0009",
+          timestamp: "2026-11-26T17:00:00+07:00",
+          userId: "SIM-HR-002",
+          userName: "HR Staff",
+          email: "hr.staff@example.com",
+          module: "Authentication",
+          action: "LOGOUT",
+          recordId: "SESSION-002",
+          result: "success",
+          description: "Pengguna keluar dari ZFSI-HRIS.",
+          ipAddress: "192.0.2.11",
+          changes: "Sesi pengguna diakhiri.",
+          source: "Browser"
+        }
+      ];
+    }
+
+    function getFilteredLogs() {
+      const startDate = $("startDate").value;
+      const endDate = $("endDate").value;
+      const search = $("searchInput").value.trim().toLowerCase();
+      const module = $("moduleFilter").value;
+      const action = $("actionFilter").value;
+      const result = $("resultFilter").value;
+
+      return auditLogs.filter(log => {
+        const logDate = datePart(log.timestamp);
+
+        const searchable = [
+          log.logId,
+          log.userId,
+          log.userName,
+          log.email,
+          log.module,
+          log.action,
+          log.recordId,
+          log.description,
+          log.changes
+        ].join(" ").toLowerCase();
+
+        const matchesStart = !startDate || logDate >= startDate;
+        const matchesEnd = !endDate || logDate <= endDate;
+        const matchesSearch = !search || searchable.includes(search);
+        const matchesModule = !module || log.module === module;
+        const matchesAction = !action || log.action === action;
+        const matchesResult = !result || log.result === result;
+
+        return matchesStart &&
+          matchesEnd &&
+          matchesSearch &&
+          matchesModule &&
+          matchesAction &&
+          matchesResult;
+      });
+    }
+
+    function updateStatistics(records) {
+      $("totalLogs").textContent = records.length;
+
+      $("authLogs").textContent =
+        records.filter(log =>
+          ["LOGIN", "LOGOUT"].includes(log.action)
+        ).length;
+
+      $("changeLogs").textContent =
+        records.filter(log =>
+          ["CREATE", "UPDATE", "STATUS_CHANGE"].includes(log.action)
+        ).length;
+
+      $("approvalLogs").textContent =
+        records.filter(log =>
+          ["APPROVE", "REJECT"].includes(log.action)
+        ).length;
+    }
+
+    function renderLogs() {
+      const records = getFilteredLogs();
+      const tbody = $("logTableBody");
+
+      updateStatistics(records);
+
+      $("exportButton").disabled =
+        !sampleMode || records.length === 0;
+
+      if (!records.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7">
+              <div class="empty">
+                <span class="empty-icon">◴</span>
+                Tidak ada aktivitas yang sesuai dengan filter.<br>
+                Data audit resmi akan tampil setelah Firestore terhubung.
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = records.map(log => `
+        <tr>
+          <td>
+            <strong>${escapeHTML(formatDateTime(log.timestamp))}</strong>
+            <div class="subtext">${escapeHTML(log.logId)}</div>
+          </td>
+
+          <td>
+            <div class="actor-name">${escapeHTML(log.userName)}</div>
+            <div class="subtext">${escapeHTML(log.email)}</div>
+          </td>
+
+          <td>${escapeHTML(moduleLabels[log.module] || log.module)}</td>
+
+          <td>
+            <strong>${escapeHTML(actionLabels[log.action] || log.action)}</strong>
+            <div class="subtext">${escapeHTML(log.description)}</div>
+          </td>
+
+          <td>${escapeHTML(log.recordId || "—")}</td>
+
+          <td>${resultBadge(log.result)}</td>
+
+          <td>
+            <button
+              class="action-button"
+              type="button"
+              data-detail="${escapeHTML(log.logId)}"
+            >Detail</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function showSamples() {
+      auditLogs = getSampleLogs();
+      sampleMode = true;
+
+      $("dataMode").textContent = "DATA CONTOH";
+      $("dataMode").className = "badge badge-simulation";
+
+      $("startDate").value = "";
+      $("endDate").value = "";
+      $("searchInput").value = "";
+      $("moduleFilter").value = "";
+      $("actionFilter").value = "";
+      $("resultFilter").value = "";
+
+      renderLogs();
+
+      showMessage(
+        "Data contoh sedang ditampilkan. Seluruh catatan memiliki ID SIM dan bukan aktivitas nyata perusahaan.",
+        "info"
+      );
+    }
+
+    function resetSamples() {
+      auditLogs = [];
+      sampleMode = false;
+
+      $("dataMode").textContent = "Belum ada data";
+      $("dataMode").className = "badge badge-simulation";
+
+      $("startDate").value = "";
+      $("endDate").value = "";
+      $("searchInput").value = "";
+      $("moduleFilter").value = "";
+      $("actionFilter").value = "";
+      $("resultFilter").value = "";
+
+      renderLogs();
+
+      $("logTableBody").innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="empty">
+              <span class="empty-icon">◴</span>
+              Data contoh telah dihapus dari tampilan.<br>
+              Riwayat audit resmi belum terhubung ke Firestore.
+            </div>
+          </td>
+        </tr>
+      `;
+
+      clearMessage();
+      showToast("Data contoh telah dikosongkan.", "info");
+    }
+
+    function detailItem(label, value, full = false, normal = false) {
+      return `
+        <div class="detail-item ${full ? "full" : ""}">
+          <div class="detail-label">${escapeHTML(label)}</div>
+          <div class="detail-value ${normal ? "normal" : ""}">
+            ${escapeHTML(value || "—")}
+          </div>
+        </div>
+      `;
+    }
+
+    function openDetail(logId) {
+      const log = auditLogs.find(item => item.logId === logId);
+      if (!log) return;
+
+      $("detailContent").innerHTML = [
+        detailItem("Log ID", log.logId),
+        detailItem("Waktu", formatDateTime(log.timestamp)),
+        detailItem("User ID", log.userId),
+        detailItem("Nama Pengguna", log.userName),
+        detailItem("Email", log.email),
+        detailItem("Modul", moduleLabels[log.module] || log.module),
+        detailItem("Aktivitas", actionLabels[log.action] || log.action),
+        detailItem("Record ID", log.recordId),
+        detailItem("Hasil", log.result),
+        detailItem("Sumber Aktivitas", log.source),
+        detailItem("Alamat IP", log.ipAddress),
+        detailItem("Deskripsi Aktivitas", log.description, true, true),
+        detailItem("Informasi Perubahan", log.changes, true, true),
+        detailItem(
+          "Jenis Data",
+          sampleMode ? "SIMULASI / BUKAN DATA NYATA" : "DATA AUDIT",
+          true
+        )
+      ].join("");
+
+      $("detailModal").classList.add("show");
+    }
+
+    function closeDetail() {
+      $("detailModal").classList.remove("show");
+    }
+
+    function exportCSV() {
+      const records = getFilteredLogs();
+
+      if (!sampleMode || !records.length) {
+        showToast(
+          "Tidak ada data contoh yang dapat diekspor. Ekspor log resmi akan tersedia setelah integrasi Firestore.",
+          "info"
+        );
+        return;
+      }
+
+      const headers = [
+        "Log ID",
+        "Waktu",
+        "User ID",
+        "Nama Pengguna",
+        "Email",
+        "Modul",
+        "Aktivitas",
+        "Record ID",
+        "Hasil",
+        "Deskripsi",
+        "Perubahan",
+        "Alamat IP",
+        "Sumber",
+        "Jenis Data"
+      ];
+
+      const rows = records.map(log => [
+        log.logId,
+        log.timestamp,
+        log.userId,
+        log.userName,
+        log.email,
+        log.module,
+        log.action,
+        log.recordId,
+        log.result,
+        log.description,
+        log.changes,
+        log.ipAddress,
+        log.source,
+        "SIMULASI - BUKAN DATA NYATA"
+      ]);
+
+      const csv = [
+        headers,
+        ...rows
+      ].map(row =>
+        row.map(value =>
+          `"${String(value ?? "").replace(/"/g, '""')}"`
+        ).join(",")
+      ).join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "ZFSI-HRIS-Audit-Log-SIMULATION.csv";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    onAuthStateChanged(auth, user => {
+      if (authHandled) return;
+      authHandled = true;
+
+      if (!user) {
+        location.replace("index.html");
+        return;
+      }
+
+      currentUser = user;
+
+      $("userEmail").textContent =
+        user.email || "Pengguna ZFSI-HRIS";
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        location.replace("index.html");
+      } catch (error) {
+        showMessage(
+          "Gagal logout: " + (error.message || error.code),
+          "error"
+        );
+      }
+    });
+
+    $("sampleButton").addEventListener("click", showSamples);
+    $("resetButton").addEventListener("click", resetSamples);
+    $("exportButton").addEventListener("click", exportCSV);
+
+    [
+      "startDate",
+      "endDate",
+      "searchInput",
+      "moduleFilter",
+      "actionFilter",
+      "resultFilter"
+    ].forEach(id => {
+      $(id).addEventListener(
+        id === "searchInput" ? "input" : "change",
+        renderLogs
+      );
+    });
+
+    $("logTableBody").addEventListener("click", event => {
+      const button = event.target.closest("[data-detail]");
+      if (!button) return;
+
+      openDetail(button.dataset.detail);
+    });
+
+    $("closeModalButton").addEventListener("click", closeDetail);
+    $("closeFooterButton").addEventListener("click", closeDetail);
+
+    $("detailModal").addEventListener("click", event => {
+      if (event.target === $("detailModal")) closeDetail();
+    });
+
+    renderLogs();
+  </script>
+
+</body>
+</html>
