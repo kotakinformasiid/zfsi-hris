@@ -23,7 +23,7 @@
       color: #243449;
     }
 
-    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    /* SIDEBAR - SAMA DENGAN DASHBOARD.HTML */
     .sidebar {
       width: 245px;
       position: fixed;
@@ -50,7 +50,6 @@
       place-items: center;
       font-size: 23px;
       font-weight: bold;
-      flex-shrink: 0;
     }
 
     .brand h2 {
@@ -87,12 +86,6 @@
     .nav-link.active {
       background: #1e3c59;
       color: white;
-    }
-
-    .nav-link span:first-child {
-      width: 16px;
-      text-align: center;
-      flex-shrink: 0;
     }
 
     .main {
@@ -590,12 +583,31 @@
     }
 
     @media(max-width: 650px) {
-      .sidebar { width: 65px; padding: 15px 6px; }
-      .brand { padding: 0 5px 25px; }
-      .brand h2, .brand small,
-      .nav-link span:not(:first-child), .section-label { display: none; }
-      .nav-link { justify-content: center; }
-      .main { margin-left: 65px; padding: 15px; }
+      .sidebar {
+        width: 65px;
+        padding: 15px 6px;
+      }
+
+      .brand {
+        padding: 0 5px 25px;
+      }
+
+      .brand h2,
+      .brand small,
+      .nav-link span,
+      .section-label {
+        display: none;
+      }
+
+      .nav-link {
+        justify-content: center;
+      }
+
+      .main {
+        margin-left: 65px;
+        padding: 15px;
+      }
+
       .stats { gap: 9px; }
       .card { padding: 13px; }
       .number { font-size: 21px; }
@@ -612,7 +624,7 @@
 
 <body>
 
-  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <!-- SIDEBAR - SAMA DENGAN DASHBOARD.HTML -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-icon">Z</div>
