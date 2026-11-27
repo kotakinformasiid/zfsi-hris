@@ -1255,7 +1255,50 @@ async function initializeUser(user){
   await loadEmployees();
 }
 
-onAuthStateChanged(auth,async user=>{
+
+async function initializeUser(user){
+  currentUser = user;
+
+  const profileRef = doc(db,"users",user.uid);
+  const profileSnap = await getDoc(profileRef);
+
+  if(!profileSnap.exists()){
+    throw new Error("Profil pengguna tidak ditemukan di Firestore.");
+  }
+
+  currentProfile = profileSnap.data();
+
+  console.log("USER UID:", user.uid);
+  console.log("USER PROFILE:", currentProfile);
+
+  if(currentProfile.status !== "active" ||
+     currentProfile.active === false){
+    throw new Error("Akun pengguna tidak aktif.");
+  }
+
+  if(currentProfile.companyId !== COMPANY_ID){
+    throw new Error("Company ID tidak sesuai.");
+  }
+
+  const isSuperAdmin =
+    currentProfile.systemRole === "super_admin" ||
+    currentProfile.roleId === "super_admin";
+
+  const hasPermission =
+    Array.isArray(currentProfile.permissions) &&
+    currentProfile.permissions.includes("employees.manage");
+
+  if(!isSuperAdmin && !hasPermission){
+    throw new Error("Akun tidak memiliki izin Employee Data.");
+  }
+
+  $("userEmail").textContent =
+    currentProfile.email || user.email || "Logged in";
+
+  await loadEmployees();
+}
+
+onAuthStateChanged(auth, async user => {
   if(!user){
     window.location.href = "index.html";
     return;
@@ -1264,10 +1307,11 @@ onAuthStateChanged(auth,async user=>{
   try{
     await initializeUser(user);
   }catch(error){
-    console.error(error);
-    showMessage(error.message,"error");
+    console.error("EMPLOYEE ACCESS ERROR:", error);
+    showMessage(error.message, "error");
   }
 });
+
 
 // BUTTONS
 $("addBtn").addEventListener("click",openAdd);
