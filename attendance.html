@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Absensi | ZFSI-HRIS</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #10243b;
+      --blue: #2879c7;
+      --bg: #f4f7fb;
+      --border: #e5eaf0;
+      --muted: #8290a2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #243449;
+    }
+
+    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    .sidebar {
+      width: 245px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--navy);
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 8px 30px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .brand small {
+      font-size: 9px;
+      color: #afc2d5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      color: #8199b0;
+      padding: 13px 10px 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #cbd7e3;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1e3c59;
+      color: white;
+    }
+
+    .main {
+      margin-left: 245px;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 7px 0 0;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e8f6ef;
+      color: #16865b;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #486078;
+      background: transparent;
+      color: white;
+      padding: 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* KOMPONEN HALAMAN */
+    .notice {
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+      padding: 15px 17px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 19px;
+      border-radius: 12px;
+    }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .number {
+      font-size: 27px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 17px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid var(--border);
+    }
+
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    input, select, textarea {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #243449;
+    }
+
+    .filter-input,
+    .filter-select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      min-width: 160px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #65758a;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .badge-present {
+      background: #e8f6ef;
+      color: #16865b;
+    }
+
+    .badge-late {
+      background: #fff5dc;
+      color: #9a6b11;
+    }
+
+    .badge-sick,
+    .badge-permission {
+      background: #eaf3fc;
+      color: #2879c7;
+    }
+
+    .badge-absent {
+      background: #fdeaea;
+      color: #a33c3c;
+    }
+
+    .badge-off {
+      background: #eef0f3;
+      color: #65758a;
+    }
+
+    .action-button {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 7px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #2879c7;
+    }
+
+    .empty {
+      padding: 38px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #a83232;
+      background: #fff0f0;
+      border: 1px solid #f0cccc;
+    }
+
+    .message.success {
+      display: block;
+      color: #176b4b;
+      background: #eaf8f1;
+      border: 1px solid #cdebdc;
+    }
+
+    .message.info {
+      display: block;
+      color: #225a8d;
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #10243b99;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px #0003;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .close-button {
+      border: 0;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .form-body {
+      padding: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      min-width: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #536579;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #dce3eb;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .form-group textarea {
+      min-height: 75px;
+      resize: vertical;
+    }
+
+    .form-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .readonly {
+      background: #f4f7fb !important;
+      color: #66788a !important;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 15px 22px;
+      border-top: 1px solid var(--border);
+      position: sticky;
+      bottom: 0;
+      background: white;
+    }
+
+    #toast {
+      position: fixed;
+      right: 20px;
+      bottom: 15px;
+      z-index: 80;
+      max-width: 380px;
+      margin: 0;
+    }
+
+    @media(max-width: 1000px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media(max-width: 650px) {
+      .sidebar { width: 65px; padding: 15px 6px; }
+      .brand { padding: 0 5px 25px; }
+      .brand h2, .brand small,
+      .nav-link span, .section-label { display: none; }
+      .nav-link { justify-content: center; }
+      .main { margin-left: 65px; padding: 15px; }
+      .stats { gap: 9px; }
+      .card { padding: 13px; }
+      .number { font-size: 21px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: auto; }
+      .toolbar, .toolbar-group { width: 100%; }
+      .toolbar .button { flex: 1; }
+      .filters { width: 100%; }
+      .filters > * { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div>
+        <h2>ZFSI-HRIS</h2>
+        <small>HUMAN RESOURCE SYSTEM</small>
+      </div>
+    </div>
+
+    <div class="section-label">MAIN MENU</div>
+
+    <a class="nav-link" href="dashboard.html">
+      <span>▦</span><span>Dashboard</span>
+    </a>
+
+    <a class="nav-link" href="employees.html">
+      <span>♙</span><span>Data Karyawan</span>
+    </a>
+
+    <a class="nav-link active" href="attendance.html">
+      <span>◷</span><span>Absensi</span>
+    </a>
+
+    <a class="nav-link" href="leave.html">
+      <span>▣</span><span>Cuti & Izin</span>
+    </a>
+
+    <a class="nav-link" href="overtime.html">
+      <span>◴</span><span>Lembur</span>
+    </a>
+
+    <div class="section-label">COMPENSATION</div>
+
+    <a class="nav-link" href="payroll.html">
+      <span>＄</span><span>Payroll</span>
+    </a>
+
+    <a class="nav-link" href="payslip.html">
+      <span>▤</span><span>Slip Gaji</span>
+    </a>
+
+    <div class="section-label">MANAGEMENT</div>
+
+    <a class="nav-link" href="announcements.html">
+      <span>♧</span><span>Pengumuman</span>
+    </a>
+
+    <a class="nav-link" href="reports.html">
+      <span>▥</span><span>Laporan</span>
+    </a>
+
+    <a class="nav-link" href="users.html">
+      <span>♙</span><span>User Management</span>
+    </a>
+
+    <a class="nav-link" href="audit-log.html">
+      <span>◴</span><span>Audit Log</span>
+    </a>
+
+    <a class="nav-link" href="settings.html">
+      <span>⚙</span><span>Pengaturan</span>
+    </a>
+
+    <button class="logout" id="logoutButton">
+      Keluar / Logout
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1>Absensi Karyawan</h1>
+        <p>Pencatatan dan pemantauan kehadiran karyawan ZFSI.</p>
+      </div>
+
+      <div class="profile">
+        <strong id="userEmail">Memeriksa akun...</strong>
+        <div class="status">Terautentikasi</div>
+      </div>
+    </header>
+
+    <div id="pageMessage" class="message"></div>
+
+    <div class="notice">
+      <strong>Modul Absensi — Tahap Penyusunan Halaman</strong><br>
+      Halaman ini sedang disiapkan. Untuk sementara, data yang ditambahkan
+      hanya berada di memori halaman dan akan hilang ketika halaman dimuat
+      ulang. Penyimpanan permanen, validasi hak akses, dan sinkronisasi
+      dengan Data Karyawan akan diaktifkan pada tahap integrasi Firestore.
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="card-label">Total Catatan</div>
+        <div class="number" id="totalRecords">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Hadir</div>
+        <div class="number" id="presentRecords">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Terlambat</div>
+        <div class="number" id="lateRecords">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Tidak Hadir</div>
+        <div class="number" id="absentRecords">0</div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="button button-primary" id="addButton">
+          + Input Absensi
+        </button>
+
+        <button class="button button-secondary" id="exportButton">
+          Export CSV
+        </button>
+      </div>
+
+      <div class="toolbar-group">
+        <button class="button button-secondary" id="refreshButton">
+          ↻ Reset Tampilan
+        </button>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Daftar Absensi</h3>
+
+        <div class="filters">
+          <input
+            type="date"
+            class="filter-input"
+            id="dateFilter"
+          >
+
+          <input
+            type="search"
+            class="filter-input"
+            id="searchInput"
+            placeholder="Cari ID atau nama karyawan..."
+          >
+
+          <select class="filter-select" id="statusFilter">
+            <option value="">Semua Status</option>
+            <option value="present">Hadir</option>
+            <option value="late">Terlambat</option>
+            <option value="sick">Sakit</option>
+            <option value="permission">Izin</option>
+            <option value="absent">Alpa</option>
+            <option value="off">Libur</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Employee ID</th>
+              <th>Nama Karyawan</th>
+              <th>Jam Masuk</th>
+              <th>Jam Pulang</th>
+              <th>Status</th>
+              <th>Keterangan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="attendanceTableBody">
+            <tr>
+              <td colspan="8">
+                <div class="empty">
+                  Belum ada catatan absensi pada sesi ini.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- FORM INPUT / EDIT ABSENSI -->
+  <div class="modal" id="attendanceModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modalTitle">Input Absensi</h2>
+        <button class="close-button" id="closeModalButton" type="button">×</button>
+      </div>
+
+      <form id="attendanceForm">
+        <div class="form-body">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label>Tanggal Absensi *</label>
+              <input type="date" id="attendanceDate" required>
+            </div>
+
+            <div class="form-group">
+              <label>Employee ID *</label>
+              <input
+                type="text"
+                id="employeeId"
+                required
+                maxlength="50"
+                placeholder="Contoh: ZFSI-EMP-000001"
+              >
+              <div class="form-help">
+                Pada tahap integrasi, pilihan karyawan akan diambil dari
+                Master Data Karyawan.
+              </div>
+            </div>
+
+            <div class="form-group full">
+              <label>Nama Karyawan *</label>
+              <input
+                type="text"
+                id="employeeName"
+                required
+                maxlength="120"
+                placeholder="Nama lengkap karyawan"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Jam Masuk</label>
+              <input type="time" id="checkIn">
+            </div>
+
+            <div class="form-group">
+              <label>Jam Pulang</label>
+              <input type="time" id="checkOut">
+            </div>
+
+            <div class="form-group">
+              <label>Status Kehadiran *</label>
+              <select id="attendanceStatus" required>
+                <option value="present">Hadir</option>
+                <option value="late">Terlambat</option>
+                <option value="sick">Sakit</option>
+                <option value="permission">Izin</option>
+                <option value="absent">Alpa</option>
+                <option value="off">Libur</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Keterangan</label>
+              <input
+                type="text"
+                id="notes"
+                maxlength="300"
+                placeholder="Keterangan tambahan"
+              >
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="button button-secondary" type="button" id="cancelButton">
+            Batal
+          </button>
+
+          <button class="button button-primary" type="submit" id="saveButton">
+            Simpan Absensi
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="message"></div>
+
+  <script type="module">
+    import {
+      initializeApp,
+      getApps,
+      getApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+      authDomain: "zfsi-hris.firebaseapp.com",
+      projectId: "zfsi-hris",
+      storageBucket: "zfsi-hris.firebasestorage.app",
+      messagingSenderId: "642441161494",
+      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let authHandled = false;
+    let attendanceRecords = [];
+    let editingRecordId = null;
+
+    const $ = id => document.getElementById(id);
+
+    function localDateString() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function showMessage(text, type = "info") {
+      const element = $("pageMessage");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+    }
+
+    function showToast(text, type = "success") {
+      const element = $("toast");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+
+      window.setTimeout(() => {
+        element.style.display = "none";
+      }, 3500);
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function statusText(status) {
+      const labels = {
+        present: "Hadir",
+        late: "Terlambat",
+        sick: "Sakit",
+        permission: "Izin",
+        absent: "Alpa",
+        off: "Libur"
+      };
+
+      return labels[status] || status || "—";
+    }
+
+    function statusBadge(status) {
+      const allowed = [
+        "present",
+        "late",
+        "sick",
+        "permission",
+        "absent",
+        "off"
+      ];
+
+      const safeStatus = allowed.includes(status) ? status : "off";
+
+      return `
+        <span class="badge badge-${safeStatus}">
+          ${escapeHTML(statusText(safeStatus))}
+        </span>
+      `;
+    }
+
+    function formatDate(value) {
+      if (!value) return "—";
+
+      const parts = value.split("-");
+      if (parts.length !== 3) return value;
+
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    function updateStatistics() {
+      $("totalRecords").textContent = attendanceRecords.length;
+
+      $("presentRecords").textContent =
+        attendanceRecords.filter(item =>
+          item.attendanceStatus === "present"
+        ).length;
+
+      $("lateRecords").textContent =
+        attendanceRecords.filter(item =>
+          item.attendanceStatus === "late"
+        ).length;
+
+      $("absentRecords").textContent =
+        attendanceRecords.filter(item =>
+          item.attendanceStatus === "absent"
+        ).length;
+    }
+
+    function renderAttendance() {
+      const search = $("searchInput").value.trim().toLowerCase();
+      const selectedDate = $("dateFilter").value;
+      const selectedStatus = $("statusFilter").value;
+
+      const filtered = attendanceRecords.filter(item => {
+        const searchable = [
+          item.employeeId,
+          item.employeeName,
+          item.notes
+        ].join(" ").toLowerCase();
+
+        return (!search || searchable.includes(search)) &&
+          (!selectedDate || item.attendanceDate === selectedDate) &&
+          (!selectedStatus || item.attendanceStatus === selectedStatus);
+      });
+
+      const tbody = $("attendanceTableBody");
+
+      if (!filtered.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div class="empty">
+                Tidak ada catatan absensi yang sesuai dengan filter.
+              </div>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => `
+        <tr>
+          <td>${escapeHTML(formatDate(item.attendanceDate))}</td>
+          <td><strong>${escapeHTML(item.employeeId)}</strong></td>
+          <td><strong>${escapeHTML(item.employeeName)}</strong></td>
+          <td>${escapeHTML(item.checkIn || "—")}</td>
+          <td>${escapeHTML(item.checkOut || "—")}</td>
+          <td>${statusBadge(item.attendanceStatus)}</td>
+          <td>${escapeHTML(item.notes || "—")}</td>
+          <td>
+            <button
+              class="action-button"
+              type="button"
+              data-edit="${escapeHTML(item.id)}"
+            >Edit</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function openAddModal() {
+      editingRecordId = null;
+
+      $("attendanceForm").reset();
+      $("modalTitle").textContent = "Input Absensi";
+      $("attendanceDate").value = localDateString();
+      $("attendanceStatus").value = "present";
+
+      $("attendanceModal").classList.add("show");
+    }
+
+    function openEditModal(item) {
+      editingRecordId = item.id;
+
+      $("modalTitle").textContent = "Edit Absensi";
+      $("attendanceDate").value = item.attendanceDate || "";
+      $("employeeId").value = item.employeeId || "";
+      $("employeeName").value = item.employeeName || "";
+      $("checkIn").value = item.checkIn || "";
+      $("checkOut").value = item.checkOut || "";
+      $("attendanceStatus").value = item.attendanceStatus || "present";
+      $("notes").value = item.notes || "";
+
+      $("attendanceModal").classList.add("show");
+    }
+
+    function closeModal() {
+      $("attendanceModal").classList.remove("show");
+      editingRecordId = null;
+    }
+
+    function saveAttendance(event) {
+      event.preventDefault();
+
+      const button = $("saveButton");
+      button.disabled = true;
+      button.textContent = "Memproses...";
+
+      try {
+        const data = {
+          attendanceDate: $("attendanceDate").value,
+          employeeId: $("employeeId").value.trim(),
+          employeeName: $("employeeName").value.trim(),
+          checkIn: $("checkIn").value,
+          checkOut: $("checkOut").value,
+          attendanceStatus: $("attendanceStatus").value,
+          notes: $("notes").value.trim(),
+          recordedBy: currentUser?.uid || ""
+        };
+
+        if (
+          !data.attendanceDate ||
+          !data.employeeId ||
+          !data.employeeName
+        ) {
+          throw new Error(
+            "Tanggal, Employee ID, dan Nama Karyawan wajib diisi."
+          );
+        }
+
+        if (
+          data.checkIn &&
+          data.checkOut &&
+          data.checkOut < data.checkIn
+        ) {
+          throw new Error(
+            "Jam pulang tidak boleh lebih awal daripada jam masuk. Untuk jadwal lintas tengah malam, aturan ini akan disesuaikan pada tahap integrasi."
+          );
+        }
+
+        const duplicate = attendanceRecords.find(item =>
+          item.employeeId.toLowerCase() === data.employeeId.toLowerCase() &&
+          item.attendanceDate === data.attendanceDate &&
+          item.id !== editingRecordId
+        );
+
+        if (duplicate) {
+          throw new Error(
+            "Catatan absensi untuk karyawan dan tanggal tersebut sudah ada."
+          );
+        }
+
+        if (editingRecordId) {
+          attendanceRecords = attendanceRecords.map(item =>
+            item.id === editingRecordId
+              ? { ...item, ...data }
+              : item
+          );
+
+          showToast("Catatan absensi berhasil diperbarui pada sesi ini.");
+        } else {
+          attendanceRecords.push({
+            ...data,
+            id: "TEMP-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7)
+          });
+
+          showToast("Catatan absensi ditambahkan pada sesi ini.");
+        }
+
+        closeModal();
+        updateStatistics();
+        renderAttendance();
+
+      } catch (error) {
+        showToast(
+          error.message || "Gagal memproses data absensi.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Simpan Absensi";
+      }
+    }
+
+    function exportCSV() {
+      if (!attendanceRecords.length) {
+        showToast("Belum ada catatan absensi untuk diekspor.", "info");
+        return;
+      }
+
+      const headers = [
+        "Tanggal",
+        "Employee ID",
+        "Nama Karyawan",
+        "Jam Masuk",
+        "Jam Pulang",
+        "Status",
+        "Keterangan"
+      ];
+
+      const rows = attendanceRecords.map(item => [
+        item.attendanceDate,
+        item.employeeId,
+        item.employeeName,
+        item.checkIn,
+        item.checkOut,
+        statusText(item.attendanceStatus),
+        item.notes
+      ]);
+
+      const csv = [
+        headers,
+        ...rows
+      ].map(row =>
+        row.map(value =>
+          `"${String(value ?? "").replace(/"/g, '""')}"`
+        ).join(",")
+      ).join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "ZFSI-HRIS-Attendance.csv";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    onAuthStateChanged(auth, user => {
+      if (authHandled) return;
+      authHandled = true;
+
+      if (!user) {
+        location.replace("index.html");
+        return;
+      }
+
+      currentUser = user;
+
+      $("userEmail").textContent =
+        user.email || "Pengguna ZFSI-HRIS";
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        location.replace("index.html");
+      } catch (error) {
+        showMessage(
+          "Gagal logout: " + (error.message || error.code),
+          "error"
+        );
+      }
+    });
+
+    $("addButton").addEventListener("click", openAddModal);
+    $("exportButton").addEventListener("click", exportCSV);
+
+    $("refreshButton").addEventListener("click", () => {
+      attendanceRecords = [];
+      $("searchInput").value = "";
+      $("dateFilter").value = "";
+      $("statusFilter").value = "";
+
+      updateStatistics();
+      renderAttendance();
+
+      showToast(
+        "Tampilan sesi dikosongkan. Data belum tersimpan permanen.",
+        "info"
+      );
+    });
+
+    $("searchInput").addEventListener("input", renderAttendance);
+    $("dateFilter").addEventListener("change", renderAttendance);
+    $("statusFilter").addEventListener("change", renderAttendance);
+
+    $("attendanceForm").addEventListener("submit", saveAttendance);
+    $("closeModalButton").addEventListener("click", closeModal);
+    $("cancelButton").addEventListener("click", closeModal);
+
+    $("attendanceTableBody").addEventListener("click", event => {
+      const button = event.target.closest("[data-edit]");
+      if (!button) return;
+
+      const item = attendanceRecords.find(
+        record => record.id === button.dataset.edit
+      );
+
+      if (item) openEditModal(item);
+    });
+
+    $("attendanceModal").addEventListener("click", event => {
+      if (event.target === $("attendanceModal")) {
+        closeModal();
+      }
+    });
+
+    updateStatistics();
+    renderAttendance();
+  </script>
+
+</body>
+</html>
