@@ -23,7 +23,7 @@
       color: #243449;
     }
 
-    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    /* SIDEBAR - SAMA DENGAN DASHBOARD.HTML */
     .sidebar {
       width: 245px;
       position: fixed;
@@ -50,7 +50,6 @@
       place-items: center;
       font-size: 23px;
       font-weight: bold;
-      flex-shrink: 0;
     }
 
     .brand h2 {
@@ -87,12 +86,6 @@
     .nav-link.active {
       background: #1e3c59;
       color: white;
-    }
-
-    .nav-link span:first-child {
-      width: 16px;
-      text-align: center;
-      flex-shrink: 0;
     }
 
     .main {
@@ -434,7 +427,7 @@
 
       .brand h2,
       .brand small,
-      .nav-link span:not(:first-child),
+      .nav-link span,
       .section-label {
         display: none;
       }
@@ -484,7 +477,7 @@
 
 <body>
 
-  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <!-- SIDEBAR - SAMA DENGAN DASHBOARD.HTML -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-icon">Z</div>
@@ -994,7 +987,6 @@
         const startDate = $("startDate").value;
         const endDate = $("endDate").value;
         const department = $("departmentId").value.trim();
-        const status = $("statusFilter").value;
 
         reportRows = [];
         generatedReport = true;
