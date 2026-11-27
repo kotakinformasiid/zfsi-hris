@@ -3,272 +3,86 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ZFSI HRIS - Employee Data</title>
-
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f7fb;
-  color:#243247;
-}
-.sidebar{
-  width:245px;
-  height:100vh;
-  position:fixed;
-  top:0;left:0;
-  background:#10243b;
-  color:white;
-  padding:22px 15px;
-  overflow-y:auto;
-}
-.brand{
-  font-size:19px;
-  font-weight:800;
-  padding:8px 12px 25px;
-}
-.brand small{
-  display:block;
-  font-size:11px;
-  color:#aab9cc;
-  margin-top:5px;
-  font-weight:400;
-}
-.menu-title{
-  color:#8da2ba;
-  font-size:10px;
-  margin:20px 12px 8px;
-  letter-spacing:1px;
-}
-.sidebar a{
-  display:block;
-  text-decoration:none;
-  color:#c8d4e3;
-  padding:12px;
-  border-radius:7px;
-  margin-bottom:4px;
-  font-size:13px;
-}
-.sidebar a:hover,.sidebar a.active{
-  background:#2879c7;
-  color:white;
-}
-.main{
-  margin-left:245px;
-  padding:25px;
-}
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:25px;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#243247}
+.sidebar{width:245px;height:100vh;position:fixed;top:0;left:0;background:#10243b;color:white;padding:22px 15px;overflow-y:auto}
+.brand{font-size:19px;font-weight:800;padding:8px 12px 25px}
+.brand small{display:block;font-size:11px;color:#aab9cc;margin-top:5px;font-weight:400}
+.menu-title{color:#8da2ba;font-size:10px;margin:20px 12px 8px;letter-spacing:1px}
+.sidebar a{display:block;text-decoration:none;color:#c8d4e3;padding:12px;border-radius:7px;margin-bottom:4px;font-size:13px}
+.sidebar a:hover,.sidebar a.active{background:#2879c7;color:white}
+.main{margin-left:245px;padding:25px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
 h1{font-size:25px;margin:0 0 7px}
 .subtitle{font-size:13px;color:#7c8999}
 .user-info{font-size:12px;color:#66768a}
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(130px,1fr));
-  gap:15px;
-  margin-bottom:22px;
-}
-.stat,.panel{
-  background:white;
-  border:1px solid #e6ebf1;
-  border-radius:10px;
-  padding:18px;
-}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:15px;margin-bottom:22px}
+.stat,.panel{background:white;border:1px solid #e6ebf1;border-radius:10px;padding:18px}
 .stat-label{font-size:12px;color:#7b8795}
 .stat-value{font-size:27px;font-weight:700;margin-top:9px}
 .panel{margin-bottom:20px}
-.panel-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-bottom:17px;
-}
+.panel-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:17px}
 .panel-title{font-size:16px;font-weight:700}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
-button{
-  border:0;
-  border-radius:6px;
-  padding:10px 14px;
-  cursor:pointer;
-  font-size:12px;
-  font-weight:600;
-}
+button{border:0;border-radius:6px;padding:10px 14px;cursor:pointer;font-size:12px;font-weight:600}
 .btn-primary{background:#2879c7;color:white}
 .btn-secondary{background:#eaf1f8;color:#31506d}
 .btn-danger{background:#fdeaea;color:#b63838}
-.btn-success{background:#e4f5eb;color:#217b49}
 button:disabled{opacity:.5;cursor:not-allowed}
-.filters{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:15px;
-}
-input,select,textarea{
-  width:100%;
-  border:1px solid #dce3eb;
-  border-radius:6px;
-  padding:10px;
-  background:white;
-  font-size:13px;
-  color:#243247;
-}
-input:focus,select:focus,textarea:focus{
-  outline:2px solid #c9e2fa;
-  border-color:#2879c7;
-}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+input,select,textarea{width:100%;border:1px solid #dce3eb;border-radius:6px;padding:10px;background:white;font-size:13px;color:#243247}
+input:focus,select:focus,textarea:focus{outline:2px solid #c9e2fa;border-color:#2879c7}
 .filters input{max-width:330px}
 .filters select{max-width:190px}
 .table-wrap{overflow-x:auto}
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:850px;
-}
-th,td{
-  text-align:left;
-  padding:12px 10px;
-  border-bottom:1px solid #edf0f4;
-  font-size:12px;
-  white-space:nowrap;
-}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #edf0f4;font-size:12px;white-space:nowrap}
 th{background:#f8fafc;color:#65758a}
-.status{
-  display:inline-block;
-  border-radius:20px;
-  padding:5px 9px;
-  font-size:10px;
-  font-weight:700;
-}
+.status{display:inline-block;border-radius:20px;padding:5px 9px;font-size:10px;font-weight:700}
 .active-status{background:#e3f5e9;color:#23814b}
 .inactive-status{background:#fff2d9;color:#a66a0b}
 .resigned-status{background:#fde8e8;color:#b43b3b}
 .empty{text-align:center;padding:30px;color:#8a96a5}
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:10;
-  background:#14233899;
-  overflow-y:auto;
-  padding:25px;
-}
-.modal-content{
-  max-width:900px;
-  background:white;
-  border-radius:12px;
-  padding:23px;
-  margin:0 auto;
-}
-.modal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
+.modal{display:none;position:fixed;inset:0;z-index:10;background:#14233899;overflow-y:auto;padding:25px}
+.modal-content{max-width:900px;background:white;border-radius:12px;padding:23px;margin:0 auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .modal-head h2{font-size:19px;margin:0}
-.form-section{
-  font-size:13px;
-  font-weight:700;
-  color:#2879c7;
-  border-bottom:1px solid #e7edf3;
-  padding-bottom:9px;
-  margin:22px 0 14px;
-}
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-}
-.field label{
-  display:block;
-  font-size:12px;
-  font-weight:600;
-  margin-bottom:7px;
-}
-.field small{
-  color:#8995a4;
-  display:block;
-  font-size:10px;
-  margin-top:5px;
-}
+.form-section{font-size:13px;font-weight:700;color:#2879c7;border-bottom:1px solid #e7edf3;padding-bottom:9px;margin:22px 0 14px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field label{display:block;font-size:12px;font-weight:600;margin-bottom:7px}
+.field small{color:#8995a4;display:block;font-size:10px;margin-top:5px}
 .full{grid-column:1/-1}
 textarea{min-height:75px;resize:vertical}
-.modal-footer{
-  display:flex;
-  justify-content:flex-end;
-  gap:9px;
-  margin-top:24px;
-}
-.notice{
-  padding:12px;
-  border-radius:7px;
-  background:#edf5ff;
-  color:#315c85;
-  font-size:12px;
-  margin-bottom:15px;
-}
-.message{
-  display:none;
-  padding:12px;
-  border-radius:7px;
-  margin-bottom:15px;
-  font-size:12px;
-}
-.message.error{background:#fdeaea;color:#a52e2e}
-.message.success{background:#e3f5e9;color:#217b49}
-.loading{opacity:.6;pointer-events:none}
-@media(max-width:900px){
-  .sidebar{width:200px}
-  .main{margin-left:200px;padding:18px}
-  .stats{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:650px){
-  .sidebar{
-    position:relative;
-    width:100%;
-    height:auto;
-    max-height:260px;
-  }
-  .main{margin-left:0;padding:15px}
-  .form-grid{grid-template-columns:1fr}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .modal{padding:10px}
-}
+.modal-footer{display:flex;justify-content:flex-end;gap:9px;margin-top:24px}
+.notice{padding:12px;border-radius:7px;background:#edf5ff;color:#315c85;font-size:12px;margin-bottom:15px;line-height:1.6}
+.message{display:none;padding:13px;border-radius:7px;margin-bottom:15px;font-size:12px;line-height:1.6;white-space:pre-wrap}
+.message.error{display:block;background:#fdeaea;color:#a52e2e}
+.message.success{display:block;background:#e3f5e9;color:#217b49}
+.message.info{display:block;background:#edf5ff;color:#315c85}
+.auth-screen{background:white;border:1px solid #e6ebf1;border-radius:10px;padding:22px;margin-bottom:18px;display:none}
+.auth-screen h3{margin:0 0 8px;font-size:16px}
+.auth-screen p{font-size:13px;line-height:1.6;color:#65758a}
+@media(max-width:900px){.sidebar{width:200px}.main{margin-left:200px;padding:18px}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.sidebar{position:relative;width:100%;height:auto;max-height:260px}.main{margin-left:0;padding:15px}.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.modal{padding:10px}}
 </style>
 </head>
-
 <body>
 
 <aside class="sidebar">
-  <div class="brand">
-    ZFSI HRIS
-    <small>Human Resource Information System</small>
-  </div>
-
+  <div class="brand">ZFSI HRIS<small>Human Resource Information System</small></div>
   <div class="menu-title">MAIN MENU</div>
   <a href="dashboard.html">Dashboard</a>
-  <a href="Employee%20Data.html" class="active">Employee Data</a>
+  <a href="employees.html" class="active">Employee Data</a>
   <a href="attendance.html">Attendance</a>
   <a href="leave.html">Leave Management</a>
   <a href="overtime.html">Overtime</a>
-
   <div class="menu-title">PAYROLL</div>
   <a href="payroll.html">Payroll Processing</a>
   <a href="payslips.html">Employee Payslips</a>
-
   <div class="menu-title">ADMINISTRATION</div>
   <a href="departments.html">Departments</a>
   <a href="positions.html">Positions</a>
@@ -281,34 +95,26 @@ textarea{min-height:75px;resize:vertical}
 </aside>
 
 <main class="main">
-
   <div class="topbar">
     <div>
       <h1>Employee Data</h1>
       <div class="subtitle">Employee Master Data Management</div>
     </div>
-    <div class="user-info" id="userEmail">Checking user...</div>
+    <div class="user-info" id="userEmail">Memeriksa login...</div>
   </div>
 
   <div id="message" class="message"></div>
 
+  <div id="accessPanel" class="auth-screen">
+    <h3 id="accessTitle">Memeriksa akses pengguna</h3>
+    <p id="accessDetail">Mohon tunggu sebentar.</p>
+  </div>
+
   <section class="stats">
-    <div class="stat">
-      <div class="stat-label">Total Employees</div>
-      <div class="stat-value" id="totalCount">0</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Active Employees</div>
-      <div class="stat-value" id="activeCount">0</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Inactive Employees</div>
-      <div class="stat-value" id="inactiveCount">0</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Resigned Employees</div>
-      <div class="stat-value" id="resignedCount">0</div>
-    </div>
+    <div class="stat"><div class="stat-label">Total Employees</div><div class="stat-value" id="totalCount">0</div></div>
+    <div class="stat"><div class="stat-label">Active Employees</div><div class="stat-value" id="activeCount">0</div></div>
+    <div class="stat"><div class="stat-label">Inactive Employees</div><div class="stat-value" id="inactiveCount">0</div></div>
+    <div class="stat"><div class="stat-label">Resigned Employees</div><div class="stat-value" id="resignedCount">0</div></div>
   </section>
 
   <section class="panel">
@@ -321,9 +127,8 @@ textarea{min-height:75px;resize:vertical}
         <button class="btn-primary" id="addBtn">+ Add Employee</button>
       </div>
     </div>
-
     <div class="filters">
-      <input id="searchInput" placeholder="Search Employee ID, name, NIK...">
+      <input id="searchInput" placeholder="Cari Employee ID, nama, NIK, email...">
       <select id="statusFilter">
         <option value="">All Status</option>
         <option value="active">Active</option>
@@ -332,182 +137,78 @@ textarea{min-height:75px;resize:vertical}
       </select>
       <button class="btn-secondary" id="refreshBtn">Refresh</button>
     </div>
-
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Employee ID</th>
-            <th>Employee Name</th>
-            <th>NIK</th>
-            <th>Department</th>
-            <th>Position</th>
-            <th>Phone</th>
-            <th>Join Date</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th>Employee ID</th><th>Employee Name</th><th>NIK</th>
+            <th>Department</th><th>Position</th><th>Phone</th>
+            <th>Join Date</th><th>Status</th><th>Action</th>
           </tr>
         </thead>
         <tbody id="employeeTable">
-          <tr><td colspan="9" class="empty">Loading data...</td></tr>
+          <tr><td colspan="9" class="empty">Menunggu autentikasi...</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 </main>
 
-<!-- EMPLOYEE FORM -->
 <div class="modal" id="employeeModal">
   <div class="modal-content">
     <div class="modal-head">
       <h2 id="formTitle">Add Employee</h2>
-      <button class="btn-secondary" id="closeModalBtn">✕</button>
+      <button type="button" class="btn-secondary" id="closeModalBtn">✕</button>
     </div>
-
     <div class="notice">
-      Employee ID dibuat otomatis oleh sistem. Data NIK dan informasi pribadi
-      sebaiknya hanya dapat diakses oleh petugas HR yang berwenang.
+      Employee ID dibuat otomatis oleh sistem. NIK, alamat KTP, dan agama merupakan data pribadi. Batasi aksesnya hanya untuk petugas yang berwenang.
     </div>
-
     <form id="employeeForm">
-
       <div class="form-section">A. Employee Identification</div>
       <div class="form-grid">
-
-        <div class="field">
-          <label>Employee ID</label>
-          <input id="employeeIdDisplay" readonly placeholder="Auto Generated">
-        </div>
-
-        <div class="field">
-          <label>Employee Name *</label>
-          <input id="employeeName" required maxlength="150">
-        </div>
-
+        <div class="field"><label>Employee ID</label><input id="employeeIdDisplay" readonly placeholder="Auto Generated"></div>
+        <div class="field"><label>Employee Name *</label><input id="employeeName" required maxlength="150"></div>
         <div class="field">
           <label>NIK</label>
-          <input id="nik" type="text" inputmode="numeric"
-                 maxlength="16" pattern="[0-9]{16}"
-                 placeholder="16 digit NIK">
-          <small>Masukkan 16 digit NIK tanpa tanda baca. Boleh dikosongkan.</small>
+          <input id="nik" type="text" inputmode="numeric" maxlength="16" placeholder="16 digit NIK">
+          <small>Masukkan 16 digit angka. Boleh dikosongkan.</small>
         </div>
-
-        <div class="field">
-          <label>Gender *</label>
-          <select id="gender" required>
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
+        <div class="field"><label>Gender *</label>
+          <select id="gender" required><option value="">Select Gender</option><option value="Male">Male</option><option value="Female">Female</option></select>
         </div>
-
-        <div class="field">
-          <label>Birth City</label>
-          <input id="birthCity" maxlength="100">
-        </div>
-
-        <div class="field">
-          <label>Date of Birth *</label>
-          <input id="birthDate" type="date" required>
-        </div>
-
-        <div class="field">
-          <label>Religion</label>
+        <div class="field"><label>Birth City</label><input id="birthCity" maxlength="100"></div>
+        <div class="field"><label>Date of Birth *</label><input id="birthDate" type="date" required></div>
+        <div class="field"><label>Religion</label>
           <select id="religion">
-            <option value="">Select Religion</option>
-            <option>Islam</option>
-            <option>Kristen</option>
-            <option>Katolik</option>
-            <option>Hindu</option>
-            <option>Buddha</option>
-            <option>Konghucu</option>
-            <option>Kepercayaan Lainnya</option>
+            <option value="">Select Religion</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option><option>Kepercayaan Lainnya</option>
           </select>
         </div>
-
-        <div class="field">
-          <label>Marital Status</label>
-          <select id="maritalStatus">
-            <option value="">Select Status</option>
-            <option value="Single">Single</option>
-            <option value="Married">Married</option>
-            <option value="Divorced">Divorced</option>
-            <option value="Widowed">Widowed</option>
-          </select>
+        <div class="field"><label>Marital Status</label>
+          <select id="maritalStatus"><option value="">Select Status</option><option value="Single">Single</option><option value="Married">Married</option><option value="Divorced">Divorced</option><option value="Widowed">Widowed</option></select>
         </div>
-
-        <div class="field">
-          <label>Dependents Count</label>
-          <input id="dependentsCount" type="number" min="0" step="1" value="0">
-        </div>
-
-        <div class="field full">
-          <label>KTP Address</label>
-          <textarea id="ktpAddress" maxlength="1000"></textarea>
-        </div>
-
+        <div class="field"><label>Dependents Count</label><input id="dependentsCount" type="number" min="0" step="1" value="0"></div>
+        <div class="field full"><label>KTP Address</label><textarea id="ktpAddress" maxlength="1000"></textarea></div>
       </div>
 
       <div class="form-section">B. Contact Information</div>
       <div class="form-grid">
-
-        <div class="field">
-          <label>Email</label>
-          <input id="email" type="email" maxlength="150">
-        </div>
-
-        <div class="field">
-          <label>Phone Number</label>
-          <input id="phone" maxlength="30">
-        </div>
-
+        <div class="field"><label>Email</label><input id="email" type="email" maxlength="150"></div>
+        <div class="field"><label>Phone Number</label><input id="phone" maxlength="30"></div>
       </div>
 
       <div class="form-section">C. Employment Information</div>
       <div class="form-grid">
-
-        <div class="field">
-          <label>Join Date *</label>
-          <input id="joinDate" type="date" required>
+        <div class="field"><label>Join Date *</label><input id="joinDate" type="date" required></div>
+        <div class="field"><label>Department</label><input id="departmentId" placeholder="Example: Finance"></div>
+        <div class="field"><label>Position</label><input id="positionId" placeholder="Example: Accounting Staff"></div>
+        <div class="field"><label>Employment Type</label>
+          <select id="employmentType"><option value="Permanent">Permanent</option><option value="Contract">Contract</option><option value="Probation">Probation</option><option value="Internship">Internship</option><option value="Daily Worker">Daily Worker</option></select>
         </div>
-
-        <div class="field">
-          <label>Department</label>
-          <input id="departmentId" placeholder="Example: Finance">
+        <div class="field"><label>Employment Status</label>
+          <select id="employmentStatus"><option value="active">Active</option><option value="inactive">Inactive</option><option value="resigned">Resigned</option></select>
         </div>
-
-        <div class="field">
-          <label>Position</label>
-          <input id="positionId" placeholder="Example: Accounting Staff">
-        </div>
-
-        <div class="field">
-          <label>Employment Type</label>
-          <select id="employmentType">
-            <option value="Permanent">Permanent</option>
-            <option value="Contract">Contract</option>
-            <option value="Probation">Probation</option>
-            <option value="Internship">Internship</option>
-            <option value="Daily Worker">Daily Worker</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Employment Status</label>
-          <select id="employmentStatus">
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="resigned">Resigned</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Branch</label>
-          <input value="HQ (hq)" readonly>
-        </div>
-
+        <div class="field"><label>Branch</label><input value="HQ (hq)" readonly></div>
       </div>
-
       <div class="modal-footer">
         <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
         <button type="submit" class="btn-primary" id="saveBtn">Save Employee</button>
@@ -516,851 +217,528 @@ textarea{min-height:75px;resize:vertical}
   </div>
 </div>
 
-<!-- IMPORT FORM -->
 <div class="modal" id="importModal">
   <div class="modal-content" style="max-width:650px">
-    <div class="modal-head">
-      <h2>Import Employee Excel</h2>
-      <button class="btn-secondary" id="closeImportBtn">✕</button>
-    </div>
-
-    <div class="notice">
-      ADD: Employee ID dikosongkan agar sistem membuat ID otomatis.
-      UPDATE: Employee ID wajib diisi. Kolom kosong tidak mengubah data lama.
-      Maksimal 200 baris dan 5 MB per file.
-    </div>
-
-    <div class="field">
-      <label>Import Mode</label>
-      <select id="importMode">
-        <option value="ADD">ADD - New Employees</option>
-        <option value="UPDATE">UPDATE - Existing Employees</option>
-      </select>
-    </div>
-
-    <div class="field" style="margin-top:15px">
-      <label>Excel File (.xlsx, .xls, .csv)</label>
-      <input type="file" id="excelFile" accept=".xlsx,.xls,.csv">
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn-secondary" id="cancelImportBtn">Cancel</button>
-      <button class="btn-primary" id="processImportBtn">Process Import</button>
-    </div>
+    <div class="modal-head"><h2>Import Employee Excel</h2><button type="button" class="btn-secondary" id="closeImportBtn">✕</button></div>
+    <div class="notice">ADD: kosongkan Employee ID agar sistem membuat ID otomatis. UPDATE: Employee ID wajib diisi; kolom kosong tidak mengubah data lama. Maksimal 200 baris dan 5 MB per file.</div>
+    <div class="field"><label>Import Mode</label><select id="importMode"><option value="ADD">ADD - New Employees</option><option value="UPDATE">UPDATE - Existing Employees</option></select></div>
+    <div class="field" style="margin-top:15px"><label>Excel File (.xlsx, .xls, .csv)</label><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"></div>
+    <div class="modal-footer"><button class="btn-secondary" id="cancelImportBtn">Cancel</button><button class="btn-primary" id="processImportBtn">Process Import</button></div>
   </div>
 </div>
 
 <script type="module">
-import { initializeApp } from
-  "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 import {
-  getAuth,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-
-import {
-  getFirestore,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  runTransaction,
-  serverTimestamp,
-  setDoc,
-  updateDoc
+  getFirestore,collection,doc,getDoc,getDocs,query,where,
+  runTransaction,serverTimestamp,setDoc,updateDoc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAxz62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
-  authDomain: "zfsi-hris.firebaseapp.com",
-  projectId: "zfsi-hris",
-  storageBucket: "zfsi-hris.firebasestorage.app",
-  messagingSenderId: "642441161494",
-  appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+const firebaseConfig={
+  apiKey:"AIzaSyAxz62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+  authDomain:"zfsi-hris.firebaseapp.com",
+  projectId:"zfsi-hris",
+  storageBucket:"zfsi-hris.firebasestorage.app",
+  messagingSenderId:"642441161494",
+  appId:"1:642441161494:web:23ecd4832f89eac5893e37"
 };
 
-const COMPANY_ID = "zfsi-main";
-const BRANCH_ID = "hq";
-const EMPLOYEE_PREFIX = "ZFSI-EMP-";
-const MAX_IMPORT_ROWS = 200;
-const MAX_IMPORT_SIZE = 5 * 1024 * 1024;
+const COMPANY_ID="zfsi-main";
+const BRANCH_ID="hq";
+const EMPLOYEE_PREFIX="ZFSI-EMP-";
+const MAX_IMPORT_ROWS=200;
+const MAX_IMPORT_SIZE=5*1024*1024;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
 
-let currentUser = null;
-let currentProfile = null;
-let employees = [];
-let editingEmployeeId = null;
+let currentUser=null;
+let currentProfile=null;
+let employees=[];
+let editingEmployeeId=null;
+let authReady=false;
 
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
+const val=id=>$(id).value.trim();
 
-function showMessage(message, type="success"){
-  const el = $("message");
-  el.textContent = message;
-  el.className = "message " + type;
-  el.style.display = "block";
-  window.scrollTo({top:0,behavior:"smooth"});
-  setTimeout(()=>el.style.display="none",6000);
+function showMessage(message,type="info"){
+  const el=$("message");
+  el.textContent=message;
+  el.className="message "+type;
+  el.style.display="block";
 }
-
-function hasPermission(permission){
-  if(!currentProfile) return false;
-  return currentProfile.systemRole === "super_admin" ||
-    currentProfile.roleId === "super_admin" ||
-    (Array.isArray(currentProfile.permissions) &&
-      currentProfile.permissions.includes(permission));
+function clearMessage(){
+  $("message").textContent="";
+  $("message").className="message";
+  $("message").style.display="none";
 }
-
-function requireEmployeePermission(){
-  if(!hasPermission("employees.manage")){
-    throw new Error("Anda tidak memiliki izin mengelola data karyawan.");
-  }
+function showAccess(title,detail){
+  $("accessPanel").style.display="block";
+  $("accessTitle").textContent=title;
+  $("accessDetail").textContent=detail;
 }
-
+function hideAccess(){
+  $("accessPanel").style.display="none";
+}
 function escapeHtml(value){
-  return String(value ?? "").replace(/[&<>"']/g, ch => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#039;"
-  })[ch]);
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  })[c]);
 }
-
-function value(id){
-  return $(id).value.trim();
+function isSuperAdmin(){
+  if(!currentProfile)return false;
+  return currentProfile.systemRole==="super_admin" ||
+         currentProfile.roleId==="super_admin";
 }
-
-function normalizeText(v){
-  return String(v ?? "").trim();
+function hasEmployeePermission(){
+  if(!currentProfile)return false;
+  if(isSuperAdmin())return true;
+  return Array.isArray(currentProfile.permissions) &&
+         currentProfile.permissions.includes("employees.manage");
 }
-
-function validNIK(nik){
-  return !nik || /^[0-9]{16}$/.test(nik);
-}
-
-function normalizeDependents(v){
-  if(v === "" || v === null || v === undefined) return 0;
-  const number = Number(v);
-  if(!Number.isInteger(number) || number < 0){
-    throw new Error("Jumlah tanggungan harus berupa bilangan bulat minimal 0.");
+function requireEmployeePermission(){
+  if(!currentUser || !currentProfile){
+    throw new Error("Profil pengguna belum berhasil dimuat.");
   }
-  return number;
+  if(!hasEmployeePermission()){
+    throw new Error("Akun Anda tidak memiliki izin employees.manage.");
+  }
 }
-
+function normalizeDependents(value){
+  if(value===""||value===null||value===undefined)return 0;
+  const n=Number(value);
+  if(!Number.isInteger(n)||n<0)throw new Error("Jumlah tanggungan harus bilangan bulat minimal 0.");
+  return n;
+}
+function validNIK(nik){return !nik||/^[0-9]{16}$/.test(nik)}
 function statusLabel(status){
-  if(status === "active") return "Active";
-  if(status === "inactive") return "Inactive";
-  if(status === "resigned") return "Resigned";
-  return status || "-";
+  return status==="active"?"Active":status==="inactive"?"Inactive":status==="resigned"?"Resigned":status||"-";
 }
-
 function statusClass(status){
-  if(status === "active") return "active-status";
-  if(status === "inactive") return "inactive-status";
-  if(status === "resigned") return "resigned-status";
-  return "";
+  return status==="active"?"active-status":status==="inactive"?"inactive-status":status==="resigned"?"resigned-status":"";
 }
 
 async function generateEmployeeId(){
   requireEmployeePermission();
-
-  const counterRef = doc(db,"counters","employee");
-
+  const counterRef=doc(db,"counters","employee");
   return await runTransaction(db,async transaction=>{
-    const counterSnap = await transaction.get(counterRef);
-    let nextNumber = 1;
-
-    if(counterSnap.exists()){
-      const counter = counterSnap.data();
-
-      if(counter.companyId !== COMPANY_ID){
-        throw new Error("Counter perusahaan tidak sesuai.");
-      }
-
-      nextNumber = Number(counter.lastNumber || 0) + 1;
+    const snap=await transaction.get(counterRef);
+    let next=1;
+    if(snap.exists()){
+      const old=snap.data();
+      if(old.companyId!==COMPANY_ID)throw new Error("Company ID pada counter tidak sesuai.");
+      next=Number(old.lastNumber||0)+1;
     }
-
     transaction.set(counterRef,{
-      companyId:COMPANY_ID,
-      lastNumber:nextNumber,
-      updatedAt:serverTimestamp(),
-      updatedBy:currentUser.uid
+      companyId:COMPANY_ID,lastNumber:next,
+      updatedAt:serverTimestamp(),updatedBy:currentUser.uid
     },{merge:true});
-
-    return EMPLOYEE_PREFIX + String(nextNumber).padStart(6,"0");
+    return EMPLOYEE_PREFIX+String(next).padStart(6,"0");
   });
 }
 
 async function loadEmployees(){
+  clearMessage();
+  $("employeeTable").innerHTML='<tr><td colspan="9" class="empty">Loading employee data...</td></tr>';
   try{
-    const q = query(
-      collection(db,"employees"),
-      where("companyId","==",COMPANY_ID)
-    );
-
-    const snapshot = await getDocs(q);
-    employees = snapshot.docs.map(d=>({
-      ...d.data(),
-      employeeId:d.id
-    }));
-
-    employees.sort((a,b)=>
-      String(a.employeeName || "").localeCompare(
-        String(b.employeeName || "")
-      )
-    );
-
+    requireEmployeePermission();
+    const q=query(collection(db,"employees"),where("companyId","==",COMPANY_ID));
+    const snap=await getDocs(q);
+    employees=snap.docs.map(d=>({...d.data(),employeeId:d.id}));
+    employees.sort((a,b)=>String(a.employeeName||"").localeCompare(String(b.employeeName||"")));
     renderEmployees();
     updateStats();
   }catch(error){
-    console.error(error);
-    showMessage("Gagal mengambil data: " + error.message,"error");
-    $("employeeTable").innerHTML =
-      `<tr><td colspan="9" class="empty">Unable to load employee data.</td></tr>`;
+    console.error("LOAD EMPLOYEES ERROR:",error);
+    $("employeeTable").innerHTML='<tr><td colspan="9" class="empty">Data belum dapat dimuat. Lihat pesan kesalahan di atas.</td></tr>';
+    showMessage("Gagal mengambil data karyawan: "+error.message,"error");
   }
 }
-
 function updateStats(){
-  $("totalCount").textContent = employees.length;
-  $("activeCount").textContent =
-    employees.filter(e=>e.employmentStatus==="active").length;
-  $("inactiveCount").textContent =
-    employees.filter(e=>e.employmentStatus==="inactive").length;
-  $("resignedCount").textContent =
-    employees.filter(e=>e.employmentStatus==="resigned").length;
+  $("totalCount").textContent=employees.length;
+  $("activeCount").textContent=employees.filter(e=>e.employmentStatus==="active").length;
+  $("inactiveCount").textContent=employees.filter(e=>e.employmentStatus==="inactive").length;
+  $("resignedCount").textContent=employees.filter(e=>e.employmentStatus==="resigned").length;
 }
-
 function renderEmployees(){
-  const keyword = $("searchInput").value.toLowerCase();
-  const status = $("statusFilter").value;
-
-  const filtered = employees.filter(e=>{
-    const searchable = [
-      e.employeeId,e.employeeName,e.nik,e.email,
-      e.phone,e.departmentId,e.positionId
-    ].join(" ").toLowerCase();
-
-    return searchable.includes(keyword) &&
-      (!status || e.employmentStatus===status);
+  const keyword=$("searchInput").value.toLowerCase();
+  const status=$("statusFilter").value;
+  const filtered=employees.filter(e=>{
+    const text=[e.employeeId,e.employeeName,e.nik,e.email,e.phone,e.departmentId,e.positionId].join(" ").toLowerCase();
+    return text.includes(keyword)&&(!status||e.employmentStatus===status);
   });
-
   if(!filtered.length){
-    $("employeeTable").innerHTML =
-      `<tr><td colspan="9" class="empty">No employee records found.</td></tr>`;
+    $("employeeTable").innerHTML='<tr><td colspan="9" class="empty">No employee records found.</td></tr>';
     return;
   }
-
-  $("employeeTable").innerHTML = filtered.map(e=>`
+  $("employeeTable").innerHTML=filtered.map(e=>`
     <tr>
       <td>${escapeHtml(e.employeeId)}</td>
       <td>${escapeHtml(e.employeeName)}</td>
-      <td>${escapeHtml(e.nik || "-")}</td>
-      <td>${escapeHtml(e.departmentId || "-")}</td>
-      <td>${escapeHtml(e.positionId || "-")}</td>
-      <td>${escapeHtml(e.phone || "-")}</td>
-      <td>${escapeHtml(e.joinDate || "-")}</td>
-      <td>
-        <span class="status ${statusClass(e.employmentStatus)}">
-          ${escapeHtml(statusLabel(e.employmentStatus))}
-        </span>
-      </td>
-      <td>
-        <button class="btn-secondary" data-edit="${escapeHtml(e.employeeId)}">
-          Edit
-        </button>
-      </td>
-    </tr>
-  `).join("");
-
-  document.querySelectorAll("[data-edit]").forEach(button=>{
-    button.addEventListener("click",()=>{
-      openEdit(button.dataset.edit);
-    });
+      <td>${escapeHtml(e.nik||"-")}</td>
+      <td>${escapeHtml(e.departmentId||"-")}</td>
+      <td>${escapeHtml(e.positionId||"-")}</td>
+      <td>${escapeHtml(e.phone||"-")}</td>
+      <td>${escapeHtml(e.joinDate||"-")}</td>
+      <td><span class="status ${statusClass(e.employmentStatus)}">${escapeHtml(statusLabel(e.employmentStatus))}</span></td>
+      <td><button class="btn-secondary" data-edit="${escapeHtml(e.employeeId)}">Edit</button></td>
+    </tr>`).join("");
+  document.querySelectorAll("[data-edit]").forEach(btn=>{
+    btn.addEventListener("click",()=>openEdit(btn.dataset.edit));
   });
 }
 
 function resetForm(){
   $("employeeForm").reset();
-  $("employeeIdDisplay").value = "";
-  $("dependentsCount").value = "0";
-  $("employmentType").value = "Permanent";
-  $("employmentStatus").value = "active";
+  $("employeeIdDisplay").value="";
+  $("dependentsCount").value="0";
+  $("employmentType").value="Permanent";
+  $("employmentStatus").value="active";
 }
-
 function openAdd(){
   try{
     requireEmployeePermission();
-    editingEmployeeId = null;
+    editingEmployeeId=null;
     resetForm();
-    $("formTitle").textContent = "Add Employee";
-    $("saveBtn").textContent = "Save Employee";
-    $("employeeModal").style.display = "block";
-  }catch(error){
-    showMessage(error.message,"error");
-  }
+    $("formTitle").textContent="Add Employee";
+    $("saveBtn").textContent="Save Employee";
+    $("employeeModal").style.display="block";
+  }catch(e){showMessage(e.message,"error")}
 }
-
-function openEdit(employeeId){
+function openEdit(id){
   try{
     requireEmployeePermission();
-    const e = employees.find(x=>x.employeeId===employeeId);
-    if(!e) throw new Error("Data karyawan tidak ditemukan.");
-
-    editingEmployeeId = employeeId;
+    const e=employees.find(x=>x.employeeId===id);
+    if(!e)throw new Error("Data karyawan tidak ditemukan.");
+    editingEmployeeId=id;
     $("employeeForm").reset();
-
-    $("employeeIdDisplay").value = e.employeeId;
-    $("employeeName").value = e.employeeName || "";
-    $("nik").value = e.nik || "";
-    $("gender").value = e.gender || "";
-    $("birthCity").value = e.birthCity || "";
-    $("birthDate").value = e.birthDate || "";
-    $("religion").value = e.religion || "";
-    $("maritalStatus").value = e.maritalStatus || "";
-    $("dependentsCount").value = e.dependentsCount ?? 0;
-    $("ktpAddress").value = e.ktpAddress || "";
-    $("email").value = e.email || "";
-    $("phone").value = e.phone || "";
-    $("joinDate").value = e.joinDate || "";
-    $("departmentId").value = e.departmentId || "";
-    $("positionId").value = e.positionId || "";
-    $("employmentType").value = e.employmentType || "Permanent";
-    $("employmentStatus").value = e.employmentStatus || "active";
-
-    $("formTitle").textContent = "Edit Employee";
-    $("saveBtn").textContent = "Update Employee";
-    $("employeeModal").style.display = "block";
-  }catch(error){
-    showMessage(error.message,"error");
-  }
+    $("employeeIdDisplay").value=e.employeeId;
+    $("employeeName").value=e.employeeName||"";
+    $("nik").value=e.nik||"";
+    $("gender").value=e.gender||"";
+    $("birthCity").value=e.birthCity||"";
+    $("birthDate").value=e.birthDate||"";
+    $("religion").value=e.religion||"";
+    $("maritalStatus").value=e.maritalStatus||"";
+    $("dependentsCount").value=e.dependentsCount??0;
+    $("ktpAddress").value=e.ktpAddress||"";
+    $("email").value=e.email||"";
+    $("phone").value=e.phone||"";
+    $("joinDate").value=e.joinDate||"";
+    $("departmentId").value=e.departmentId||"";
+    $("positionId").value=e.positionId||"";
+    $("employmentType").value=e.employmentType||"Permanent";
+    $("employmentStatus").value=e.employmentStatus||"active";
+    $("formTitle").textContent="Edit Employee";
+    $("saveBtn").textContent="Update Employee";
+    $("employeeModal").style.display="block";
+  }catch(e){showMessage(e.message,"error")}
 }
-
-function closeEmployeeModal(){
-  $("employeeModal").style.display = "none";
-}
+function closeEmployeeModal(){$("employeeModal").style.display="none"}
 
 function collectFormData(){
-  const nik = value("nik");
-  if(!validNIK(nik)){
-    throw new Error("NIK harus terdiri dari 16 digit angka.");
-  }
-
+  const nik=val("nik");
+  if(!validNIK(nik))throw new Error("NIK harus terdiri dari 16 digit angka.");
   return {
-    companyId:COMPANY_ID,
-    branchId:BRANCH_ID,
-
-    employeeName:value("employeeName"),
-    nik:nik,
-    gender:value("gender"),
-    birthCity:value("birthCity"),
-    birthDate:value("birthDate"),
-    religion:value("religion"),
-    maritalStatus:value("maritalStatus"),
-    dependentsCount:normalizeDependents(value("dependentsCount")),
-    ktpAddress:value("ktpAddress"),
-
-    email:value("email"),
-    phone:value("phone"),
-
-    joinDate:value("joinDate"),
-    departmentId:value("departmentId"),
-    positionId:value("positionId"),
-    employmentType:value("employmentType"),
-    employmentStatus:value("employmentStatus"),
-
-    updatedAt:serverTimestamp(),
-    updatedBy:currentUser.uid
+    companyId:COMPANY_ID,branchId:BRANCH_ID,
+    employeeName:val("employeeName"),nik,
+    gender:val("gender"),birthCity:val("birthCity"),
+    birthDate:val("birthDate"),religion:val("religion"),
+    maritalStatus:val("maritalStatus"),
+    dependentsCount:normalizeDependents(val("dependentsCount")),
+    ktpAddress:val("ktpAddress"),email:val("email"),phone:val("phone"),
+    joinDate:val("joinDate"),departmentId:val("departmentId"),
+    positionId:val("positionId"),employmentType:val("employmentType"),
+    employmentStatus:val("employmentStatus"),
+    updatedAt:serverTimestamp(),updatedBy:currentUser.uid
   };
 }
 
 $("employeeForm").addEventListener("submit",async event=>{
   event.preventDefault();
-
-  const saveButton = $("saveBtn");
-
+  const button=$("saveBtn");
+  const isEditing=Boolean(editingEmployeeId);
   try{
     requireEmployeePermission();
-    saveButton.disabled = true;
-    saveButton.textContent = "Saving...";
-
-    const data = collectFormData();
-
-    if(!data.employeeName || !data.gender ||
-       !data.birthDate || !data.joinDate){
+    button.disabled=true;
+    button.textContent="Saving...";
+    const data=collectFormData();
+    if(!data.employeeName||!data.gender||!data.birthDate||!data.joinDate){
       throw new Error("Mohon lengkapi semua field wajib.");
     }
-
-    if(editingEmployeeId){
-      const ref = doc(db,"employees",editingEmployeeId);
-      const old = employees.find(e=>e.employeeId===editingEmployeeId);
-
-      if(!old || old.companyId !== COMPANY_ID){
-        throw new Error("Data karyawan tidak valid.");
-      }
-
-      await updateDoc(ref,data);
-
-      showMessage("Data karyawan berhasil diperbarui.");
+    if(isEditing){
+      const old=employees.find(e=>e.employeeId===editingEmployeeId);
+      if(!old||old.companyId!==COMPANY_ID)throw new Error("Data karyawan tidak valid.");
+      await updateDoc(doc(db,"employees",editingEmployeeId),data);
+      showMessage("Data karyawan berhasil diperbarui.","success");
     }else{
-      const employeeId = await generateEmployeeId();
-      const ref = doc(db,"employees",employeeId);
-
-      await setDoc(ref,{
-        ...data,
-        employeeId,
-        userId:null,
-        createdAt:serverTimestamp(),
-        createdBy:currentUser.uid
+      const id=await generateEmployeeId();
+      await setDoc(doc(db,"employees",id),{
+        ...data,employeeId:id,userId:null,
+        createdAt:serverTimestamp(),createdBy:currentUser.uid
       });
-
-      showMessage("Data karyawan berhasil disimpan: " + employeeId);
+      showMessage("Data karyawan berhasil disimpan. Employee ID: "+id,"success");
     }
-
     closeEmployeeModal();
     await loadEmployees();
-
   }catch(error){
-    console.error(error);
-    showMessage("Gagal menyimpan data: " + error.message,"error");
+    console.error("SAVE EMPLOYEE ERROR:",error);
+    showMessage("Gagal menyimpan data: "+error.message,"error");
   }finally{
-    saveButton.disabled = false;
-    saveButton.textContent =
-      editingEmployeeId ? "Update Employee" : "Save Employee";
+    button.disabled=false;
+    button.textContent=isEditing?"Update Employee":"Save Employee";
   }
 });
 
-function excelHeaders(){
-  return [
-    "Employee ID","Employee Name","NIK","Gender",
-    "Birth City","Birth Date","Religion","Marital Status",
-    "Dependents Count","KTP Address","Email","Phone",
-    "Join Date","Department","Position","Employment Type",
-    "Employment Status"
-  ];
-}
-
+const excelHeaders=[
+  "Employee ID","Employee Name","NIK","Gender","Birth City","Birth Date",
+  "Religion","Marital Status","Dependents Count","KTP Address","Email",
+  "Phone","Join Date","Department","Position","Employment Type","Employment Status"
+];
 function employeeToExcel(e){
   return {
-    "Employee ID":e.employeeId || "",
-    "Employee Name":e.employeeName || "",
-    "NIK":e.nik || "",
-    "Gender":e.gender || "",
-    "Birth City":e.birthCity || "",
-    "Birth Date":e.birthDate || "",
-    "Religion":e.religion || "",
-    "Marital Status":e.maritalStatus || "",
-    "Dependents Count":e.dependentsCount ?? 0,
-    "KTP Address":e.ktpAddress || "",
-    "Email":e.email || "",
-    "Phone":e.phone || "",
-    "Join Date":e.joinDate || "",
-    "Department":e.departmentId || "",
-    "Position":e.positionId || "",
-    "Employment Type":e.employmentType || "",
-    "Employment Status":e.employmentStatus || ""
+    "Employee ID":e.employeeId||"",
+    "Employee Name":e.employeeName||"",
+    "NIK":String(e.nik||""),
+    "Gender":e.gender||"",
+    "Birth City":e.birthCity||"",
+    "Birth Date":e.birthDate||"",
+    "Religion":e.religion||"",
+    "Marital Status":e.maritalStatus||"",
+    "Dependents Count":e.dependentsCount??0,
+    "KTP Address":e.ktpAddress||"",
+    "Email":e.email||"",
+    "Phone":e.phone||"",
+    "Join Date":e.joinDate||"",
+    "Department":e.departmentId||"",
+    "Position":e.positionId||"",
+    "Employment Type":e.employmentType||"",
+    "Employment Status":e.employmentStatus||""
   };
 }
-
 function exportExcel(){
-  if(!employees.length){
-    showMessage("Tidak ada data untuk diexport.","error");
-    return;
-  }
-
-  const rows = employees.map(employeeToExcel);
-  const ws = XLSX.utils.json_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
+  if(!employees.length){showMessage("Tidak ada data untuk diexport.","error");return}
+  const ws=XLSX.utils.json_to_sheet(employees.map(employeeToExcel));
+  const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,"Employees");
   XLSX.writeFile(wb,"ZFSI_Employee_Data.xlsx");
 }
-
 function downloadTemplate(){
-  const headers = excelHeaders();
-  const example = {
-    "Employee ID":"",
-    "Employee Name":"Example Employee",
-    "NIK":"0000000000000000",
-    "Gender":"Male",
-    "Birth City":"Jakarta",
-    "Birth Date":"1995-01-01",
-    "Religion":"",
-    "Marital Status":"Single",
-    "Dependents Count":0,
-    "KTP Address":"Example address",
-    "Email":"employee@example.com",
-    "Phone":"08123456789",
-    "Join Date":"2026-01-01",
-    "Department":"Finance",
-    "Position":"Staff",
-    "Employment Type":"Permanent",
-    "Employment Status":"active"
+  const example={
+    "Employee ID":"","Employee Name":"Example Employee","NIK":"'0000000000000000",
+    "Gender":"Male","Birth City":"Jakarta","Birth Date":"1995-01-01",
+    "Religion":"","Marital Status":"Single","Dependents Count":0,
+    "KTP Address":"Example address","Email":"employee@example.com",
+    "Phone":"08123456789","Join Date":"2026-01-01","Department":"Finance",
+    "Position":"Staff","Employment Type":"Permanent","Employment Status":"active"
   };
-
-  const ws = XLSX.utils.json_to_sheet([example],{header:headers});
-  const wb = XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet([example],{header:excelHeaders});
+  const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,"Employees");
   XLSX.writeFile(wb,"ZFSI_Employee_Import_Template.xlsx");
 }
-
 function getCell(row,...names){
-  const keys = Object.keys(row);
+  const keys=Object.keys(row);
   for(const name of names){
-    const key = keys.find(k=>
-      k.toLowerCase().replace(/[^a-z0-9]/g,"") ===
-      name.toLowerCase().replace(/[^a-z0-9]/g,"")
-    );
-    if(key !== undefined) return row[key];
+    const normalized=name.toLowerCase().replace(/[^a-z0-9]/g,"");
+    const key=keys.find(k=>k.toLowerCase().replace(/[^a-z0-9]/g,"")===normalized);
+    if(key!==undefined)return row[key];
   }
   return undefined;
 }
-
-function excelDate(value){
-  if(value === undefined || value === null || value === "") return "";
-
-  if(value instanceof Date && !isNaN(value)){
-    return value.toISOString().slice(0,10);
+function excelDate(v){
+  if(v===undefined||v===null||v==="")return "";
+  if(v instanceof Date&&!isNaN(v))return v.toISOString().slice(0,10);
+  if(typeof v==="number"){
+    const d=XLSX.SSF.parse_date_code(v);
+    if(d)return `${d.y}-${String(d.m).padStart(2,"0")}-${String(d.d).padStart(2,"0")}`;
   }
-
-  if(typeof value === "number"){
-    const date = XLSX.SSF.parse_date_code(value);
-    if(date){
-      return [
-        date.y,
-        String(date.m).padStart(2,"0"),
-        String(date.d).padStart(2,"0")
-      ].join("-");
-    }
-  }
-
-  const text = String(value).trim();
-  if(/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
-
-  const match = text.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
-  if(match){
-    return `${match[3]}-${match[2].padStart(2,"0")}-${match[1].padStart(2,"0")}`;
-  }
-
-  return text;
+  const s=String(v).trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  const m=s.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
+  if(m)return `${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
+  return s;
 }
-
 function rowToEmployee(row){
-  const get = (...names)=>getCell(row,...names);
-
-  const result = {
-    employeeId:normalizeText(get("Employee ID","EmployeeId")),
-    employeeName:normalizeText(get("Employee Name","Name")),
-    nik:normalizeText(get("NIK")),
-    gender:normalizeText(get("Gender")),
-    birthCity:normalizeText(get("Birth City","BirthCity")),
-    birthDate:excelDate(get("Birth Date","BirthDate")),
-    religion:normalizeText(get("Religion")),
-    maritalStatus:normalizeText(get("Marital Status","MaritalStatus")),
-    ktpAddress:normalizeText(get("KTP Address","KTPAddress")),
-    email:normalizeText(get("Email")),
-    phone:normalizeText(get("Phone","Phone Number")),
-    joinDate:excelDate(get("Join Date","JoinDate")),
-    departmentId:normalizeText(get("Department","Department ID")),
-    positionId:normalizeText(get("Position","Position ID")),
-    employmentType:normalizeText(get("Employment Type")) || "Permanent",
-    employmentStatus:normalizeText(get("Employment Status")) || "active"
+  const g=(...names)=>getCell(row,...names);
+  const dep=g("Dependents Count","DependentsCount");
+  return {
+    employeeId:String(g("Employee ID","EmployeeId")??"").trim(),
+    employeeName:String(g("Employee Name","Name")??"").trim(),
+    nik:String(g("NIK")??"").trim().replace(/^'/,""),
+    gender:String(g("Gender")??"").trim(),
+    birthCity:String(g("Birth City","BirthCity")??"").trim(),
+    birthDate:excelDate(g("Birth Date","BirthDate")),
+    religion:String(g("Religion")??"").trim(),
+    maritalStatus:String(g("Marital Status","MaritalStatus")??"").trim(),
+    dependentsCount:dep===""||dep===undefined?undefined:normalizeDependents(dep),
+    ktpAddress:String(g("KTP Address","KTPAddress")??"").trim(),
+    email:String(g("Email")??"").trim(),
+    phone:String(g("Phone","Phone Number")??"").trim(),
+    joinDate:excelDate(g("Join Date","JoinDate")),
+    departmentId:String(g("Department","Department ID")??"").trim(),
+    positionId:String(g("Position","Position ID")??"").trim(),
+    employmentType:String(g("Employment Type")??"").trim()||"Permanent",
+    employmentStatus:String(g("Employment Status")??"").trim()||"active"
   };
-
-  const dependentRaw = get("Dependents Count","DependentsCount");
-  result.dependentsCount =
-    dependentRaw === undefined || dependentRaw === ""
-      ? undefined
-      : normalizeDependents(dependentRaw);
-
-  return result;
 }
-
-function isBlank(v){
-  return v === undefined || v === null || v === "";
-}
-
+function blank(v){return v===undefined||v===null||v===""}
 async function importExcel(){
   requireEmployeePermission();
-
-  const file = $("excelFile").files[0];
-  if(!file) throw new Error("Pilih file Excel terlebih dahulu.");
-  if(file.size > MAX_IMPORT_SIZE) throw new Error("Ukuran file maksimal 5 MB.");
-
-  const mode = $("importMode").value;
-  const buffer = await file.arrayBuffer();
-  const workbook = XLSX.read(buffer,{type:"array",cellDates:true});
-  const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
-  const rows = XLSX.utils.sheet_to_json(sheet,{defval:""});
-  if(!rows.length) throw new Error("File Excel tidak memiliki data.");
-  if(rows.length > MAX_IMPORT_ROWS){
-    throw new Error("Maksimal import adalah 200 baris per proses.");
-  }
-
-  const parsed = rows.map(rowToEmployee);
-  const importedIds = new Set();
-
+  const file=$("excelFile").files[0];
+  if(!file)throw new Error("Pilih file Excel terlebih dahulu.");
+  if(file.size>MAX_IMPORT_SIZE)throw new Error("Ukuran file maksimal 5 MB.");
+  const mode=$("importMode").value;
+  const wb=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:true});
+  const sheet=wb.Sheets[wb.SheetNames[0]];
+  const rows=XLSX.utils.sheet_to_json(sheet,{defval:""});
+  if(!rows.length)throw new Error("File Excel tidak memiliki data.");
+  if(rows.length>MAX_IMPORT_ROWS)throw new Error("Maksimal 200 baris per proses.");
+  const parsed=rows.map(rowToEmployee);
+  const seen=new Set();
   for(let i=0;i<parsed.length;i++){
-    const row = parsed[i];
-
-    if(mode==="ADD" && row.employeeId){
-      throw new Error(
-        `Baris ${i+2}: kosongkan Employee ID untuk mode ADD.`
-      );
-    }
-
-    if(mode==="UPDATE" && !row.employeeId){
-      throw new Error(
-        `Baris ${i+2}: Employee ID wajib diisi untuk mode UPDATE.`
-      );
-    }
-
-    if(row.employeeId){
-      if(importedIds.has(row.employeeId)){
-        throw new Error(`Employee ID duplikat: ${row.employeeId}`);
-      }
-      importedIds.add(row.employeeId);
-    }
-
-    if(!row.employeeName){
-      throw new Error(`Baris ${i+2}: Employee Name wajib diisi.`);
-    }
-
-    if(row.nik && !validNIK(row.nik)){
-      throw new Error(`Baris ${i+2}: NIK harus 16 digit.`);
-    }
-
-    if(!["active","inactive","resigned"].includes(row.employmentStatus)){
-      throw new Error(`Baris ${i+2}: Employment Status tidak valid.`);
-    }
+    const r=parsed[i],line=i+2;
+    if(mode==="ADD"&&r.employeeId)throw new Error(`Baris ${line}: kosongkan Employee ID untuk mode ADD.`);
+    if(mode==="UPDATE"&&!r.employeeId)throw new Error(`Baris ${line}: Employee ID wajib untuk UPDATE.`);
+    if(r.employeeId&&seen.has(r.employeeId))throw new Error(`Employee ID duplikat: ${r.employeeId}`);
+    if(r.employeeId)seen.add(r.employeeId);
+    if(!r.employeeName)throw new Error(`Baris ${line}: Employee Name wajib diisi.`);
+    if(r.nik&&!validNIK(r.nik))throw new Error(`Baris ${line}: NIK harus 16 digit. Pastikan kolom NIK di Excel berformat Text.`);
+    if(!["active","inactive","resigned"].includes(r.employmentStatus))throw new Error(`Baris ${line}: Employment Status harus active, inactive, atau resigned.`);
   }
-
-  let added = 0;
-  let updated = 0;
-
-  for(const row of parsed){
+  let added=0,updated=0;
+  for(const r of parsed){
     if(mode==="ADD"){
-      const employeeId = await generateEmployeeId();
-
-      const data = {
-        companyId:COMPANY_ID,
-        branchId:BRANCH_ID,
-        employeeId,
-        employeeName:row.employeeName,
-        nik:row.nik,
-        gender:row.gender,
-        birthCity:row.birthCity,
-        birthDate:row.birthDate,
-        religion:row.religion,
-        maritalStatus:row.maritalStatus,
-        dependentsCount:row.dependentsCount ?? 0,
-        ktpAddress:row.ktpAddress,
-        email:row.email,
-        phone:row.phone,
-        joinDate:row.joinDate,
-        departmentId:row.departmentId,
-        positionId:row.positionId,
-        employmentType:row.employmentType,
-        employmentStatus:row.employmentStatus,
-        userId:null,
-        createdAt:serverTimestamp(),
-        createdBy:currentUser.uid,
-        updatedAt:serverTimestamp(),
-        updatedBy:currentUser.uid
+      const id=await generateEmployeeId();
+      const data={
+        companyId:COMPANY_ID,branchId:BRANCH_ID,employeeId:id,
+        employeeName:r.employeeName,nik:r.nik,gender:r.gender,
+        birthCity:r.birthCity,birthDate:r.birthDate,religion:r.religion,
+        maritalStatus:r.maritalStatus,dependentsCount:r.dependentsCount??0,
+        ktpAddress:r.ktpAddress,email:r.email,phone:r.phone,joinDate:r.joinDate,
+        departmentId:r.departmentId,positionId:r.positionId,
+        employmentType:r.employmentType,employmentStatus:r.employmentStatus,
+        userId:null,createdAt:serverTimestamp(),createdBy:currentUser.uid,
+        updatedAt:serverTimestamp(),updatedBy:currentUser.uid
       };
-
-      await setDoc(doc(db,"employees",employeeId),data);
+      await setDoc(doc(db,"employees",id),data);
       added++;
-
     }else{
-      const ref = doc(db,"employees",row.employeeId);
-      const snap = await getDoc(ref);
-
-      if(!snap.exists()){
-        throw new Error(`Employee ID tidak ditemukan: ${row.employeeId}`);
-      }
-
-      if(snap.data().companyId !== COMPANY_ID){
-        throw new Error(`Employee ID bukan milik perusahaan ini: ${row.employeeId}`);
-      }
-
-      const update = {
-        updatedAt:serverTimestamp(),
-        updatedBy:currentUser.uid
-      };
-
-      const fields = [
-        "employeeName","nik","gender","birthCity","birthDate",
-        "religion","maritalStatus","ktpAddress","email","phone",
-        "joinDate","departmentId","positionId",
-        "employmentType","employmentStatus"
+      const ref=doc(db,"employees",r.employeeId);
+      const snap=await getDoc(ref);
+      if(!snap.exists())throw new Error("Employee ID tidak ditemukan: "+r.employeeId);
+      if(snap.data().companyId!==COMPANY_ID)throw new Error("Employee ID bukan milik perusahaan ini: "+r.employeeId);
+      const update={updatedAt:serverTimestamp(),updatedBy:currentUser.uid};
+      const fields=[
+        "employeeName","nik","gender","birthCity","birthDate","religion",
+        "maritalStatus","ktpAddress","email","phone","joinDate",
+        "departmentId","positionId","employmentType","employmentStatus"
       ];
-
-      for(const field of fields){
-        if(!isBlank(row[field])) update[field] = row[field];
-      }
-
-      if(row.dependentsCount !== undefined){
-        update.dependentsCount = row.dependentsCount;
-      }
-
+      for(const f of fields)if(!blank(r[f]))update[f]=r[f];
+      if(r.dependentsCount!==undefined)update.dependentsCount=r.dependentsCount;
       await updateDoc(ref,update);
       updated++;
     }
   }
-
-  $("importModal").style.display = "none";
-  $("excelFile").value = "";
+  $("importModal").style.display="none";
+  $("excelFile").value="";
   await loadEmployees();
-
-  showMessage(
-    `Import selesai. Ditambahkan: ${added}. Diperbarui: ${updated}.`
-  );
+  showMessage(`Import selesai. Ditambahkan: ${added}. Diperbarui: ${updated}.`,"success");
 }
 
 async function initializeUser(user){
-  currentUser = user;
-
-  const profileRef = doc(db,"users",user.uid);
-  const profileSnap = await getDoc(profileRef);
-
+  currentUser=user;
+  $("userEmail").textContent=user.email||"Pengguna login";
+  showAccess("Memeriksa profil pengguna","Mengambil profil dari Firestore...");
+  const profileRef=doc(db,"users",user.uid);
+  const profileSnap=await getDoc(profileRef);
   if(!profileSnap.exists()){
-    throw new Error("Profil user belum terdaftar di Firestore.");
+    throw new Error("Dokumen profil tidak ditemukan di users/"+user.uid+". Periksa apakah akun ini sudah memiliki profil HRIS.");
+  }
+  currentProfile=profileSnap.data();
+  console.log("ZFSI HRIS UID:",user.uid);
+  console.log("ZFSI HRIS PROFILE:",currentProfile);
+
+  if(currentProfile.status&&currentProfile.status!=="active"){
+    throw new Error("Status akun bukan active. Hubungi administrator.");
+  }
+  if(currentProfile.active===false){
+    throw new Error("Akun dinonaktifkan. Hubungi administrator.");
+  }
+  if(currentProfile.companyId!==COMPANY_ID){
+    throw new Error("Company ID profil tidak cocok. Ditemukan: "+(currentProfile.companyId||"(kosong)")+". Sistem mengharapkan: "+COMPANY_ID+".");
+  }
+  if(!hasEmployeePermission()){
+    throw new Error("Akses ditolak. Profil ditemukan, tetapi bukan Super Admin dan tidak memiliki permission employees.manage.");
   }
 
-  currentProfile = profileSnap.data();
-
-  if(currentProfile.status !== "active" ||
-     currentProfile.active === false){
-    throw new Error("Akun Anda tidak aktif.");
-  }
-
-  if(currentProfile.companyId !== COMPANY_ID){
-    throw new Error("Akun bukan bagian dari perusahaan ZFSI.");
-  }
-
-  if(!hasPermission("employees.manage")){
-    throw new Error("Anda tidak memiliki izin mengakses Employee Data.");
-  }
-
-  $("userEmail").textContent =
-    currentProfile.email || user.email || "Logged in";
-
+  $("userEmail").textContent=currentProfile.email||user.email||"Logged in";
+  hideAccess();
   await loadEmployees();
 }
 
-
-async function initializeUser(user){
-  currentUser = user;
-
-  const profileRef = doc(db,"users",user.uid);
-  const profileSnap = await getDoc(profileRef);
-
-  if(!profileSnap.exists()){
-    throw new Error("Profil pengguna tidak ditemukan di Firestore.");
-  }
-
-  currentProfile = profileSnap.data();
-
-  console.log("USER UID:", user.uid);
-  console.log("USER PROFILE:", currentProfile);
-
-  if(currentProfile.status !== "active" ||
-     currentProfile.active === false){
-    throw new Error("Akun pengguna tidak aktif.");
-  }
-
-  if(currentProfile.companyId !== COMPANY_ID){
-    throw new Error("Company ID tidak sesuai.");
-  }
-
-  const isSuperAdmin =
-    currentProfile.systemRole === "super_admin" ||
-    currentProfile.roleId === "super_admin";
-
-  const hasPermission =
-    Array.isArray(currentProfile.permissions) &&
-    currentProfile.permissions.includes("employees.manage");
-
-  if(!isSuperAdmin && !hasPermission){
-    throw new Error("Akun tidak memiliki izin Employee Data.");
-  }
-
-  $("userEmail").textContent =
-    currentProfile.email || user.email || "Logged in";
-
-  await loadEmployees();
-}
-
-onAuthStateChanged(auth, async user => {
+let authHandled=false;
+onAuthStateChanged(auth,async user=>{
+  if(authHandled)return;
+  authHandled=true;
   if(!user){
-    window.location.href = "index.html";
+    $("userEmail").textContent="Belum login";
+    showAccess("Anda belum login","Anda akan diarahkan ke halaman login.");
+    setTimeout(()=>{window.location.href="index.html"},1200);
     return;
   }
-
   try{
     await initializeUser(user);
   }catch(error){
-    console.error("EMPLOYEE ACCESS ERROR:", error);
-    showMessage(error.message, "error");
+    console.error("EMPLOYEE AUTHENTICATION ERROR:",error);
+    showAccess("Tidak dapat membuka Employee Data",error.message);
+    showMessage("Pemeriksaan akses gagal: "+error.message,"error");
+    $("userEmail").textContent=user.email||"User login";
+    $("employeeTable").innerHTML='<tr><td colspan="9" class="empty">Akses atau pemuatan profil gagal. Periksa pesan di atas.</td></tr>';
   }
 });
 
-
-// BUTTONS
+// Event tombol
 $("addBtn").addEventListener("click",openAdd);
 $("closeModalBtn").addEventListener("click",closeEmployeeModal);
 $("cancelBtn").addEventListener("click",closeEmployeeModal);
 $("refreshBtn").addEventListener("click",loadEmployees);
 $("searchInput").addEventListener("input",renderEmployees);
 $("statusFilter").addEventListener("change",renderEmployees);
-
 $("templateBtn").addEventListener("click",downloadTemplate);
 $("exportBtn").addEventListener("click",exportExcel);
-
 $("importBtn").addEventListener("click",()=>{
-  $("excelFile").value = "";
-  $("importModal").style.display = "block";
+  $("excelFile").value="";
+  $("importModal").style.display="block";
 });
-
-function closeImport(){
-  $("importModal").style.display = "none";
-}
-
-$("closeImportBtn").addEventListener("click",closeImport);
-$("cancelImportBtn").addEventListener("click",closeImport);
-
+$("closeImportBtn").addEventListener("click",()=>$("importModal").style.display="none");
+$("cancelImportBtn").addEventListener("click",()=>$("importModal").style.display="none");
 $("processImportBtn").addEventListener("click",async()=>{
-  const button = $("processImportBtn");
+  const btn=$("processImportBtn");
   try{
-    button.disabled = true;
-    button.textContent = "Processing...";
+    btn.disabled=true;
+    btn.textContent="Processing...";
     await importExcel();
   }catch(error){
-    console.error(error);
-    showMessage("Import gagal: " + error.message,"error");
+    console.error("IMPORT ERROR:",error);
+    showMessage("Import gagal: "+error.message,"error");
   }finally{
-    button.disabled = false;
-    button.textContent = "Process Import";
+    btn.disabled=false;
+    btn.textContent="Process Import";
   }
 });
-
 $("logoutBtn").addEventListener("click",async event=>{
   event.preventDefault();
-  await signOut(auth);
-  window.location.href = "index.html";
+  try{
+    await signOut(auth);
+    window.location.href="index.html";
+  }catch(error){showMessage("Gagal logout: "+error.message,"error")}
 });
-
 $("nik").addEventListener("input",event=>{
-  event.target.value = event.target.value.replace(/\D/g,"").slice(0,16);
+  event.target.value=event.target.value.replace(/\D/g,"").slice(0,16);
 });
-
 </script>
 </body>
 </html>
