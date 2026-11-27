@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZFSI HRIS - Pengaturan</title>
+
+<style>
+:root {
+  --navy: #10243b;
+  --blue: #2879c7;
+  --blue-dark: #1e65a8;
+  --bg: #f4f7fb;
+  --border: #e5eaf0;
+  --muted: #8290a2;
+  --text: #243449;
+  --green: #16845b;
+  --red: #d34e4e;
+  --orange: #c98528;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+  width: 245px;
+  position: fixed;
+  inset: 0 auto 0 0;
+  background: var(--navy);
+  color: white;
+  padding: 24px 15px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 8px 30px;
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--blue);
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.brand h2 {
+  font-size: 17px;
+  margin: 0 0 4px;
+}
+
+.brand small {
+  font-size: 9px;
+  color: #afc2d5;
+}
+
+.section-label {
+  font-size: 10px;
+  color: #8199b0;
+  padding: 13px 10px 8px;
+  letter-spacing: 1px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #cbd7e3;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: #1e3c59;
+  color: white;
+}
+
+.logout {
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  border: 1px solid #456078;
+  border-radius: 8px;
+  background: transparent;
+  color: #e1eaf2;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.logout:hover {
+  background: #29465f;
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.main {
+  margin-left: 245px;
+  padding: 25px;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 24px;
+}
+
+.breadcrumb {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.page-title {
+  font-size: 25px;
+  font-weight: 700;
+  margin: 0;
+  color: #172b42;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 7px;
+  line-height: 1.5;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 12px;
+  color: #526276;
+  max-width: 280px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  display: grid;
+  place-items: center;
+  background: #e8f1fb;
+  color: var(--blue);
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.user-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   NOTICE
+========================= */
+
+.notice {
+  background: #fff8e9;
+  border: 1px solid #f0dfb8;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  color: #76551c;
+}
+
+.notice-icon {
+  font-size: 18px;
+}
+
+.notice strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.notice p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* =========================
+   SETTINGS LAYOUT
+========================= */
+
+.settings-layout {
+  display: grid;
+  grid-template-columns: 225px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.settings-menu {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.settings-menu-title {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--muted);
+  padding: 12px 10px;
+}
+
+.settings-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 11px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  text-align: left;
+  color: #526276;
+  font-size: 12px;
+  cursor: pointer;
+  margin-bottom: 3px;
+  transition: .2s;
+}
+
+.settings-tab:hover {
+  background: #f2f6fb;
+}
+
+.settings-tab.active {
+  background: #eaf3fc;
+  color: var(--blue-dark);
+  font-weight: bold;
+}
+
+.tab-icon {
+  width: 21px;
+  text-align: center;
+  font-size: 16px;
+}
+
+/* =========================
+   CONTENT CARD
+========================= */
+
+.settings-content {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.panel-header {
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-header h2 {
+  font-size: 17px;
+  margin: 0 0 7px;
+}
+
+.panel-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.panel-body {
+  padding: 23px 24px;
+}
+
+.form-section {
+  margin-bottom: 28px;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+.form-section h3 {
+  font-size: 13px;
+  margin: 0 0 6px;
+  color: #243449;
+}
+
+.section-description {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.form-group {
+  min-width: 0;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 7px;
+  color: #42536a;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #dce3eb;
+  border-radius: 7px;
+  background: white;
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  outline: none;
+  transition: .2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(40,121,199,.09);
+}
+
+.form-group input:disabled,
+.form-group input[readonly] {
+  background: #f4f6f8;
+  color: #8290a2;
+  cursor: not-allowed;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.field-help {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+
+.form-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0;
+}
+
+/* =========================
+   SWITCH
+========================= */
+
+.switch-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.switch-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #edf0f3;
+}
+
+.switch-item:last-child {
+  border-bottom: none;
+}
+
+.switch-info strong {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.switch-info small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  display: block;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 23px;
+  min-width: 42px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #cbd3dc;
+  transition: .25s;
+  border-radius: 20px;
+}
+
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  transition: .25s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .switch-slider {
+  background: var(--blue);
+}
+
+.switch input:checked + .switch-slider:before {
+  transform: translateX(19px);
+}
+
+/* =========================
+   QUICK LINKS
+========================= */
+
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  text-decoration: none;
+  color: var(--text);
+  transition: .2s;
+}
+
+.quick-link:hover {
+  border-color: #9fc5e9;
+  background: #f8fbff;
+}
+
+.quick-link-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: #eaf3fc;
+  color: var(--blue);
+  border-radius: 9px;
+  font-size: 18px;
+  min-width: 38px;
+}
+
+.quick-link strong {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.quick-link small {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* =========================
+   INFO BOX
+========================= */
+
+.info-box {
+  padding: 13px 15px;
+  border-radius: 8px;
+  background: #f2f7fc;
+  border: 1px solid #dceaf7;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #42617e;
+  margin-top: 16px;
+}
+
+.warning-box {
+  padding: 13px 15px;
+  border-radius: 8px;
+  background: #fff8e9;
+  border: 1px solid #f0dfb8;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #76551c;
+  margin-top: 16px;
+}
+
+/* =========================
+   FOOTER ACTIONS
+========================= */
+
+.settings-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-note {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: none;
+  border-radius: 7px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--blue-dark);
+}
+
+.btn-secondary {
+  background: #edf1f5;
+  color: #526276;
+}
+
+.btn-secondary:hover {
+  background: #e1e7ed;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  background: #173651;
+  color: white;
+  padding: 13px 17px;
+  border-radius: 9px;
+  font-size: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.16);
+  z-index: 300;
+  display: none;
+  max-width: 350px;
+  line-height: 1.5;
+}
+
+.toast.show {
+  display: block;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width: 950px) {
+  .settings-layout {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width: 650px) {
+  .sidebar {
+    width: 65px;
+    padding: 15px 6px;
+  }
+
+  .brand {
+    padding: 0 5px 25px;
+  }
+
+  .brand h2,
+  .brand small,
+  .nav-link span:last-child,
+  .section-label {
+    display: none;
+  }
+
+  .nav-link {
+    justify-content: center;
+    padding: 12px 8px;
+  }
+
+  .logout {
+    font-size: 0;
+    padding: 10px 3px;
+  }
+
+  .logout:after {
+    content: "↪";
+    font-size: 19px;
+  }
+
+  .main {
+    margin-left: 65px;
+    padding: 15px;
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .page-title {
+    font-size: 21px;
+  }
+
+  .user-info {
+    max-width: 145px;
+    padding: 7px;
+  }
+
+  .settings-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-menu {
+    display: flex;
+    overflow-x: auto;
+    gap: 5px;
+    padding: 8px;
+  }
+
+  .settings-menu-title {
+    display: none;
+  }
+
+  .settings-tab {
+    white-space: nowrap;
+    width: auto;
+    flex-shrink: 0;
+    padding: 10px;
+  }
+
+  .quick-links {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header,
+  .panel-body {
+    padding: 17px;
+  }
+
+  .settings-footer {
+    padding: 15px 17px;
+  }
+
+  .footer-actions {
+    width: 100%;
+  }
+
+  .footer-actions .btn {
+    flex: 1;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+  <div class="brand">
+    <div class="brand-icon">Z</div>
+    <div>
+      <h2>ZFSI-HRIS</h2>
+      <small>HUMAN RESOURCE SYSTEM</small>
+    </div>
+  </div>
+
+  <div class="section-label">MAIN MENU</div>
+
+  <a class="nav-link" href="dashboard.html">
+    <span>▦</span><span>Dashboard</span>
+  </a>
+
+  <a class="nav-link" href="employees.html">
+    <span>♙</span><span>Data Karyawan</span>
+  </a>
+
+  <a class="nav-link" href="attendance.html">
+    <span>◷</span><span>Absensi</span>
+  </a>
+
+  <a class="nav-link" href="leave.html">
+    <span>▣</span><span>Cuti & Izin</span>
+  </a>
+
+  <a class="nav-link" href="overtime.html">
+    <span>◴</span><span>Lembur</span>
+  </a>
+
+  <div class="section-label">COMPENSATION</div>
+
+  <a class="nav-link" href="payroll.html">
+    <span>＄</span><span>Payroll</span>
+  </a>
+
+  <a class="nav-link" href="payslip.html">
+    <span>▤</span><span>Slip Gaji</span>
+  </a>
+
+  <div class="section-label">MANAGEMENT</div>
+
+  <a class="nav-link" href="announcements.html">
+    <span>♧</span><span>Pengumuman</span>
+  </a>
+
+  <a class="nav-link" href="reports.html">
+    <span>▥</span><span>Laporan</span>
+  </a>
+
+  <a class="nav-link" href="users.html">
+    <span>♙</span><span>User Management</span>
+  </a>
+
+  <a class="nav-link" href="audit-log.html">
+    <span>◴</span><span>Audit Log</span>
+  </a>
+
+  <a class="nav-link active" href="settings.html">
+    <span>⚙</span><span>Pengaturan</span>
+  </a>
+
+  <button class="logout" id="logoutButton">
+    Keluar / Logout
+  </button>
+
+</aside>
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<main class="main">
+
+  <div class="topbar">
+    <div>
+      <div class="breadcrumb">Management / Pengaturan</div>
+      <h1 class="page-title">Pengaturan Sistem</h1>
+      <div class="page-subtitle">
+        Kelola konfigurasi umum dan preferensi sistem HRIS.
+      </div>
+    </div>
+
+    <div class="user-info">
+      <div class="user-avatar">Z</div>
+      <div class="user-email" id="userEmail">
+        Memeriksa akun...
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTICE -->
+
+  <div class="notice">
+    <div class="notice-icon">ⓘ</div>
+    <div>
+      <strong>Mode Pratinjau Pengaturan</strong>
+      <p>
+        Formulir pada halaman ini sudah dapat digunakan untuk mencoba
+        pengaturan. Untuk tahap saat ini, perubahan hanya berlaku sementara
+        selama halaman terbuka dan belum disimpan secara permanen ke Firebase.
+        Koneksi penyimpanan akan diselesaikan pada tahap integrasi database.
+      </p>
+    </div>
+  </div>
+
+  <!-- SETTINGS FORM -->
+
+  <form id="settingsForm" novalidate>
+
+    <div class="settings-layout">
+
+      <!-- SETTINGS MENU -->
+
+      <div class="settings-menu">
+
+        <div class="settings-menu-title">PREFERENSI SISTEM</div>
+
+        <button type="button"
+          class="settings-tab active"
+          data-tab="company">
+          <span class="tab-icon">▣</span>
+          Profil Perusahaan
+        </button>
+
+        <button type="button"
+          class="settings-tab"
+          data-tab="attendance">
+          <span class="tab-icon">◷</span>
+          Pengaturan Absensi
+        </button>
+
+        <button type="button"
+          class="settings-tab"
+          data-tab="leave">
+          <span class="tab-icon">▤</span>
+          Pengaturan Cuti
+        </button>
+
+        <button type="button"
+          class="settings-tab"
+          data-tab="payroll">
+          <span class="tab-icon">＄</span>
+          Pengaturan Payroll
+        </button>
+
+        <button type="button"
+          class="settings-tab"
+          data-tab="system">
+          <span class="tab-icon">⚙</span>
+          Sistem & Keamanan
+        </button>
+
+      </div>
+
+      <!-- SETTINGS CONTENT -->
+
+      <div class="settings-content">
+
+        <!-- =========================
+             TAB 1: COMPANY
+        ========================== -->
+
+        <section class="tab-panel active" id="tab-company">
+
+          <div class="panel-header">
+            <h2>Profil Perusahaan</h2>
+            <p>
+              Informasi identitas perusahaan yang menggunakan sistem HRIS.
+            </p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="form-section">
+
+              <h3>Informasi Umum</h3>
+              <p class="section-description">
+                Data dasar perusahaan.
+              </p>
+
+              <div class="form-grid">
+
+                <div class="form-group">
+                  <label for="companyName">Nama Perusahaan</label>
+                  <input
+                    type="text"
+                    id="companyName"
+                    name="companyName"
+                    value="Zheng Feng Steel Indonesia"
+                    required
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="companyCode">Kode Perusahaan</label>
+                  <input
+                    type="text"
+                    id="companyCode"
+                    value="ZFSI"
+                    readonly
+                  >
+                  <div class="field-help">
+                    Identitas perusahaan. Perubahan kode perlu dilakukan
+                    melalui pengelolaan data perusahaan.
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="companyId">Company ID</label>
+                  <input
+                    type="text"
+                    id="companyId"
+                    value="zfsi-main"
+                    readonly
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="companyEmail">Email Perusahaan</label>
+                  <input
+                    type="email"
+                    id="companyEmail"
+                    name="companyEmail"
+                    placeholder="hr@company.com"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="companyPhone">Nomor Telepon</label>
+                  <input
+                    type="tel"
+                    id="companyPhone"
+                    name="companyPhone"
+                    placeholder="021-xxxxxxxx"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="companyWebsite">Website</label>
+                  <input
+                    type="url"
+                    id="companyWebsite"
+                    name="companyWebsite"
+                    placeholder="https://www.company.com"
+                  >
+                </div>
+
+                <div class="form-group full">
+                  <label for="companyAddress">Alamat Perusahaan</label>
+                  <textarea
+                    id="companyAddress"
+                    name="companyAddress"
+                    placeholder="Masukkan alamat perusahaan..."
+                  ></textarea>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Preferensi Regional</h3>
+              <p class="section-description">
+                Pengaturan bahasa, waktu, dan format tampilan sistem.
+              </p>
+
+              <div class="form-grid">
+
+                <div class="form-group">
+                  <label for="language">Bahasa Sistem</label>
+                  <select id="language" name="language">
+                    <option value="id" selected>Bahasa Indonesia</option>
+                    <option value="en">English</option>
+                    <option value="zh">中文 (Chinese)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="timezone">Zona Waktu</label>
+                  <select id="timezone" name="timezone">
+                    <option value="Asia/Jakarta" selected>
+                      Asia/Jakarta (WIB)
+                    </option>
+                    <option value="Asia/Makassar">
+                      Asia/Makassar (WITA)
+                    </option>
+                    <option value="Asia/Jayapura">
+                      Asia/Jayapura (WIT)
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="dateFormat">Format Tanggal</label>
+                  <select id="dateFormat" name="dateFormat">
+                    <option value="dd/mm/yyyy" selected>DD/MM/YYYY</option>
+                    <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+                    <option value="mm/dd/yyyy">MM/DD/YYYY</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="defaultCurrency">Mata Uang Default</label>
+                  <select id="defaultCurrency" name="defaultCurrency">
+                    <option value="IDR" selected>IDR - Indonesian Rupiah</option>
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="CNY">CNY - Chinese Yuan</option>
+                    <option value="SGD">SGD - Singapore Dollar</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <div class="info-box">
+                Zona waktu dan format tanggal di atas merupakan preferensi
+                tampilan. Penerapannya pada transaksi, absensi, dan laporan
+                akan dihubungkan saat integrasi database.
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Master Data Perusahaan</h3>
+              <p class="section-description">
+                Akses cepat ke pengelolaan data organisasi.
+              </p>
+
+              <div class="quick-links">
+
+                <a href="departments.html" class="quick-link">
+                  <div class="quick-link-icon">▦</div>
+                  <div>
+                    <strong>Departments</strong>
+                    <small>Kelola departemen perusahaan</small>
+                  </div>
+                </a>
+
+                <a href="positions.html" class="quick-link">
+                  <div class="quick-link-icon">♙</div>
+                  <div>
+                    <strong>Positions</strong>
+                    <small>Kelola jabatan karyawan</small>
+                  </div>
+                </a>
+
+                <a href="employees.html" class="quick-link">
+                  <div class="quick-link-icon">♧</div>
+                  <div>
+                    <strong>Employee Data</strong>
+                    <small>Kelola data karyawan</small>
+                  </div>
+                </a>
+
+                <a href="users.html" class="quick-link">
+                  <div class="quick-link-icon">⚿</div>
+                  <div>
+                    <strong>User Management</strong>
+                    <small>Kelola pengguna dan hak akses</small>
+                  </div>
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- =========================
+             TAB 2: ATTENDANCE
+        ========================== -->
+
+        <section class="tab-panel" id="tab-attendance">
+
+          <div class="panel-header">
+            <h2>Pengaturan Absensi</h2>
+            <p>
+              Atur jam kerja standar dan parameter keterlambatan karyawan.
+            </p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="form-section">
+
+              <h3>Jam Kerja</h3>
+              <p class="section-description">
+                Konfigurasi jam kerja standar perusahaan.
+              </p>
+
+              <div class="form-grid">
+
+                <div class="form-group">
+                  <label for="workStart">Jam Masuk</label>
+                  <input
+                    type="time"
+                    id="workStart"
+                    name="workStart"
+                    value="08:00"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="workEnd">Jam Pulang</label>
+                  <input
+                    type="time"
+                    id="workEnd"
+                    name="workEnd"
+                    value="17:00"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="breakStart">Mulai Istirahat</label>
+                  <input
+                    type="time"
+                    id="breakStart"
+                    name="breakStart"
+                    value="12:00"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="breakEnd">Selesai Istirahat</label>
+                  <input
+                    type="time"
+                    id="breakEnd"
+                    name="breakEnd"
+                    value="13:00"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="gracePeriod">Toleransi Keterlambatan</label>
+                  <input
+                    type="number"
+                    id="gracePeriod"
+                    name="gracePeriod"
+                    value="10"
+                    min="0"
+                    max="180"
+                  >
+                  <div class="field-help">
+                    Dalam menit.
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="dailyWorkHours">Target Jam Kerja Harian</label>
+                  <input
+                    type="number"
+                    id="dailyWorkHours"
+                    name="dailyWorkHours"
+                    value="8"
+                    min="1"
+                    max="24"
+                    step="0.5"
+                  >
+                  <div class="field-help">
+                    Dalam jam kerja.
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Hari Kerja</h3>
+              <p class="section-description">
+                Tentukan hari kerja standar perusahaan.
+              </p>
+
+              <div class="switch-list">
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Senin</strong>
+                    <small>Hari kerja</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="workMonday" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Selasa</strong>
+                    <small>Hari kerja</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="workTuesday" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Rabu</strong>
+                    <small>Hari kerja</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="workWednesday" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Kamis</strong>
+                    <small>Hari kerja</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="workThursday" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Jumat</strong>
+                    <small>Hari kerja</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="workFriday" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Sabtu</strong>
+                    <small>Hari kerja tambahan (opsional)</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="workSaturday">
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Minggu</strong>
+                    <small>Hari kerja tambahan (opsional)</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="workSunday">
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Preferensi Absensi</h3>
+              <p class="section-description">
+                Pengaturan tambahan terkait pencatatan kehadiran.
+              </p>
+
+              <div class="switch-list">
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Wajib Clock In</strong>
+                    <small>Karyawan harus mencatat jam masuk.</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="requireClockIn" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Wajib Clock Out</strong>
+                    <small>Karyawan harus mencatat jam pulang.</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="requireClockOut" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Catat Keterlambatan</strong>
+                    <small>Sistem menandai absensi yang melewati toleransi.</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="recordLate" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- =========================
+             TAB 3: LEAVE
+        ========================== -->
+
+        <section class="tab-panel" id="tab-leave">
+
+          <div class="panel-header">
+            <h2>Pengaturan Cuti & Izin</h2>
+            <p>
+              Atur kuota cuti dan ketentuan permohonan cuti karyawan.
+            </p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="form-section">
+
+              <h3>Kuota Cuti Tahunan</h3>
+              <p class="section-description">
+                Parameter awal untuk pengelolaan cuti tahunan.
+              </p>
+
+              <div class="form-grid">
+
+                <div class="form-group">
+                  <label for="annualLeave">Kuota Cuti Tahunan</label>
+                  <input
+                    type="number"
+                    id="annualLeave"
+                    name="annualLeave"
+                    value="12"
+                    min="0"
+                    max="365"
+                  >
+                  <div class="field-help">
+                    Dalam hari per tahun.
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="leaveYearStart">Awal Periode Cuti</label>
+                  <select id="leaveYearStart" name="leaveYearStart">
+                    <option value="calendar" selected>
+                      Januari - Desember
+                    </option>
+                    <option value="anniversary">
+                      Berdasarkan tanggal masuk karyawan
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="leaveCarryForward">Maksimum Cuti Dibawa</label>
+                  <input
+                    type="number"
+                    id="leaveCarryForward"
+                    name="leaveCarryForward"
+                    value="0"
+                    min="0"
+                    max="365"
+                  >
+                  <div class="field-help">
+                    Dalam hari.
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="leaveNotice">Minimal Pengajuan Sebelumnya</label>
+                  <input
+                    type="number"
+                    id="leaveNotice"
+                    name="leaveNotice"
+                    value="3"
+                    min="0"
+                    max="365"
+                  >
+                  <div class="field-help">
+                    Dalam hari kalender.
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Ketentuan Pengajuan</h3>
+              <p class="section-description">
+                Preferensi alur permohonan cuti dan izin.
+              </p>
+
+              <div class="switch-list">
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Persetujuan Atasan Langsung</strong>
+                    <small>
+                      Permohonan perlu diperiksa oleh atasan langsung.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      name="leaveSupervisorApproval"
+                      checked
+                    >
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Persetujuan HR</strong>
+                    <small>
+                      Permohonan perlu diverifikasi oleh HR.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      name="leaveHrApproval"
+                      checked
+                    >
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Izinkan Pembatalan Permohonan</strong>
+                    <small>
+                      Karyawan dapat membatalkan permohonan yang belum disetujui.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      name="leaveCancellation"
+                      checked
+                    >
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="warning-box">
+              Catatan: kuota dan ketentuan pada halaman ini merupakan
+              konfigurasi pratinjau. Penerapan aturan cuti harus disesuaikan
+              dengan kebijakan perusahaan dan ketentuan ketenagakerjaan yang
+              berlaku sebelum digunakan secara operasional.
+            </div>
+
+          </div>
+        </section>
+
+        <!-- =========================
+             TAB 4: PAYROLL
+        ========================== -->
+
+        <section class="tab-panel" id="tab-payroll">
+
+          <div class="panel-header">
+            <h2>Pengaturan Payroll</h2>
+            <p>
+              Preferensi periode penggajian dan parameter dasar payroll.
+            </p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="form-section">
+
+              <h3>Periode Penggajian</h3>
+              <p class="section-description">
+                Tentukan periode dan jadwal pembayaran gaji.
+              </p>
+
+              <div class="form-grid">
+
+                <div class="form-group">
+                  <label for="payrollPeriod">Periode Payroll</label>
+                  <select id="payrollPeriod" name="payrollPeriod">
+                    <option value="monthly" selected>Bulanan</option>
+                    <option value="weekly">Mingguan</option>
+                    <option value="biweekly">Dua Mingguan</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="paymentDate">Tanggal Pembayaran</label>
+                  <input
+                    type="number"
+                    id="paymentDate"
+                    name="paymentDate"
+                    value="25"
+                    min="1"
+                    max="31"
+                  >
+                  <div class="field-help">
+                    Tanggal pembayaran gaji untuk periode bulanan.
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="payrollCurrency">Mata Uang Payroll</label>
+                  <select id="payrollCurrency" name="payrollCurrency">
+                    <option value="IDR" selected>IDR</option>
+                    <option value="USD">USD</option>
+                    <option value="CNY">CNY</option>
+                    <option value="SGD">SGD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="JPY">JPY</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="payrollRounding">Pembulatan Nilai</label>
+                  <select id="payrollRounding" name="payrollRounding">
+                    <option value="1" selected>Tanpa pembulatan khusus</option>
+                    <option value="100">Ke kelipatan 100</option>
+                    <option value="1000">Ke kelipatan 1.000</option>
+                  </select>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Komponen Penggajian</h3>
+              <p class="section-description">
+                Aktifkan komponen yang akan ditampilkan dalam proses payroll.
+              </p>
+
+              <div class="switch-list">
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Gaji Pokok</strong>
+                    <small>Komponen utama penghasilan karyawan.</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="includeBasicSalary" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Tunjangan</strong>
+                    <small>Komponen tambahan penghasilan.</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="includeAllowance" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Lembur</strong>
+                    <small>Komponen pembayaran lembur.</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="includeOvertime" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Potongan</strong>
+                    <small>Komponen pengurang penghasilan.</small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="includeDeduction" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Pengaturan Tambahan</h3>
+
+              <div class="switch-list">
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Slip Gaji Karyawan</strong>
+                    <small>
+                      Sediakan tampilan slip gaji untuk masing-masing karyawan.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="enablePayslip" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Persetujuan Payroll</strong>
+                    <small>
+                      Payroll harus diperiksa dan disetujui sebelum finalisasi.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="requirePayrollApproval" checked>
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="warning-box">
+              Pengaturan ini bukan mesin perhitungan pajak atau BPJS.
+              Perhitungan PPh 21, BPJS Kesehatan, BPJS Ketenagakerjaan,
+              THR, dan komponen lainnya perlu dirancang dan diuji tersendiri
+              sebelum payroll digunakan secara resmi.
+            </div>
+
+          </div>
+        </section>
+
+        <!-- =========================
+             TAB 5: SYSTEM
+        ========================== -->
+
+        <section class="tab-panel" id="tab-system">
+
+          <div class="panel-header">
+            <h2>Sistem & Keamanan</h2>
+            <p>
+              Preferensi notifikasi dan informasi keamanan aplikasi.
+            </p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="form-section">
+
+              <h3>Notifikasi</h3>
+              <p class="section-description">
+                Pilih notifikasi yang ingin ditampilkan pada sistem.
+              </p>
+
+              <div class="switch-list">
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Notifikasi Pengajuan Cuti</strong>
+                    <small>
+                      Pemberitahuan ketika ada permohonan cuti baru.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      name="notifyLeave"
+                      checked
+                    >
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Notifikasi Lembur</strong>
+                    <small>
+                      Pemberitahuan permohonan dan persetujuan lembur.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      name="notifyOvertime"
+                      checked
+                    >
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Notifikasi Payroll</strong>
+                    <small>
+                      Pemberitahuan proses dan status penggajian.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      name="notifyPayroll"
+                      checked
+                    >
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-item">
+                  <div class="switch-info">
+                    <strong>Notifikasi Pengumuman</strong>
+                    <small>
+                      Pemberitahuan ketika terdapat pengumuman baru.
+                    </small>
+                  </div>
+                  <label class="switch">
+                    <input
+                      type="checkbox"
+                      name="notifyAnnouncement"
+                      checked
+                    >
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Preferensi Sesi</h3>
+              <p class="section-description">
+                Tampilan konfigurasi sesi pengguna. Nilai berikut belum
+                diterapkan ke Firebase Authentication.
+              </p>
+
+              <div class="form-grid">
+
+                <div class="form-group">
+                  <label for="sessionTimeout">Batas Waktu Sesi</label>
+                  <select id="sessionTimeout" name="sessionTimeout">
+                    <option value="30">30 menit</option>
+                    <option value="60" selected>60 menit</option>
+                    <option value="120">120 menit</option>
+                    <option value="240">240 menit</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="passwordLength">Minimum Panjang Password</label>
+                  <select id="passwordLength" name="passwordLength">
+                    <option value="8" selected>8 karakter</option>
+                    <option value="10">10 karakter</option>
+                    <option value="12">12 karakter</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <div class="info-box">
+                Pengaturan sesi dan kebijakan password pada halaman ini
+                hanya berupa preferensi rancangan. Keamanan autentikasi
+                sebenarnya tetap mengikuti konfigurasi Firebase Authentication
+                dan mekanisme keamanan aplikasi.
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Informasi Aplikasi</h3>
+
+              <div class="form-grid">
+
+                <div class="form-group">
+                  <label>Nama Aplikasi</label>
+                  <input type="text" value="ZFSI-HRIS" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label>Versi Antarmuka</label>
+                  <input type="text" value="1.0.0 - Initial HRIS" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label>Authentication Provider</label>
+                  <input type="text" value="Firebase Authentication" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label>Database Provider</label>
+                  <input type="text" value="Cloud Firestore" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label>Hosting</label>
+                  <input type="text" value="GitHub Pages" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label>Firebase Project ID</label>
+                  <input type="text" value="zfsi-hris" readonly>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-section">
+
+              <h3>Audit & Riwayat Sistem</h3>
+              <p class="section-description">
+                Akses ke halaman pemantauan aktivitas sistem.
+              </p>
+
+              <div class="quick-links">
+
+                <a href="audit-log.html" class="quick-link">
+                  <div class="quick-link-icon">◴</div>
+                  <div>
+                    <strong>Audit Log</strong>
+                    <small>
+                      Lihat riwayat aktivitas pengguna dan sistem.
+                    </small>
+                  </div>
+                </a>
+
+                <a href="users.html" class="quick-link">
+                  <div class="quick-link-icon">♙</div>
+                  <div>
+                    <strong>User Management</strong>
+                    <small>
+                      Lihat pengelolaan akun dan hak akses pengguna.
+                    </small>
+                  </div>
+                </a>
+
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- FOOTER -->
+
+        <div class="settings-footer">
+
+          <div class="footer-note">
+            Mode pratinjau: perubahan belum disimpan secara permanen.
+          </div>
+
+          <div class="footer-actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="resetButton"
+            >
+              Kembalikan Default
+            </button>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+            >
+              Simpan Perubahan
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </form>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<!-- =========================
+     FIREBASE AUTHENTICATION
+========================= -->
+
+<script type="module">
+
+import {
+  initializeApp,
+  getApps,
+  getApp
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+/* Firebase Configuration */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+  authDomain: "zfsi-hris.firebaseapp.com",
+  projectId: "zfsi-hris",
+  storageBucket: "zfsi-hris.firebasestorage.app",
+  messagingSenderId: "642441161494",
+  appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+};
+
+/* Initialize Firebase */
+
+const app = getApps().length
+  ? getApp()
+  : initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+/* Authentication Guard */
+
+onAuthStateChanged(auth, (user) => {
+
+  if (!user) {
+    window.location.replace("./index.html");
+    return;
+  }
+
+  document.getElementById("userEmail").textContent =
+    user.email || "Pengguna HRIS";
+
+});
+
+/* Logout */
+
+document.getElementById("logoutButton").addEventListener("click", async () => {
+
+  const confirmed = confirm("Apakah Anda yakin ingin keluar dari sistem?");
+
+  if (!confirmed) return;
+
+  try {
+
+    await signOut(auth);
+    window.location.replace("./index.html");
+
+  } catch (error) {
+
+    console.error("Logout error:", error);
+
+    showToast(
+      "Gagal keluar dari akun. Silakan coba kembali."
+    );
+
+  }
+
+});
+
+/* =========================
+   TOAST NOTIFICATION
+========================= */
+
+let toastTimer;
+
+function showToast(message) {
+
+  const toast = document.getElementById("toast");
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3500);
+
+}
+
+/* =========================
+   SETTINGS TAB NAVIGATION
+========================= */
+
+const tabButtons = document.querySelectorAll(".settings-tab");
+const tabPanels = document.querySelectorAll(".tab-panel");
+
+tabButtons.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    const target = button.dataset.tab;
+
+    tabButtons.forEach(item => {
+      item.classList.remove("active");
+    });
+
+    tabPanels.forEach(panel => {
+      panel.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    const selectedPanel = document.getElementById("tab-" + target);
+
+    if (selectedPanel) {
+      selectedPanel.classList.add("active");
+    }
+
+  });
+
+});
+
+/* =========================
+   VALIDATION & SIMULATED SAVE
+========================= */
+
+const settingsForm = document.getElementById("settingsForm");
+
+settingsForm.addEventListener("submit", (event) => {
+
+  event.preventDefault();
+
+  /*
+    Validasi hanya bagian tab yang sedang dibuka.
+    Penyimpanan permanen belum diaktifkan.
+  */
+
+  const activePanel = document.querySelector(".tab-panel.active");
+
+  if (!activePanel) return;
+
+  const fields = activePanel.querySelectorAll(
+    "input:not([readonly]), select, textarea"
+  );
+
+  for (const field of fields) {
+
+    if (!field.checkValidity()) {
+
+      field.reportValidity();
+
+      showToast(
+        "Mohon periksa kembali data pengaturan yang diisi."
+      );
+
+      return;
+
+    }
+
+  }
+
+  /*
+    Tidak ada penulisan ke Firestore atau localStorage.
+    Hanya memberikan informasi bahwa formulir telah diperiksa.
+  */
+
+  showToast(
+    "Pemeriksaan berhasil. Pengaturan belum disimpan permanen ke Firebase."
+  );
+
+});
+
+/* =========================
+   RESET TO DEFAULT
+========================= */
+
+document.getElementById("resetButton").addEventListener("click", () => {
+
+  const confirmed = confirm(
+    "Kembalikan seluruh formulir pengaturan ke nilai awal?"
+  );
+
+  if (!confirmed) return;
+
+  settingsForm.reset();
+
+  showToast(
+    "Formulir telah dikembalikan ke nilai awal."
+  );
+
+});
+
+</script>
+
+</body>
+</html>
