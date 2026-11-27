@@ -1,744 +1,1620 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ZFSI HRIS - Employee Data</title>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#243247}
-.sidebar{width:245px;height:100vh;position:fixed;top:0;left:0;background:#10243b;color:white;padding:22px 15px;overflow-y:auto}
-.brand{font-size:19px;font-weight:800;padding:8px 12px 25px}
-.brand small{display:block;font-size:11px;color:#aab9cc;margin-top:5px;font-weight:400}
-.menu-title{color:#8da2ba;font-size:10px;margin:20px 12px 8px;letter-spacing:1px}
-.sidebar a{display:block;text-decoration:none;color:#c8d4e3;padding:12px;border-radius:7px;margin-bottom:4px;font-size:13px}
-.sidebar a:hover,.sidebar a.active{background:#2879c7;color:white}
-.main{margin-left:245px;padding:25px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
-h1{font-size:25px;margin:0 0 7px}
-.subtitle{font-size:13px;color:#7c8999}
-.user-info{font-size:12px;color:#66768a}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:15px;margin-bottom:22px}
-.stat,.panel{background:white;border:1px solid #e6ebf1;border-radius:10px;padding:18px}
-.stat-label{font-size:12px;color:#7b8795}
-.stat-value{font-size:27px;font-weight:700;margin-top:9px}
-.panel{margin-bottom:20px}
-.panel-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:17px}
-.panel-title{font-size:16px;font-weight:700}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-button{border:0;border-radius:6px;padding:10px 14px;cursor:pointer;font-size:12px;font-weight:600}
-.btn-primary{background:#2879c7;color:white}
-.btn-secondary{background:#eaf1f8;color:#31506d}
-.btn-danger{background:#fdeaea;color:#b63838}
-button:disabled{opacity:.5;cursor:not-allowed}
-.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-input,select,textarea{width:100%;border:1px solid #dce3eb;border-radius:6px;padding:10px;background:white;font-size:13px;color:#243247}
-input:focus,select:focus,textarea:focus{outline:2px solid #c9e2fa;border-color:#2879c7}
-.filters input{max-width:330px}
-.filters select{max-width:190px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:900px}
-th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #edf0f4;font-size:12px;white-space:nowrap}
-th{background:#f8fafc;color:#65758a}
-.status{display:inline-block;border-radius:20px;padding:5px 9px;font-size:10px;font-weight:700}
-.active-status{background:#e3f5e9;color:#23814b}
-.inactive-status{background:#fff2d9;color:#a66a0b}
-.resigned-status{background:#fde8e8;color:#b43b3b}
-.empty{text-align:center;padding:30px;color:#8a96a5}
-.modal{display:none;position:fixed;inset:0;z-index:10;background:#14233899;overflow-y:auto;padding:25px}
-.modal-content{max-width:900px;background:white;border-radius:12px;padding:23px;margin:0 auto}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.modal-head h2{font-size:19px;margin:0}
-.form-section{font-size:13px;font-weight:700;color:#2879c7;border-bottom:1px solid #e7edf3;padding-bottom:9px;margin:22px 0 14px}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.field label{display:block;font-size:12px;font-weight:600;margin-bottom:7px}
-.field small{color:#8995a4;display:block;font-size:10px;margin-top:5px}
-.full{grid-column:1/-1}
-textarea{min-height:75px;resize:vertical}
-.modal-footer{display:flex;justify-content:flex-end;gap:9px;margin-top:24px}
-.notice{padding:12px;border-radius:7px;background:#edf5ff;color:#315c85;font-size:12px;margin-bottom:15px;line-height:1.6}
-.message{display:none;padding:13px;border-radius:7px;margin-bottom:15px;font-size:12px;line-height:1.6;white-space:pre-wrap}
-.message.error{display:block;background:#fdeaea;color:#a52e2e}
-.message.success{display:block;background:#e3f5e9;color:#217b49}
-.message.info{display:block;background:#edf5ff;color:#315c85}
-.auth-screen{background:white;border:1px solid #e6ebf1;border-radius:10px;padding:22px;margin-bottom:18px;display:none}
-.auth-screen h3{margin:0 0 8px;font-size:16px}
-.auth-screen p{font-size:13px;line-height:1.6;color:#65758a}
-@media(max-width:900px){.sidebar{width:200px}.main{margin-left:200px;padding:18px}.stats{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.sidebar{position:relative;width:100%;height:auto;max-height:260px}.main{margin-left:0;padding:15px}.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.modal{padding:10px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Karyawan | ZFSI-HRIS</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #10243b;
+      --blue: #2879c7;
+      --bg: #f4f7fb;
+      --border: #e5eaf0;
+      --muted: #8290a2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #243449;
+    }
+
+    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    .sidebar {
+      width: 245px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--navy);
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+      z-index: 20;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 8px 30px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .brand small {
+      font-size: 9px;
+      color: #afc2d5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      color: #8199b0;
+      padding: 13px 10px 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #cbd7e3;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1e3c59;
+      color: white;
+    }
+
+    .nav-link span:first-child {
+      width: 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .main {
+      margin-left: 245px;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 7px 0 0;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e8f6ef;
+      color: #16865b;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #486078;
+      background: transparent;
+      color: white;
+      padding: 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* KOMPONEN HALAMAN */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid var(--border);
+    }
+
+    .button-danger {
+      background: #fff0f0;
+      color: #b83232;
+      border: 1px solid #f2d0d0;
+    }
+
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 18px;
+      border-radius: 12px;
+      min-width: 0;
+    }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .number {
+      font-size: 26px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #243449;
+    }
+
+    .filter-input,
+    .filter-select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      min-width: 170px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #65758a;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .employee-name {
+      font-weight: bold;
+      color: #26394f;
+    }
+
+    .subtext {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .badge-active {
+      color: #16865b;
+      background: #e8f6ef;
+    }
+
+    .badge-inactive {
+      color: #9a6b11;
+      background: #fff5dc;
+    }
+
+    .badge-resigned {
+      color: #a33c3c;
+      background: #fdeaea;
+    }
+
+    .action-button {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 7px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #2879c7;
+    }
+
+    .empty {
+      padding: 38px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #a83232;
+      background: #fff0f0;
+      border: 1px solid #f0cccc;
+    }
+
+    .message.success {
+      display: block;
+      color: #176b4b;
+      background: #eaf8f1;
+      border: 1px solid #cdebdc;
+    }
+
+    .message.info {
+      display: block;
+      color: #225a8d;
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+    }
+
+    /* FORM MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #10243b99;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 850px;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px #0003;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .close-button {
+      border: 0;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .form-body {
+      padding: 20px 22px;
+    }
+
+    .form-section-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #2879c7;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 9px;
+      margin: 5px 0 15px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 23px;
+    }
+
+    .form-group {
+      min-width: 0;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #536579;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #dce3eb;
+      border-radius: 8px;
+      background: white;
+    }
+
+    .form-group textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    .form-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .checkbox-line {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      color: #536579;
+      margin-top: 8px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 15px 22px;
+      border-top: 1px solid var(--border);
+      position: sticky;
+      bottom: 0;
+      background: white;
+    }
+
+    .readonly-id {
+      background: #f4f7fb !important;
+      color: #66788a !important;
+    }
+
+    .permission-note {
+      color: #a46b15;
+      background: #fff7e5;
+      border: 1px solid #f3dfb4;
+      padding: 12px 14px;
+      border-radius: 9px;
+      font-size: 12px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    #logoutButton {
+      font-family: Arial, sans-serif;
+    }
+
+    @media(max-width: 1000px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media(max-width: 650px) {
+      .sidebar { width: 65px; padding: 15px 6px; }
+      .brand { padding: 0 5px 25px; }
+      .brand h2, .brand small,
+      .nav-link span:not(:first-child), .section-label { display: none; }
+      .nav-link { justify-content: center; }
+      .main { margin-left: 65px; padding: 15px; }
+      .stats { gap: 9px; }
+      .card { padding: 13px; }
+      .number { font-size: 21px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: auto; }
+      .toolbar { align-items: stretch; }
+      .toolbar-left, .toolbar-right { width: 100%; }
+      .toolbar .button { flex: 1; }
+      .filter-input, .filter-select { width: 100%; }
+      .filters { width: 100%; }
+      .filters > * { flex: 1; min-width: 0; }
+    }
+  </style>
 </head>
+
 <body>
 
-<aside class="sidebar">
-  <div class="brand">ZFSI HRIS<small>Human Resource Information System</small></div>
-  <div class="menu-title">MAIN MENU</div>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="employees.html" class="active">Employee Data</a>
-  <a href="attendance.html">Attendance</a>
-  <a href="leave.html">Leave Management</a>
-  <a href="overtime.html">Overtime</a>
-  <div class="menu-title">PAYROLL</div>
-  <a href="payroll.html">Payroll Processing</a>
-  <a href="payslips.html">Employee Payslips</a>
-  <div class="menu-title">ADMINISTRATION</div>
-  <a href="departments.html">Departments</a>
-  <a href="positions.html">Positions</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="users.html">User Management</a>
-  <a href="reports.html">Reports</a>
-  <a href="audit.html">Audit Logs</a>
-  <a href="settings.html">Settings</a>
-  <a href="#" id="logoutBtn">Logout</a>
-</aside>
-
-<main class="main">
-  <div class="topbar">
-    <div>
-      <h1>Employee Data</h1>
-      <div class="subtitle">Employee Master Data Management</div>
-    </div>
-    <div class="user-info" id="userEmail">Memeriksa login...</div>
-  </div>
-
-  <div id="message" class="message"></div>
-
-  <div id="accessPanel" class="auth-screen">
-    <h3 id="accessTitle">Memeriksa akses pengguna</h3>
-    <p id="accessDetail">Mohon tunggu sebentar.</p>
-  </div>
-
-  <section class="stats">
-    <div class="stat"><div class="stat-label">Total Employees</div><div class="stat-value" id="totalCount">0</div></div>
-    <div class="stat"><div class="stat-label">Active Employees</div><div class="stat-value" id="activeCount">0</div></div>
-    <div class="stat"><div class="stat-label">Inactive Employees</div><div class="stat-value" id="inactiveCount">0</div></div>
-    <div class="stat"><div class="stat-label">Resigned Employees</div><div class="stat-value" id="resignedCount">0</div></div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-head">
-      <div class="panel-title">Employee Directory</div>
-      <div class="actions">
-        <button class="btn-secondary" id="templateBtn">Excel Template</button>
-        <button class="btn-secondary" id="exportBtn">Export Excel</button>
-        <button class="btn-secondary" id="importBtn">Import Excel</button>
-        <button class="btn-primary" id="addBtn">+ Add Employee</button>
+  <!-- SIDEBAR - STRUKTUR MENGIKUTI DASHBOARD.HTML -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div>
+        <h2>ZFSI-HRIS</h2>
+        <small>HUMAN RESOURCE SYSTEM</small>
       </div>
     </div>
-    <div class="filters">
-      <input id="searchInput" placeholder="Cari Employee ID, nama, NIK, email...">
-      <select id="statusFilter">
-        <option value="">All Status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-        <option value="resigned">Resigned</option>
-      </select>
-      <button class="btn-secondary" id="refreshBtn">Refresh</button>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Employee ID</th><th>Employee Name</th><th>NIK</th>
-            <th>Department</th><th>Position</th><th>Phone</th>
-            <th>Join Date</th><th>Status</th><th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="employeeTable">
-          <tr><td colspan="9" class="empty">Menunggu autentikasi...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-</main>
 
-<div class="modal" id="employeeModal">
-  <div class="modal-content">
-    <div class="modal-head">
-      <h2 id="formTitle">Add Employee</h2>
-      <button type="button" class="btn-secondary" id="closeModalBtn">✕</button>
+    <div class="section-label">MAIN MENU</div>
+
+    <a class="nav-link" href="dashboard.html">
+      <span>▦</span><span>Dashboard</span>
+    </a>
+
+    <a class="nav-link active" href="employees.html">
+      <span>♙</span><span>Data Karyawan</span>
+    </a>
+
+    <a class="nav-link" href="attendance.html">
+      <span>◷</span><span>Absensi</span>
+    </a>
+
+    <a class="nav-link" href="leave.html">
+      <span>▣</span><span>Cuti & Izin</span>
+    </a>
+
+    <a class="nav-link" href="overtime.html">
+      <span>◴</span><span>Lembur</span>
+    </a>
+
+    <div class="section-label">COMPENSATION</div>
+
+    <a class="nav-link" href="payroll.html">
+      <span>＄</span><span>Payroll</span>
+    </a>
+
+    <a class="nav-link" href="payslip.html">
+      <span>▤</span><span>Slip Gaji</span>
+    </a>
+
+    <div class="section-label">MANAGEMENT</div>
+
+    <a class="nav-link" href="announcements.html">
+      <span>♧</span><span>Pengumuman</span>
+    </a>
+
+    <a class="nav-link" href="reports.html">
+      <span>▥</span><span>Laporan</span>
+    </a>
+
+    <a class="nav-link" href="users.html">
+      <span>♙</span><span>User Management</span>
+    </a>
+
+    <a class="nav-link" href="audit-log.html">
+      <span>◴</span><span>Audit Log</span>
+    </a>
+
+    <a class="nav-link" href="settings.html">
+      <span>⚙</span><span>Pengaturan</span>
+    </a>
+
+    <button class="logout" id="logoutButton">
+      Keluar / Logout
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1>Data Karyawan</h1>
+        <p>Pengelolaan data dan informasi karyawan ZFSI.</p>
+      </div>
+
+      <div class="profile">
+        <strong id="userEmail">Memeriksa akun...</strong>
+        <div class="status">Terautentikasi</div>
+      </div>
+    </header>
+
+    <div id="pageMessage" class="message"></div>
+
+    <div id="permissionNote" class="permission-note">
+      Akun kamu hanya memiliki akses melihat data karyawan. Hubungi Administrator
+      HRIS untuk mendapatkan izin menambah atau mengubah data.
     </div>
-    <div class="notice">
-      Employee ID dibuat otomatis oleh sistem. NIK, alamat KTP, dan agama merupakan data pribadi. Batasi aksesnya hanya untuk petugas yang berwenang.
+
+    <section class="stats">
+      <div class="card">
+        <div class="card-label">Total Karyawan</div>
+        <div class="number" id="totalEmployees">—</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Karyawan Aktif</div>
+        <div class="number" id="activeEmployees">—</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Tidak Aktif</div>
+        <div class="number" id="inactiveEmployees">—</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Resigned</div>
+        <div class="number" id="resignedEmployees">—</div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="button button-primary" id="addEmployeeButton">
+          + Tambah Karyawan
+        </button>
+        <button class="button button-secondary" id="exportButton">
+          Export CSV
+        </button>
+      </div>
+
+      <div class="toolbar-right">
+        <button class="button button-secondary" id="refreshButton">
+          ↻ Refresh
+        </button>
+      </div>
     </div>
-    <form id="employeeForm">
-      <div class="form-section">A. Employee Identification</div>
-      <div class="form-grid">
-        <div class="field"><label>Employee ID</label><input id="employeeIdDisplay" readonly placeholder="Auto Generated"></div>
-        <div class="field"><label>Employee Name *</label><input id="employeeName" required maxlength="150"></div>
-        <div class="field">
-          <label>NIK</label>
-          <input id="nik" type="text" inputmode="numeric" maxlength="16" placeholder="16 digit NIK">
-          <small>Masukkan 16 digit angka. Boleh dikosongkan.</small>
-        </div>
-        <div class="field"><label>Gender *</label>
-          <select id="gender" required><option value="">Select Gender</option><option value="Male">Male</option><option value="Female">Female</option></select>
-        </div>
-        <div class="field"><label>Birth City</label><input id="birthCity" maxlength="100"></div>
-        <div class="field"><label>Date of Birth *</label><input id="birthDate" type="date" required></div>
-        <div class="field"><label>Religion</label>
-          <select id="religion">
-            <option value="">Select Religion</option><option>Islam</option><option>Kristen</option><option>Katolik</option><option>Hindu</option><option>Buddha</option><option>Konghucu</option><option>Kepercayaan Lainnya</option>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Daftar Karyawan</h3>
+
+        <div class="filters">
+          <input
+            type="search"
+            class="filter-input"
+            id="searchInput"
+            placeholder="Cari nama / ID / email..."
+          >
+
+          <select class="filter-select" id="statusFilter">
+            <option value="">Semua Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="resigned">Resigned</option>
           </select>
         </div>
-        <div class="field"><label>Marital Status</label>
-          <select id="maritalStatus"><option value="">Select Status</option><option value="Single">Single</option><option value="Married">Married</option><option value="Divorced">Divorced</option><option value="Widowed">Widowed</option></select>
-        </div>
-        <div class="field"><label>Dependents Count</label><input id="dependentsCount" type="number" min="0" step="1" value="0"></div>
-        <div class="field full"><label>KTP Address</label><textarea id="ktpAddress" maxlength="1000"></textarea></div>
       </div>
 
-      <div class="form-section">B. Contact Information</div>
-      <div class="form-grid">
-        <div class="field"><label>Email</label><input id="email" type="email" maxlength="150"></div>
-        <div class="field"><label>Phone Number</label><input id="phone" maxlength="30"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Nama Karyawan</th>
+              <th>Departemen</th>
+              <th>Jabatan</th>
+              <th>Tanggal Masuk</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="employeeTableBody">
+            <tr>
+              <td colspan="7">
+                <div class="empty">Memuat data karyawan...</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- FORM TAMBAH / EDIT -->
+  <div class="modal" id="employeeModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modalTitle">Tambah Karyawan</h2>
+        <button class="close-button" id="closeModalButton" type="button">×</button>
       </div>
 
-      <div class="form-section">C. Employment Information</div>
-      <div class="form-grid">
-        <div class="field"><label>Join Date *</label><input id="joinDate" type="date" required></div>
-        <div class="field"><label>Department</label><input id="departmentId" placeholder="Example: Finance"></div>
-        <div class="field"><label>Position</label><input id="positionId" placeholder="Example: Accounting Staff"></div>
-        <div class="field"><label>Employment Type</label>
-          <select id="employmentType"><option value="Permanent">Permanent</option><option value="Contract">Contract</option><option value="Probation">Probation</option><option value="Internship">Internship</option><option value="Daily Worker">Daily Worker</option></select>
+      <form id="employeeForm">
+        <div class="form-body">
+          <div class="form-section-title">A. Identitas Karyawan</div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Employee ID</label>
+              <input
+                type="text"
+                id="employeeId"
+                class="readonly-id"
+                placeholder="Dibuat otomatis oleh sistem"
+                readonly
+              >
+              <div class="form-help">
+                Employee ID dibuat otomatis saat data baru disimpan.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Nama Lengkap *</label>
+              <input type="text" id="employeeName" required maxlength="120">
+            </div>
+
+            <div class="form-group">
+              <label>NIK</label>
+              <input
+                type="text"
+                id="nik"
+                maxlength="16"
+                inputmode="numeric"
+                placeholder="16 digit NIK"
+              >
+            </div>
+
+            <div class="form-group">
+              <label>Jenis Kelamin</label>
+              <select id="gender">
+                <option value="">Pilih</option>
+                <option value="male">Laki-laki</option>
+                <option value="female">Perempuan</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Tempat Lahir</label>
+              <input type="text" id="birthCity">
+            </div>
+
+            <div class="form-group">
+              <label>Tanggal Lahir</label>
+              <input type="date" id="birthDate">
+            </div>
+
+            <div class="form-group">
+              <label>Agama</label>
+              <select id="religion">
+                <option value="">Pilih</option>
+                <option>Islam</option>
+                <option>Kristen</option>
+                <option>Katolik</option>
+                <option>Hindu</option>
+                <option>Buddha</option>
+                <option>Khonghucu</option>
+                <option>Lainnya</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Status Pernikahan</label>
+              <select id="maritalStatus">
+                <option value="">Pilih</option>
+                <option value="single">Belum Menikah</option>
+                <option value="married">Menikah</option>
+                <option value="divorced">Cerai</option>
+                <option value="widowed">Duda/Janda</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Jumlah Tanggungan</label>
+              <input type="number" id="dependentsCount" min="0" step="1" value="0">
+            </div>
+
+            <div class="form-group full">
+              <label>Alamat KTP</label>
+              <textarea id="ktpAddress"></textarea>
+            </div>
+          </div>
+
+          <div class="form-section-title">B. Informasi Kontak</div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="email">
+              <label class="checkbox-line" id="clearEmailWrap" style="display:none">
+                <input type="checkbox" id="clearEmail">
+                Kosongkan email yang tersimpan
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label>Nomor Telepon</label>
+              <input type="tel" id="phone">
+              <label class="checkbox-line" id="clearPhoneWrap" style="display:none">
+                <input type="checkbox" id="clearPhone">
+                Kosongkan nomor telepon yang tersimpan
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section-title">C. Informasi Pekerjaan</div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tanggal Bergabung *</label>
+              <input type="date" id="joinDate" required>
+            </div>
+
+            <div class="form-group">
+              <label>Cabang / Branch ID</label>
+              <input type="text" id="branchId" value="hq">
+            </div>
+
+            <div class="form-group">
+              <label>Department ID</label>
+              <input type="text" id="departmentId" placeholder="Contoh: ZFSI_FIN">
+            </div>
+
+            <div class="form-group">
+              <label>Position ID</label>
+              <input type="text" id="positionId" placeholder="Contoh: FIN_MANAGER">
+            </div>
+
+            <div class="form-group">
+              <label>Tipe Hubungan Kerja</label>
+              <select id="employmentType">
+                <option value="">Pilih</option>
+                <option value="permanent">Permanent</option>
+                <option value="contract">Contract</option>
+                <option value="probation">Probation</option>
+                <option value="daily">Daily Worker</option>
+                <option value="internship">Internship</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Status Karyawan</label>
+              <select id="employmentStatus">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="resigned">Resigned</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-help">
+            Catatan: data karyawan yang sudah resign tetap disimpan untuk
+            kebutuhan histori dan audit perusahaan. Jangan menghapus data
+            karyawan secara permanen.
+          </div>
         </div>
-        <div class="field"><label>Employment Status</label>
-          <select id="employmentStatus"><option value="active">Active</option><option value="inactive">Inactive</option><option value="resigned">Resigned</option></select>
+
+        <div class="modal-footer">
+          <button class="button button-secondary" type="button" id="cancelModalButton">
+            Batal
+          </button>
+          <button class="button button-primary" type="submit" id="saveEmployeeButton">
+            Simpan Karyawan
+          </button>
         </div>
-        <div class="field"><label>Branch</label><input value="HQ (hq)" readonly></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
-        <button type="submit" class="btn-primary" id="saveBtn">Save Employee</button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 
-<div class="modal" id="importModal">
-  <div class="modal-content" style="max-width:650px">
-    <div class="modal-head"><h2>Import Employee Excel</h2><button type="button" class="btn-secondary" id="closeImportBtn">✕</button></div>
-    <div class="notice">ADD: kosongkan Employee ID agar sistem membuat ID otomatis. UPDATE: Employee ID wajib diisi; kolom kosong tidak mengubah data lama. Maksimal 200 baris dan 5 MB per file.</div>
-    <div class="field"><label>Import Mode</label><select id="importMode"><option value="ADD">ADD - New Employees</option><option value="UPDATE">UPDATE - Existing Employees</option></select></div>
-    <div class="field" style="margin-top:15px"><label>Excel File (.xlsx, .xls, .csv)</label><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"></div>
-    <div class="modal-footer"><button class="btn-secondary" id="cancelImportBtn">Cancel</button><button class="btn-primary" id="processImportBtn">Process Import</button></div>
-  </div>
-</div>
+  <div id="toast" class="message" style="position:fixed;right:20px;bottom:15px;z-index:80;max-width:380px;margin:0"></div>
 
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import {
-  getFirestore,collection,doc,getDoc,getDocs,query,where,
-  runTransaction,serverTimestamp,setDoc,updateDoc
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  <script type="module">
+    import {
+      initializeApp,
+      getApps,
+      getApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-const firebaseConfig={
-  apiKey:"AIzaSyAxz62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
-  authDomain:"zfsi-hris.firebaseapp.com",
-  projectId:"zfsi-hris",
-  storageBucket:"zfsi-hris.firebasestorage.app",
-  messagingSenderId:"642441161494",
-  appId:"1:642441161494:web:23ecd4832f89eac5893e37"
-};
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-const COMPANY_ID="zfsi-main";
-const BRANCH_ID="hq";
-const EMPLOYEE_PREFIX="ZFSI-EMP-";
-const MAX_IMPORT_ROWS=200;
-const MAX_IMPORT_SIZE=5*1024*1024;
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      getDocs,
+      collection,
+      query,
+      where,
+      runTransaction,
+      updateDoc,
+      serverTimestamp,
+      addDoc
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+      authDomain: "zfsi-hris.firebaseapp.com",
+      projectId: "zfsi-hris",
+      storageBucket: "zfsi-hris.firebasestorage.app",
+      messagingSenderId: "642441161494",
+      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+    };
 
-let currentUser=null;
-let currentProfile=null;
-let employees=[];
-let editingEmployeeId=null;
-let authReady=false;
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-const $=id=>document.getElementById(id);
-const val=id=>$(id).value.trim();
+    const COMPANY_DEFAULT = "zfsi-main";
 
-function showMessage(message,type="info"){
-  const el=$("message");
-  el.textContent=message;
-  el.className="message "+type;
-  el.style.display="block";
-}
-function clearMessage(){
-  $("message").textContent="";
-  $("message").className="message";
-  $("message").style.display="none";
-}
-function showAccess(title,detail){
-  $("accessPanel").style.display="block";
-  $("accessTitle").textContent=title;
-  $("accessDetail").textContent=detail;
-}
-function hideAccess(){
-  $("accessPanel").style.display="none";
-}
-function escapeHtml(value){
-  return String(value??"").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  })[c]);
-}
-function isSuperAdmin(){
-  if(!currentProfile)return false;
-  return currentProfile.systemRole==="super_admin" ||
-         currentProfile.roleId==="super_admin";
-}
-function hasEmployeePermission(){
-  if(!currentProfile)return false;
-  if(isSuperAdmin())return true;
-  return Array.isArray(currentProfile.permissions) &&
-         currentProfile.permissions.includes("employees.manage");
-}
-function requireEmployeePermission(){
-  if(!currentUser || !currentProfile){
-    throw new Error("Profil pengguna belum berhasil dimuat.");
-  }
-  if(!hasEmployeePermission()){
-    throw new Error("Akun Anda tidak memiliki izin employees.manage.");
-  }
-}
-function normalizeDependents(value){
-  if(value===""||value===null||value===undefined)return 0;
-  const n=Number(value);
-  if(!Number.isInteger(n)||n<0)throw new Error("Jumlah tanggungan harus bilangan bulat minimal 0.");
-  return n;
-}
-function validNIK(nik){return !nik||/^[0-9]{16}$/.test(nik)}
-function statusLabel(status){
-  return status==="active"?"Active":status==="inactive"?"Inactive":status==="resigned"?"Resigned":status||"-";
-}
-function statusClass(status){
-  return status==="active"?"active-status":status==="inactive"?"inactive-status":status==="resigned"?"resigned-status":"";
-}
+    let currentUser = null;
+    let currentProfile = null;
+    let companyId = COMPANY_DEFAULT;
+    let employeeRecords = [];
+    let editingEmployee = null;
+    let canManageEmployees = false;
+    let authHandled = false;
 
-async function generateEmployeeId(){
-  requireEmployeePermission();
-  const counterRef=doc(db,"counters","employee");
-  return await runTransaction(db,async transaction=>{
-    const snap=await transaction.get(counterRef);
-    let next=1;
-    if(snap.exists()){
-      const old=snap.data();
-      if(old.companyId!==COMPANY_ID)throw new Error("Company ID pada counter tidak sesuai.");
-      next=Number(old.lastNumber||0)+1;
+    const $ = id => document.getElementById(id);
+
+    function showMessage(text, type = "info") {
+      const el = $("pageMessage");
+      el.textContent = text;
+      el.className = "message " + type;
+      el.style.display = "block";
     }
-    transaction.set(counterRef,{
-      companyId:COMPANY_ID,lastNumber:next,
-      updatedAt:serverTimestamp(),updatedBy:currentUser.uid
-    },{merge:true});
-    return EMPLOYEE_PREFIX+String(next).padStart(6,"0");
-  });
-}
 
-async function loadEmployees(){
-  clearMessage();
-  $("employeeTable").innerHTML='<tr><td colspan="9" class="empty">Loading employee data...</td></tr>';
-  try{
-    requireEmployeePermission();
-    const q=query(collection(db,"employees"),where("companyId","==",COMPANY_ID));
-    const snap=await getDocs(q);
-    employees=snap.docs.map(d=>({...d.data(),employeeId:d.id}));
-    employees.sort((a,b)=>String(a.employeeName||"").localeCompare(String(b.employeeName||"")));
-    renderEmployees();
-    updateStats();
-  }catch(error){
-    console.error("LOAD EMPLOYEES ERROR:",error);
-    $("employeeTable").innerHTML='<tr><td colspan="9" class="empty">Data belum dapat dimuat. Lihat pesan kesalahan di atas.</td></tr>';
-    showMessage("Gagal mengambil data karyawan: "+error.message,"error");
-  }
-}
-function updateStats(){
-  $("totalCount").textContent=employees.length;
-  $("activeCount").textContent=employees.filter(e=>e.employmentStatus==="active").length;
-  $("inactiveCount").textContent=employees.filter(e=>e.employmentStatus==="inactive").length;
-  $("resignedCount").textContent=employees.filter(e=>e.employmentStatus==="resigned").length;
-}
-function renderEmployees(){
-  const keyword=$("searchInput").value.toLowerCase();
-  const status=$("statusFilter").value;
-  const filtered=employees.filter(e=>{
-    const text=[e.employeeId,e.employeeName,e.nik,e.email,e.phone,e.departmentId,e.positionId].join(" ").toLowerCase();
-    return text.includes(keyword)&&(!status||e.employmentStatus===status);
-  });
-  if(!filtered.length){
-    $("employeeTable").innerHTML='<tr><td colspan="9" class="empty">No employee records found.</td></tr>';
-    return;
-  }
-  $("employeeTable").innerHTML=filtered.map(e=>`
-    <tr>
-      <td>${escapeHtml(e.employeeId)}</td>
-      <td>${escapeHtml(e.employeeName)}</td>
-      <td>${escapeHtml(e.nik||"-")}</td>
-      <td>${escapeHtml(e.departmentId||"-")}</td>
-      <td>${escapeHtml(e.positionId||"-")}</td>
-      <td>${escapeHtml(e.phone||"-")}</td>
-      <td>${escapeHtml(e.joinDate||"-")}</td>
-      <td><span class="status ${statusClass(e.employmentStatus)}">${escapeHtml(statusLabel(e.employmentStatus))}</span></td>
-      <td><button class="btn-secondary" data-edit="${escapeHtml(e.employeeId)}">Edit</button></td>
-    </tr>`).join("");
-  document.querySelectorAll("[data-edit]").forEach(btn=>{
-    btn.addEventListener("click",()=>openEdit(btn.dataset.edit));
-  });
-}
+    function showToast(text, type = "success") {
+      const el = $("toast");
+      el.textContent = text;
+      el.className = "message " + type;
+      el.style.display = "block";
 
-function resetForm(){
-  $("employeeForm").reset();
-  $("employeeIdDisplay").value="";
-  $("dependentsCount").value="0";
-  $("employmentType").value="Permanent";
-  $("employmentStatus").value="active";
-}
-function openAdd(){
-  try{
-    requireEmployeePermission();
-    editingEmployeeId=null;
-    resetForm();
-    $("formTitle").textContent="Add Employee";
-    $("saveBtn").textContent="Save Employee";
-    $("employeeModal").style.display="block";
-  }catch(e){showMessage(e.message,"error")}
-}
-function openEdit(id){
-  try{
-    requireEmployeePermission();
-    const e=employees.find(x=>x.employeeId===id);
-    if(!e)throw new Error("Data karyawan tidak ditemukan.");
-    editingEmployeeId=id;
-    $("employeeForm").reset();
-    $("employeeIdDisplay").value=e.employeeId;
-    $("employeeName").value=e.employeeName||"";
-    $("nik").value=e.nik||"";
-    $("gender").value=e.gender||"";
-    $("birthCity").value=e.birthCity||"";
-    $("birthDate").value=e.birthDate||"";
-    $("religion").value=e.religion||"";
-    $("maritalStatus").value=e.maritalStatus||"";
-    $("dependentsCount").value=e.dependentsCount??0;
-    $("ktpAddress").value=e.ktpAddress||"";
-    $("email").value=e.email||"";
-    $("phone").value=e.phone||"";
-    $("joinDate").value=e.joinDate||"";
-    $("departmentId").value=e.departmentId||"";
-    $("positionId").value=e.positionId||"";
-    $("employmentType").value=e.employmentType||"Permanent";
-    $("employmentStatus").value=e.employmentStatus||"active";
-    $("formTitle").textContent="Edit Employee";
-    $("saveBtn").textContent="Update Employee";
-    $("employeeModal").style.display="block";
-  }catch(e){showMessage(e.message,"error")}
-}
-function closeEmployeeModal(){$("employeeModal").style.display="none"}
-
-function collectFormData(){
-  const nik=val("nik");
-  if(!validNIK(nik))throw new Error("NIK harus terdiri dari 16 digit angka.");
-  return {
-    companyId:COMPANY_ID,branchId:BRANCH_ID,
-    employeeName:val("employeeName"),nik,
-    gender:val("gender"),birthCity:val("birthCity"),
-    birthDate:val("birthDate"),religion:val("religion"),
-    maritalStatus:val("maritalStatus"),
-    dependentsCount:normalizeDependents(val("dependentsCount")),
-    ktpAddress:val("ktpAddress"),email:val("email"),phone:val("phone"),
-    joinDate:val("joinDate"),departmentId:val("departmentId"),
-    positionId:val("positionId"),employmentType:val("employmentType"),
-    employmentStatus:val("employmentStatus"),
-    updatedAt:serverTimestamp(),updatedBy:currentUser.uid
-  };
-}
-
-$("employeeForm").addEventListener("submit",async event=>{
-  event.preventDefault();
-  const button=$("saveBtn");
-  const isEditing=Boolean(editingEmployeeId);
-  try{
-    requireEmployeePermission();
-    button.disabled=true;
-    button.textContent="Saving...";
-    const data=collectFormData();
-    if(!data.employeeName||!data.gender||!data.birthDate||!data.joinDate){
-      throw new Error("Mohon lengkapi semua field wajib.");
+      window.setTimeout(() => {
+        el.style.display = "none";
+      }, 3500);
     }
-    if(isEditing){
-      const old=employees.find(e=>e.employeeId===editingEmployeeId);
-      if(!old||old.companyId!==COMPANY_ID)throw new Error("Data karyawan tidak valid.");
-      await updateDoc(doc(db,"employees",editingEmployeeId),data);
-      showMessage("Data karyawan berhasil diperbarui.","success");
-    }else{
-      const id=await generateEmployeeId();
-      await setDoc(doc(db,"employees",id),{
-        ...data,employeeId:id,userId:null,
-        createdAt:serverTimestamp(),createdBy:currentUser.uid
-      });
-      showMessage("Data karyawan berhasil disimpan. Employee ID: "+id,"success");
-    }
-    closeEmployeeModal();
-    await loadEmployees();
-  }catch(error){
-    console.error("SAVE EMPLOYEE ERROR:",error);
-    showMessage("Gagal menyimpan data: "+error.message,"error");
-  }finally{
-    button.disabled=false;
-    button.textContent=isEditing?"Update Employee":"Save Employee";
-  }
-});
 
-const excelHeaders=[
-  "Employee ID","Employee Name","NIK","Gender","Birth City","Birth Date",
-  "Religion","Marital Status","Dependents Count","KTP Address","Email",
-  "Phone","Join Date","Department","Position","Employment Type","Employment Status"
-];
-function employeeToExcel(e){
-  return {
-    "Employee ID":e.employeeId||"",
-    "Employee Name":e.employeeName||"",
-    "NIK":String(e.nik||""),
-    "Gender":e.gender||"",
-    "Birth City":e.birthCity||"",
-    "Birth Date":e.birthDate||"",
-    "Religion":e.religion||"",
-    "Marital Status":e.maritalStatus||"",
-    "Dependents Count":e.dependentsCount??0,
-    "KTP Address":e.ktpAddress||"",
-    "Email":e.email||"",
-    "Phone":e.phone||"",
-    "Join Date":e.joinDate||"",
-    "Department":e.departmentId||"",
-    "Position":e.positionId||"",
-    "Employment Type":e.employmentType||"",
-    "Employment Status":e.employmentStatus||""
-  };
-}
-function exportExcel(){
-  if(!employees.length){showMessage("Tidak ada data untuk diexport.","error");return}
-  const ws=XLSX.utils.json_to_sheet(employees.map(employeeToExcel));
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,"Employees");
-  XLSX.writeFile(wb,"ZFSI_Employee_Data.xlsx");
-}
-function downloadTemplate(){
-  const example={
-    "Employee ID":"","Employee Name":"Example Employee","NIK":"'0000000000000000",
-    "Gender":"Male","Birth City":"Jakarta","Birth Date":"1995-01-01",
-    "Religion":"","Marital Status":"Single","Dependents Count":0,
-    "KTP Address":"Example address","Email":"employee@example.com",
-    "Phone":"08123456789","Join Date":"2026-01-01","Department":"Finance",
-    "Position":"Staff","Employment Type":"Permanent","Employment Status":"active"
-  };
-  const ws=XLSX.utils.json_to_sheet([example],{header:excelHeaders});
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,"Employees");
-  XLSX.writeFile(wb,"ZFSI_Employee_Import_Template.xlsx");
-}
-function getCell(row,...names){
-  const keys=Object.keys(row);
-  for(const name of names){
-    const normalized=name.toLowerCase().replace(/[^a-z0-9]/g,"");
-    const key=keys.find(k=>k.toLowerCase().replace(/[^a-z0-9]/g,"")===normalized);
-    if(key!==undefined)return row[key];
-  }
-  return undefined;
-}
-function excelDate(v){
-  if(v===undefined||v===null||v==="")return "";
-  if(v instanceof Date&&!isNaN(v))return v.toISOString().slice(0,10);
-  if(typeof v==="number"){
-    const d=XLSX.SSF.parse_date_code(v);
-    if(d)return `${d.y}-${String(d.m).padStart(2,"0")}-${String(d.d).padStart(2,"0")}`;
-  }
-  const s=String(v).trim();
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
-  const m=s.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
-  if(m)return `${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`;
-  return s;
-}
-function rowToEmployee(row){
-  const g=(...names)=>getCell(row,...names);
-  const dep=g("Dependents Count","DependentsCount");
-  return {
-    employeeId:String(g("Employee ID","EmployeeId")??"").trim(),
-    employeeName:String(g("Employee Name","Name")??"").trim(),
-    nik:String(g("NIK")??"").trim().replace(/^'/,""),
-    gender:String(g("Gender")??"").trim(),
-    birthCity:String(g("Birth City","BirthCity")??"").trim(),
-    birthDate:excelDate(g("Birth Date","BirthDate")),
-    religion:String(g("Religion")??"").trim(),
-    maritalStatus:String(g("Marital Status","MaritalStatus")??"").trim(),
-    dependentsCount:dep===""||dep===undefined?undefined:normalizeDependents(dep),
-    ktpAddress:String(g("KTP Address","KTPAddress")??"").trim(),
-    email:String(g("Email")??"").trim(),
-    phone:String(g("Phone","Phone Number")??"").trim(),
-    joinDate:excelDate(g("Join Date","JoinDate")),
-    departmentId:String(g("Department","Department ID")??"").trim(),
-    positionId:String(g("Position","Position ID")??"").trim(),
-    employmentType:String(g("Employment Type")??"").trim()||"Permanent",
-    employmentStatus:String(g("Employment Status")??"").trim()||"active"
-  };
-}
-function blank(v){return v===undefined||v===null||v===""}
-async function importExcel(){
-  requireEmployeePermission();
-  const file=$("excelFile").files[0];
-  if(!file)throw new Error("Pilih file Excel terlebih dahulu.");
-  if(file.size>MAX_IMPORT_SIZE)throw new Error("Ukuran file maksimal 5 MB.");
-  const mode=$("importMode").value;
-  const wb=XLSX.read(await file.arrayBuffer(),{type:"array",cellDates:true});
-  const sheet=wb.Sheets[wb.SheetNames[0]];
-  const rows=XLSX.utils.sheet_to_json(sheet,{defval:""});
-  if(!rows.length)throw new Error("File Excel tidak memiliki data.");
-  if(rows.length>MAX_IMPORT_ROWS)throw new Error("Maksimal 200 baris per proses.");
-  const parsed=rows.map(rowToEmployee);
-  const seen=new Set();
-  for(let i=0;i<parsed.length;i++){
-    const r=parsed[i],line=i+2;
-    if(mode==="ADD"&&r.employeeId)throw new Error(`Baris ${line}: kosongkan Employee ID untuk mode ADD.`);
-    if(mode==="UPDATE"&&!r.employeeId)throw new Error(`Baris ${line}: Employee ID wajib untuk UPDATE.`);
-    if(r.employeeId&&seen.has(r.employeeId))throw new Error(`Employee ID duplikat: ${r.employeeId}`);
-    if(r.employeeId)seen.add(r.employeeId);
-    if(!r.employeeName)throw new Error(`Baris ${line}: Employee Name wajib diisi.`);
-    if(r.nik&&!validNIK(r.nik))throw new Error(`Baris ${line}: NIK harus 16 digit. Pastikan kolom NIK di Excel berformat Text.`);
-    if(!["active","inactive","resigned"].includes(r.employmentStatus))throw new Error(`Baris ${line}: Employment Status harus active, inactive, atau resigned.`);
-  }
-  let added=0,updated=0;
-  for(const r of parsed){
-    if(mode==="ADD"){
-      const id=await generateEmployeeId();
-      const data={
-        companyId:COMPANY_ID,branchId:BRANCH_ID,employeeId:id,
-        employeeName:r.employeeName,nik:r.nik,gender:r.gender,
-        birthCity:r.birthCity,birthDate:r.birthDate,religion:r.religion,
-        maritalStatus:r.maritalStatus,dependentsCount:r.dependentsCount??0,
-        ktpAddress:r.ktpAddress,email:r.email,phone:r.phone,joinDate:r.joinDate,
-        departmentId:r.departmentId,positionId:r.positionId,
-        employmentType:r.employmentType,employmentStatus:r.employmentStatus,
-        userId:null,createdAt:serverTimestamp(),createdBy:currentUser.uid,
-        updatedAt:serverTimestamp(),updatedBy:currentUser.uid
+    function clearMessage() {
+      $("pageMessage").textContent = "";
+      $("pageMessage").className = "message";
+      $("pageMessage").style.display = "none";
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function normalizeText(value) {
+      return String(value ?? "").trim();
+    }
+
+    function getPermissionList(profile) {
+      if (Array.isArray(profile.permissions)) return profile.permissions;
+      if (Array.isArray(profile.permissionIds)) return profile.permissionIds;
+      return [];
+    }
+
+    function isSuperAdministrator(profile) {
+      const roleId = String(profile.roleId || "").toLowerCase();
+      const systemRole = String(profile.systemRole || "").toLowerCase();
+
+      return profile.isSuperAdmin === true ||
+        roleId === "super_admin" ||
+        systemRole === "super_admin";
+    }
+
+    function checkEmployeePermission(profile) {
+      if (isSuperAdministrator(profile)) {
+        return { view: true, manage: true };
+      }
+
+      const permissions = getPermissionList(profile);
+
+      return {
+        view:
+          permissions.includes("employees.view") ||
+          permissions.includes("employees.manage") ||
+          permissions.includes("*"),
+        manage:
+          permissions.includes("employees.manage") ||
+          permissions.includes("*")
       };
-      await setDoc(doc(db,"employees",id),data);
-      added++;
-    }else{
-      const ref=doc(db,"employees",r.employeeId);
-      const snap=await getDoc(ref);
-      if(!snap.exists())throw new Error("Employee ID tidak ditemukan: "+r.employeeId);
-      if(snap.data().companyId!==COMPANY_ID)throw new Error("Employee ID bukan milik perusahaan ini: "+r.employeeId);
-      const update={updatedAt:serverTimestamp(),updatedBy:currentUser.uid};
-      const fields=[
-        "employeeName","nik","gender","birthCity","birthDate","religion",
-        "maritalStatus","ktpAddress","email","phone","joinDate",
-        "departmentId","positionId","employmentType","employmentStatus"
-      ];
-      for(const f of fields)if(!blank(r[f]))update[f]=r[f];
-      if(r.dependentsCount!==undefined)update.dependentsCount=r.dependentsCount;
-      await updateDoc(ref,update);
-      updated++;
     }
-  }
-  $("importModal").style.display="none";
-  $("excelFile").value="";
-  await loadEmployees();
-  showMessage(`Import selesai. Ditambahkan: ${added}. Diperbarui: ${updated}.`,"success");
-}
 
-async function initializeUser(user){
-  currentUser=user;
-  $("userEmail").textContent=user.email||"Pengguna login";
-  showAccess("Memeriksa profil pengguna","Mengambil profil dari Firestore...");
-  const profileRef=doc(db,"users",user.uid);
-  const profileSnap=await getDoc(profileRef);
-  if(!profileSnap.exists()){
-    throw new Error("Dokumen profil tidak ditemukan di users/"+user.uid+". Periksa apakah akun ini sudah memiliki profil HRIS.");
-  }
-  currentProfile=profileSnap.data();
-  console.log("ZFSI HRIS UID:",user.uid);
-  console.log("ZFSI HRIS PROFILE:",currentProfile);
+    function formatDate(value) {
+      if (!value) return "—";
 
-  if(currentProfile.status&&currentProfile.status!=="active"){
-    throw new Error("Status akun bukan active. Hubungi administrator.");
-  }
-  if(currentProfile.active===false){
-    throw new Error("Akun dinonaktifkan. Hubungi administrator.");
-  }
-  if(currentProfile.companyId!==COMPANY_ID){
-    throw new Error("Company ID profil tidak cocok. Ditemukan: "+(currentProfile.companyId||"(kosong)")+". Sistem mengharapkan: "+COMPANY_ID+".");
-  }
-  if(!hasEmployeePermission()){
-    throw new Error("Akses ditolak. Profil ditemukan, tetapi bukan Super Admin dan tidak memiliki permission employees.manage.");
-  }
+      if (typeof value === "string") {
+        const parts = value.split("-");
+        if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        return value;
+      }
 
-  $("userEmail").textContent=currentProfile.email||user.email||"Logged in";
-  hideAccess();
-  await loadEmployees();
-}
+      if (value.toDate) {
+        return value.toDate().toLocaleDateString("id-ID");
+      }
 
-let authHandled=false;
-onAuthStateChanged(auth,async user=>{
-  if(authHandled)return;
-  authHandled=true;
-  if(!user){
-    $("userEmail").textContent="Belum login";
-    showAccess("Anda belum login","Anda akan diarahkan ke halaman login.");
-    setTimeout(()=>{window.location.href="index.html"},1200);
-    return;
-  }
-  try{
-    await initializeUser(user);
-  }catch(error){
-    console.error("EMPLOYEE AUTHENTICATION ERROR:",error);
-    showAccess("Tidak dapat membuka Employee Data",error.message);
-    showMessage("Pemeriksaan akses gagal: "+error.message,"error");
-    $("userEmail").textContent=user.email||"User login";
-    $("employeeTable").innerHTML='<tr><td colspan="9" class="empty">Akses atau pemuatan profil gagal. Periksa pesan di atas.</td></tr>';
-  }
-});
+      return "—";
+    }
 
-// Event tombol
-$("addBtn").addEventListener("click",openAdd);
-$("closeModalBtn").addEventListener("click",closeEmployeeModal);
-$("cancelBtn").addEventListener("click",closeEmployeeModal);
-$("refreshBtn").addEventListener("click",loadEmployees);
-$("searchInput").addEventListener("input",renderEmployees);
-$("statusFilter").addEventListener("change",renderEmployees);
-$("templateBtn").addEventListener("click",downloadTemplate);
-$("exportBtn").addEventListener("click",exportExcel);
-$("importBtn").addEventListener("click",()=>{
-  $("excelFile").value="";
-  $("importModal").style.display="block";
-});
-$("closeImportBtn").addEventListener("click",()=>$("importModal").style.display="none");
-$("cancelImportBtn").addEventListener("click",()=>$("importModal").style.display="none");
-$("processImportBtn").addEventListener("click",async()=>{
-  const btn=$("processImportBtn");
-  try{
-    btn.disabled=true;
-    btn.textContent="Processing...";
-    await importExcel();
-  }catch(error){
-    console.error("IMPORT ERROR:",error);
-    showMessage("Import gagal: "+error.message,"error");
-  }finally{
-    btn.disabled=false;
-    btn.textContent="Process Import";
-  }
-});
-$("logoutBtn").addEventListener("click",async event=>{
-  event.preventDefault();
-  try{
-    await signOut(auth);
-    window.location.href="index.html";
-  }catch(error){showMessage("Gagal logout: "+error.message,"error")}
-});
-$("nik").addEventListener("input",event=>{
-  event.target.value=event.target.value.replace(/\D/g,"").slice(0,16);
-});
-</script>
+    function statusLabel(status) {
+      if (status === "active") return "Active";
+      if (status === "inactive") return "Inactive";
+      if (status === "resigned") return "Resigned";
+      return status || "Unknown";
+    }
+
+    function statusBadge(status) {
+      const safeStatus = ["active", "inactive", "resigned"].includes(status)
+        ? status
+        : "inactive";
+
+      return `<span class="badge badge-${safeStatus}">${escapeHTML(statusLabel(status))}</span>`;
+    }
+
+    function updateStatistics() {
+      $("totalEmployees").textContent = employeeRecords.length;
+      $("activeEmployees").textContent =
+        employeeRecords.filter(item => item.employmentStatus === "active").length;
+      $("inactiveEmployees").textContent =
+        employeeRecords.filter(item => item.employmentStatus === "inactive").length;
+      $("resignedEmployees").textContent =
+        employeeRecords.filter(item => item.employmentStatus === "resigned").length;
+    }
+
+    function renderEmployees() {
+      const search = normalizeText($("searchInput").value).toLowerCase();
+      const status = $("statusFilter").value;
+
+      const filtered = employeeRecords.filter(employee => {
+        const searchable = [
+          employee.employeeId,
+          employee.employeeName,
+          employee.email,
+          employee.phone,
+          employee.departmentId,
+          employee.positionId
+        ].join(" ").toLowerCase();
+
+        const matchSearch = !search || searchable.includes(search);
+        const matchStatus = !status || employee.employmentStatus === status;
+
+        return matchSearch && matchStatus;
+      });
+
+      const tbody = $("employeeTableBody");
+
+      if (!filtered.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7">
+              <div class="empty">
+                Tidak ada data karyawan yang sesuai dengan pencarian.
+              </div>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(employee => `
+        <tr>
+          <td><strong>${escapeHTML(employee.employeeId)}</strong></td>
+          <td>
+            <div class="employee-name">${escapeHTML(employee.employeeName)}</div>
+            <div class="subtext">${escapeHTML(employee.email || employee.phone || "")}</div>
+          </td>
+          <td>${escapeHTML(employee.departmentId || "—")}</td>
+          <td>${escapeHTML(employee.positionId || "—")}</td>
+          <td>${escapeHTML(formatDate(employee.joinDate))}</td>
+          <td>${statusBadge(employee.employmentStatus)}</td>
+          <td>
+            ${
+              canManageEmployees
+                ? `<button class="action-button" type="button" data-edit="${escapeHTML(employee.employeeId)}">Edit</button>`
+                : `<span class="subtext">View only</span>`
+            }
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function loadEmployees() {
+      clearMessage();
+
+      $("employeeTableBody").innerHTML = `
+        <tr><td colspan="7"><div class="empty">Memuat data karyawan...</div></td></tr>`;
+
+      try {
+        const employeeQuery = query(
+          collection(db, "employees"),
+          where("companyId", "==", companyId)
+        );
+
+        const snapshot = await getDocs(employeeQuery);
+
+        employeeRecords = snapshot.docs.map(item => ({
+          ...item.data(),
+          employeeId: item.id
+        }));
+
+        employeeRecords.sort((a, b) =>
+          String(a.employeeName || "").localeCompare(
+            String(b.employeeName || ""),
+            "id"
+          )
+        );
+
+        updateStatistics();
+        renderEmployees();
+
+      } catch (error) {
+        console.error("Load employees error:", error);
+
+        $("employeeTableBody").innerHTML = `
+          <tr><td colspan="7"><div class="empty">
+            Gagal membaca data karyawan.<br>
+            ${escapeHTML(error.message || error.code || "Terjadi kesalahan")}
+          </div></td></tr>`;
+
+        showMessage(
+          "Data karyawan belum dapat dimuat. Periksa koneksi Firestore dan Firestore Rules. Detail: " +
+          (error.message || error.code || "Unknown error"),
+          "error"
+        );
+      }
+    }
+
+    function setFormValue(id, value) {
+      const element = $(id);
+      if (element) element.value = value ?? "";
+    }
+
+    function openAddModal() {
+      editingEmployee = null;
+      $("employeeForm").reset();
+      $("modalTitle").textContent = "Tambah Karyawan";
+      $("employeeId").value = "";
+      $("employeeId").placeholder = "Dibuat otomatis oleh sistem";
+      $("branchId").value = "hq";
+      $("dependentsCount").value = "0";
+      $("employmentStatus").value = "active";
+      $("clearEmailWrap").style.display = "none";
+      $("clearPhoneWrap").style.display = "none";
+      $("clearEmail").checked = false;
+      $("clearPhone").checked = false;
+      $("employeeModal").classList.add("show");
+    }
+
+    function openEditModal(employee) {
+      editingEmployee = employee;
+      $("employeeForm").reset();
+
+      $("modalTitle").textContent = "Edit Data Karyawan";
+      setFormValue("employeeId", employee.employeeId);
+      setFormValue("employeeName", employee.employeeName);
+      setFormValue("nik", employee.nik);
+      setFormValue("gender", employee.gender);
+      setFormValue("birthCity", employee.birthCity);
+      setFormValue("birthDate", employee.birthDate);
+      setFormValue("religion", employee.religion);
+      setFormValue("maritalStatus", employee.maritalStatus);
+      setFormValue("dependentsCount", employee.dependentsCount ?? 0);
+      setFormValue("ktpAddress", employee.ktpAddress);
+      setFormValue("email", employee.email);
+      setFormValue("phone", employee.phone);
+      setFormValue("joinDate", employee.joinDate);
+      setFormValue("branchId", employee.branchId || "hq");
+      setFormValue("departmentId", employee.departmentId);
+      setFormValue("positionId", employee.positionId);
+      setFormValue("employmentType", employee.employmentType);
+      setFormValue("employmentStatus", employee.employmentStatus || "active");
+
+      $("clearEmailWrap").style.display = "flex";
+      $("clearPhoneWrap").style.display = "flex";
+      $("clearEmail").checked = false;
+      $("clearPhone").checked = false;
+
+      $("employeeModal").classList.add("show");
+    }
+
+    function closeModal() {
+      $("employeeModal").classList.remove("show");
+      editingEmployee = null;
+    }
+
+    function readFormData() {
+      const nikValue = normalizeText($("nik").value);
+
+      if (nikValue && !/^\d{16}$/.test(nikValue)) {
+        throw new Error("NIK harus terdiri dari 16 digit angka.");
+      }
+
+      const dependents = $("dependentsCount").value === ""
+        ? 0
+        : Number($("dependentsCount").value);
+
+      if (!Number.isInteger(dependents) || dependents < 0) {
+        throw new Error("Jumlah tanggungan harus berupa angka bulat minimal 0.");
+      }
+
+      return {
+        employeeName: normalizeText($("employeeName").value),
+        nik: nikValue,
+        gender: $("gender").value,
+        birthCity: normalizeText($("birthCity").value),
+        birthDate: $("birthDate").value,
+        religion: $("religion").value,
+        maritalStatus: $("maritalStatus").value,
+        dependentsCount: dependents,
+        ktpAddress: normalizeText($("ktpAddress").value),
+        email: normalizeText($("email").value),
+        phone: normalizeText($("phone").value),
+        joinDate: $("joinDate").value,
+        branchId: normalizeText($("branchId").value) || "hq",
+        departmentId: normalizeText($("departmentId").value),
+        positionId: normalizeText($("positionId").value),
+        employmentType: $("employmentType").value,
+        employmentStatus: $("employmentStatus").value || "active"
+      };
+    }
+
+    async function createEmployee(data) {
+      const counterRef = doc(db, "counters", "employee");
+
+      return await runTransaction(db, async transaction => {
+        const counterSnapshot = await transaction.get(counterRef);
+
+        const previousNumber = counterSnapshot.exists()
+          ? Number(counterSnapshot.data().lastNumber || 0)
+          : 0;
+
+        const nextNumber = previousNumber + 1;
+        const employeeId = "ZFSI-EMP-" + String(nextNumber).padStart(6, "0");
+        const employeeRef = doc(db, "employees", employeeId);
+
+        const existingEmployee = await transaction.get(employeeRef);
+
+        if (existingEmployee.exists()) {
+          throw new Error(
+            "Employee ID " + employeeId +
+            " sudah digunakan. Hubungi Administrator HRIS."
+          );
+        }
+
+        const nowData = {
+          ...data,
+          employeeId,
+          companyId,
+          userId: null,
+          createdAt: serverTimestamp(),
+          createdBy: currentUser.uid,
+          updatedAt: serverTimestamp(),
+          updatedBy: currentUser.uid
+        };
+
+        transaction.set(counterRef, {
+          companyId,
+          lastNumber: nextNumber,
+          updatedAt: serverTimestamp(),
+          updatedBy: currentUser.uid
+        }, { merge: true });
+
+        transaction.set(employeeRef, nowData);
+
+        return employeeId;
+      });
+    }
+
+    async function writeAuditLog(action, employeeId, description) {
+      try {
+        await addDoc(collection(db, "auditLogs"), {
+          companyId,
+          action,
+          module: "employees",
+          recordId: employeeId,
+          description,
+          performedBy: currentUser.uid,
+          performedByEmail: currentUser.email || "",
+          createdAt: serverTimestamp()
+        });
+      } catch (error) {
+        // Kegagalan audit log tidak membatalkan penyimpanan data utama.
+        console.warn("Audit log was not saved:", error.code || error.message);
+      }
+    }
+
+    async function saveEmployee(event) {
+      event.preventDefault();
+
+      if (!canManageEmployees) {
+        showToast("Akun kamu tidak memiliki izin mengubah data karyawan.", "error");
+        return;
+      }
+
+      const button = $("saveEmployeeButton");
+      button.disabled = true;
+      button.textContent = "Menyimpan...";
+
+      try {
+        const data = readFormData();
+
+        if (!data.employeeName) {
+          throw new Error("Nama karyawan wajib diisi.");
+        }
+
+        if (!data.joinDate) {
+          throw new Error("Tanggal bergabung wajib diisi.");
+        }
+
+        if (editingEmployee) {
+          const existing = editingEmployee;
+          const employeeRef = doc(db, "employees", existing.employeeId);
+
+          const updateData = { ...data };
+
+          // Kolom kosong pada saat edit mempertahankan nilai lama.
+          const preserveFields = [
+            "nik", "gender", "birthCity", "birthDate", "religion",
+            "maritalStatus", "ktpAddress", "email", "phone",
+            "departmentId", "positionId", "employmentType"
+          ];
+
+          preserveFields.forEach(field => {
+            if (
+              updateData[field] === "" ||
+              updateData[field] === null ||
+              updateData[field] === undefined
+            ) {
+              updateData[field] = existing[field] ?? "";
+            }
+          });
+
+          if ($("clearEmail").checked) updateData.email = "";
+          if ($("clearPhone").checked) updateData.phone = "";
+
+          updateData.companyId = existing.companyId || companyId;
+          updateData.updatedAt = serverTimestamp();
+          updateData.updatedBy = currentUser.uid;
+
+          await updateDoc(employeeRef, updateData);
+
+          await writeAuditLog(
+            "UPDATE",
+            existing.employeeId,
+            "Data karyawan diperbarui"
+          );
+
+          closeModal();
+          showToast("Data karyawan berhasil diperbarui.");
+        } else {
+          const employeeId = await createEmployee(data);
+
+          await writeAuditLog(
+            "CREATE",
+            employeeId,
+            "Data karyawan baru dibuat"
+          );
+
+          closeModal();
+          showToast("Karyawan berhasil ditambahkan. ID: " + employeeId);
+        }
+
+        await loadEmployees();
+
+      } catch (error) {
+        console.error("Save employee error:", error);
+        showToast(
+          error.message || error.code || "Gagal menyimpan data karyawan.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Simpan Karyawan";
+      }
+    }
+
+    function exportCSV() {
+      const rows = employeeRecords.map(employee => ({
+        "Employee ID": employee.employeeId || "",
+        "Nama Karyawan": employee.employeeName || "",
+        "NIK": employee.nik || "",
+        "Jenis Kelamin": employee.gender || "",
+        "Tempat Lahir": employee.birthCity || "",
+        "Tanggal Lahir": employee.birthDate || "",
+        "Agama": employee.religion || "",
+        "Status Pernikahan": employee.maritalStatus || "",
+        "Jumlah Tanggungan": employee.dependentsCount ?? 0,
+        "Alamat KTP": employee.ktpAddress || "",
+        "Email": employee.email || "",
+        "Telepon": employee.phone || "",
+        "Tanggal Bergabung": employee.joinDate || "",
+        "Department ID": employee.departmentId || "",
+        "Position ID": employee.positionId || "",
+        "Branch ID": employee.branchId || "",
+        "Tipe Kerja": employee.employmentType || "",
+        "Status Karyawan": employee.employmentStatus || ""
+      }));
+
+      if (!rows.length) {
+        showToast("Tidak ada data untuk diekspor.", "info");
+        return;
+      }
+
+      const headers = Object.keys(rows[0]);
+      const csv = [
+        headers.map(value => `"${String(value).replace(/"/g, '""')}"`).join(","),
+        ...rows.map(row => headers.map(header =>
+          `"${String(row[header] ?? "").replace(/"/g, '""')}"`
+        ).join(","))
+      ].join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "ZFSI-HRIS-Employees.csv";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function handleAuthentication(user) {
+      currentUser = user;
+
+      $("userEmail").textContent = user.email || "Pengguna ZFSI-HRIS";
+
+      try {
+        const profileRef = doc(db, "users", user.uid);
+        const profileSnapshot = await getDoc(profileRef);
+
+        if (!profileSnapshot.exists()) {
+          showMessage(
+            "Akun berhasil login, tetapi profil pengguna tidak ditemukan pada Firestore: users/" +
+            user.uid +
+            ". Hubungi Administrator HRIS untuk memeriksa profil akun.",
+            "error"
+          );
+          $("employeeTableBody").innerHTML = `
+            <tr><td colspan="7"><div class="empty">Profil pengguna belum tersedia.</div></td></tr>`;
+          return;
+        }
+
+        currentProfile = profileSnapshot.data();
+
+        if (
+          currentProfile.status &&
+          String(currentProfile.status).toLowerCase() !== "active"
+        ) {
+          showMessage(
+            "Akun pengguna tidak berstatus aktif. Silakan hubungi Administrator HRIS.",
+            "error"
+          );
+          return;
+        }
+
+        if (currentProfile.active === false) {
+          showMessage(
+            "Akun pengguna telah dinonaktifkan. Silakan hubungi Administrator HRIS.",
+            "error"
+          );
+          return;
+        }
+
+        companyId = currentProfile.companyId || COMPANY_DEFAULT;
+
+        const permission = checkEmployeePermission(currentProfile);
+
+        if (!permission.view) {
+          showMessage(
+            "Kamu berhasil login, tetapi tidak memiliki izin untuk melihat Data Karyawan.",
+            "error"
+          );
+          $("employeeTableBody").innerHTML = `
+            <tr><td colspan="7"><div class="empty">Akses ke modul Data Karyawan tidak diberikan.</div></td></tr>`;
+          return;
+        }
+
+        canManageEmployees = permission.manage;
+        $("addEmployeeButton").disabled = !canManageEmployees;
+
+        if (!canManageEmployees) {
+          $("permissionNote").style.display = "block";
+        }
+
+        await loadEmployees();
+
+      } catch (error) {
+        console.error("Profile verification error:", error);
+
+        showMessage(
+          "Login terdeteksi, tetapi pemeriksaan profil atau izin Firestore gagal. " +
+          (error.message || error.code || "Unknown error"),
+          "error"
+        );
+      }
+    }
+
+    onAuthStateChanged(auth, async user => {
+      if (authHandled) return;
+      authHandled = true;
+
+      if (!user) {
+        // Hanya arahkan ke login bila memang tidak ada sesi autentikasi.
+        location.replace("index.html");
+        return;
+      }
+
+      await handleAuthentication(user);
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        location.replace("index.html");
+      } catch (error) {
+        showMessage(
+          "Gagal logout: " + (error.message || error.code),
+          "error"
+        );
+      }
+    });
+
+    $("addEmployeeButton").addEventListener("click", () => {
+      if (!canManageEmployees) return;
+      openAddModal();
+    });
+
+    $("closeModalButton").addEventListener("click", closeModal);
+    $("cancelModalButton").addEventListener("click", closeModal);
+    $("employeeForm").addEventListener("submit", saveEmployee);
+    $("refreshButton").addEventListener("click", loadEmployees);
+    $("exportButton").addEventListener("click", exportCSV);
+    $("searchInput").addEventListener("input", renderEmployees);
+    $("statusFilter").addEventListener("change", renderEmployees);
+
+    $("employeeTableBody").addEventListener("click", event => {
+      const button = event.target.closest("[data-edit]");
+      if (!button) return;
+
+      const employee = employeeRecords.find(
+        item => item.employeeId === button.dataset.edit
+      );
+
+      if (employee) openEditModal(employee);
+    });
+
+    $("employeeModal").addEventListener("click", event => {
+      if (event.target === $("employeeModal")) closeModal();
+    });
+  </script>
+
 </body>
 </html>
