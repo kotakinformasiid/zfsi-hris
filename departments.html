@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Departemen | ZFSI-HRIS</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --navy: #10243b;
+      --blue: #2879c7;
+      --bg: #f4f7fb;
+      --border: #e5eaf0;
+      --muted: #8290a2;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: #243449;
+    }
+
+    /* SIDEBAR - MENGIKUTI DASHBOARD.HTML */
+    .sidebar {
+      width: 245px;
+      position: fixed;
+      inset: 0 auto 0 0;
+      background: var(--navy);
+      color: white;
+      padding: 24px 15px;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 8px 30px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--blue);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      margin: 0 0 4px;
+    }
+
+    .brand small {
+      font-size: 9px;
+      color: #afc2d5;
+    }
+
+    .section-label {
+      font-size: 10px;
+      color: #8199b0;
+      padding: 13px 10px 8px;
+      letter-spacing: 1px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #cbd7e3;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #1e3c59;
+      color: white;
+    }
+
+    .main {
+      margin-left: 245px;
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 7px 0 0;
+    }
+
+    .profile {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      background: #e8f6ef;
+      color: #16865b;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #486078;
+      background: transparent;
+      color: white;
+      padding: 11px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* KOMPONEN HALAMAN */
+    .notice {
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+      padding: 15px 17px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 19px;
+      border-radius: 12px;
+    }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .number {
+      font-size: 27px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 17px;
+    }
+
+    .toolbar-group {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .button-secondary {
+      background: white;
+      color: #34495e;
+      border: 1px solid var(--border);
+    }
+
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .filter-input,
+    .filter-select {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      min-width: 170px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 12px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #65758a;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .badge-active {
+      background: #e8f6ef;
+      color: #16865b;
+    }
+
+    .badge-inactive {
+      background: #fff5dc;
+      color: #9a6b11;
+    }
+
+    .action-button {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 7px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #2879c7;
+    }
+
+    .empty {
+      padding: 35px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      border-radius: 9px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+      color: #a83232;
+      background: #fff0f0;
+      border: 1px solid #f0cccc;
+    }
+
+    .message.success {
+      display: block;
+      color: #176b4b;
+      background: #eaf8f1;
+      border: 1px solid #cdebdc;
+    }
+
+    .message.info {
+      display: block;
+      color: #225a8d;
+      background: #eaf3fc;
+      border: 1px solid #d4e7f8;
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #10243b99;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 550px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px #0003;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 2;
+    }
+
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .close-button {
+      border: 0;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: #718096;
+    }
+
+    .form-body {
+      padding: 22px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #536579;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #dce3eb;
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #243449;
+      background: white;
+    }
+
+    .form-group textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    .form-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .readonly {
+      background: #f4f7fb !important;
+      color: #66788a !important;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 15px 22px;
+      border-top: 1px solid var(--border);
+      position: sticky;
+      bottom: 0;
+      background: white;
+    }
+
+    .permission-note {
+      display: none;
+      color: #8b6418;
+      background: #fff7e5;
+      border: 1px solid #f3dfb4;
+      padding: 12px 14px;
+      border-radius: 9px;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    @media(max-width: 1000px) {
+      .stats { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media(max-width: 650px) {
+      .sidebar { width: 65px; padding: 15px 6px; }
+      .brand { padding: 0 5px 25px; }
+      .brand h2, .brand small,
+      .nav-link span, .section-label { display: none; }
+      .nav-link { justify-content: center; }
+      .main { margin-left: 65px; padding: 15px; }
+      .stats { grid-template-columns: 1fr; gap: 9px; }
+      .card { padding: 13px; }
+      .number { font-size: 21px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .toolbar, .toolbar-group { width: 100%; }
+      .toolbar .button { flex: 1; }
+      .filters { width: 100%; }
+      .filters > * { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR - MENGIKUTI DASHBOARD.HTML -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">Z</div>
+      <div>
+        <h2>ZFSI-HRIS</h2>
+        <small>HUMAN RESOURCE SYSTEM</small>
+      </div>
+    </div>
+
+    <div class="section-label">MAIN MENU</div>
+
+    <a class="nav-link" href="dashboard.html">
+      <span>▦</span><span>Dashboard</span>
+    </a>
+
+    <a class="nav-link" href="employees.html">
+      <span>♙</span><span>Data Karyawan</span>
+    </a>
+
+    <a class="nav-link" href="attendance.html">
+      <span>◷</span><span>Absensi</span>
+    </a>
+
+    <a class="nav-link" href="leave.html">
+      <span>▣</span><span>Cuti & Izin</span>
+    </a>
+
+    <a class="nav-link" href="overtime.html">
+      <span>◴</span><span>Lembur</span>
+    </a>
+
+    <div class="section-label">COMPENSATION</div>
+
+    <a class="nav-link" href="payroll.html">
+      <span>＄</span><span>Payroll</span>
+    </a>
+
+    <a class="nav-link" href="payslip.html">
+      <span>▤</span><span>Slip Gaji</span>
+    </a>
+
+    <div class="section-label">MANAGEMENT</div>
+
+    <a class="nav-link" href="announcements.html">
+      <span>♧</span><span>Pengumuman</span>
+    </a>
+
+    <a class="nav-link" href="reports.html">
+      <span>▥</span><span>Laporan</span>
+    </a>
+
+    <a class="nav-link" href="users.html">
+      <span>♙</span><span>User Management</span>
+    </a>
+
+    <a class="nav-link" href="audit-log.html">
+      <span>◴</span><span>Audit Log</span>
+    </a>
+
+    <a class="nav-link active" href="settings.html">
+      <span>⚙</span><span>Pengaturan</span>
+    </a>
+
+    <button class="logout" id="logoutButton">
+      Keluar / Logout
+    </button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1>Master Data Departemen</h1>
+        <p>Pengaturan struktur departemen perusahaan ZFSI.</p>
+      </div>
+
+      <div class="profile">
+        <strong id="userEmail">Memeriksa akun...</strong>
+        <div class="status">Terautentikasi</div>
+      </div>
+    </header>
+
+    <div id="pageMessage" class="message"></div>
+
+    <div id="permissionNote" class="permission-note">
+      Akun kamu hanya memiliki akses melihat departemen. Hubungi Administrator
+      HRIS untuk mendapatkan izin pengelolaan master data.
+    </div>
+
+    <div class="notice">
+      <strong>Informasi Master Departemen</strong><br>
+      Gunakan Department ID yang unik dan konsisten. Department ID yang sudah
+      digunakan pada data karyawan sebaiknya tidak diganti. Untuk menonaktifkan
+      departemen, ubah statusnya menjadi Inactive, bukan menghapusnya.
+    </div>
+
+    <section class="stats">
+      <div class="card">
+        <div class="card-label">Total Departemen</div>
+        <div class="number" id="totalDepartments">—</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Departemen Aktif</div>
+        <div class="number" id="activeDepartments">—</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Departemen Nonaktif</div>
+        <div class="number" id="inactiveDepartments">—</div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="button button-primary" id="addButton">
+          + Tambah Departemen
+        </button>
+        <button class="button button-secondary" id="exportButton">
+          Export CSV
+        </button>
+      </div>
+
+      <div class="toolbar-group">
+        <button class="button button-secondary" id="refreshButton">
+          ↻ Refresh
+        </button>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Daftar Departemen</h3>
+
+        <div class="filters">
+          <input
+            type="search"
+            class="filter-input"
+            id="searchInput"
+            placeholder="Cari ID atau nama departemen..."
+          >
+
+          <select class="filter-select" id="statusFilter">
+            <option value="">Semua Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Department ID</th>
+              <th>Nama Departemen</th>
+              <th>Deskripsi</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="departmentTableBody">
+            <tr>
+              <td colspan="5">
+                <div class="empty">Memuat data departemen...</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- FORM TAMBAH / EDIT -->
+  <div class="modal" id="departmentModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modalTitle">Tambah Departemen</h2>
+        <button class="close-button" id="closeModalButton" type="button">×</button>
+      </div>
+
+      <form id="departmentForm">
+        <div class="form-body">
+          <div class="form-group">
+            <label>Department ID *</label>
+            <input
+              type="text"
+              id="departmentId"
+              required
+              maxlength="40"
+              placeholder="Contoh: ZFSI_FIN"
+              pattern="[A-Za-z0-9_-]+"
+            >
+            <div class="form-help">
+              Gunakan huruf, angka, tanda garis bawah (_) atau tanda hubung (-).
+              Department ID tidak dapat diubah setelah data dibuat.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Nama Departemen *</label>
+            <input
+              type="text"
+              id="departmentName"
+              required
+              maxlength="100"
+              placeholder="Contoh: Finance Accounting & Tax"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Deskripsi / Keterangan</label>
+            <textarea
+              id="description"
+              maxlength="500"
+              placeholder="Tulis ringkasan fungsi departemen..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Status</label>
+            <select id="departmentStatus">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="button button-secondary" type="button" id="cancelButton">
+            Batal
+          </button>
+          <button class="button button-primary" type="submit" id="saveButton">
+            Simpan Departemen
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div
+    id="toast"
+    class="message"
+    style="position:fixed;right:20px;bottom:15px;z-index:80;max-width:380px;margin:0"
+  ></div>
+
+  <script type="module">
+    import {
+      initializeApp,
+      getApps,
+      getApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      getDocs,
+      collection,
+      query,
+      where,
+      setDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAxzK62xtPRAw-ruQLo-xcZUBbdaYpOQPE",
+      authDomain: "zfsi-hris.firebaseapp.com",
+      projectId: "zfsi-hris",
+      storageBucket: "zfsi-hris.firebasestorage.app",
+      messagingSenderId: "642441161494",
+      appId: "1:642441161494:web:23ecd4832f89eac5893e37"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const COMPANY_DEFAULT = "zfsi-main";
+
+    let currentUser = null;
+    let currentProfile = null;
+    let companyId = COMPANY_DEFAULT;
+    let departments = [];
+    let editingId = null;
+    let canManage = false;
+    let authHandled = false;
+
+    const $ = id => document.getElementById(id);
+
+    function showMessage(text, type = "info") {
+      const element = $("pageMessage");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+    }
+
+    function showToast(text, type = "success") {
+      const element = $("toast");
+      element.textContent = text;
+      element.className = "message " + type;
+      element.style.display = "block";
+
+      window.setTimeout(() => {
+        element.style.display = "none";
+      }, 3500);
+    }
+
+    function clearMessage() {
+      $("pageMessage").textContent = "";
+      $("pageMessage").className = "message";
+      $("pageMessage").style.display = "none";
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function getPermissionList(profile) {
+      if (Array.isArray(profile.permissions)) return profile.permissions;
+      if (Array.isArray(profile.permissionIds)) return profile.permissionIds;
+      return [];
+    }
+
+    function isSuperAdministrator(profile) {
+      return profile.isSuperAdmin === true ||
+        String(profile.roleId || "").toLowerCase() === "super_admin" ||
+        String(profile.systemRole || "").toLowerCase() === "super_admin";
+    }
+
+    function checkPermissions(profile) {
+      if (isSuperAdministrator(profile)) {
+        return { view: true, manage: true };
+      }
+
+      const permissions = getPermissionList(profile);
+
+      return {
+        view:
+          permissions.includes("departments.view") ||
+          permissions.includes("departments.manage") ||
+          permissions.includes("settings.manage") ||
+          permissions.includes("*"),
+        manage:
+          permissions.includes("departments.manage") ||
+          permissions.includes("settings.manage") ||
+          permissions.includes("*")
+      };
+    }
+
+    function getDepartmentName(data) {
+      return data.departmentName || data.name || data.title || "";
+    }
+
+    function getDepartmentDescription(data) {
+      return data.description || data.departmentDescription || "";
+    }
+
+    function getDepartmentStatus(data) {
+      if (data.status === "inactive" || data.isActive === false) return "inactive";
+      return "active";
+    }
+
+    function updateStatistics() {
+      $("totalDepartments").textContent = departments.length;
+      $("activeDepartments").textContent =
+        departments.filter(item => item.status === "active").length;
+      $("inactiveDepartments").textContent =
+        departments.filter(item => item.status === "inactive").length;
+    }
+
+    function renderDepartments() {
+      const search = $("searchInput").value.trim().toLowerCase();
+      const status = $("statusFilter").value;
+
+      const filtered = departments.filter(item => {
+        const searchable = [
+          item.departmentId,
+          item.departmentName,
+          item.description
+        ].join(" ").toLowerCase();
+
+        return (!search || searchable.includes(search)) &&
+          (!status || item.status === status);
+      });
+
+      const tbody = $("departmentTableBody");
+
+      if (!filtered.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div class="empty">
+                Tidak ada data departemen yang sesuai.
+              </div>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => `
+        <tr>
+          <td><strong>${escapeHTML(item.departmentId)}</strong></td>
+          <td><strong>${escapeHTML(item.departmentName || "—")}</strong></td>
+          <td>${escapeHTML(item.description || "—")}</td>
+          <td>
+            <span class="badge badge-${item.status}">
+              ${item.status === "active" ? "Active" : "Inactive"}
+            </span>
+          </td>
+          <td>
+            ${
+              canManage
+                ? `<button class="action-button" type="button" data-edit="${escapeHTML(item.departmentId)}">Edit</button>`
+                : `<span style="color:#8290a2">View only</span>`
+            }
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function loadDepartments() {
+      clearMessage();
+
+      $("departmentTableBody").innerHTML = `
+        <tr>
+          <td colspan="5">
+            <div class="empty">Memuat data departemen...</div>
+          </td>
+        </tr>`;
+
+      try {
+        const departmentQuery = query(
+          collection(db, "departments"),
+          where("companyId", "==", companyId)
+        );
+
+        const snapshot = await getDocs(departmentQuery);
+
+        departments = snapshot.docs.map(item => {
+          const data = item.data();
+
+          return {
+            ...data,
+            departmentId: item.id,
+            departmentName: getDepartmentName(data),
+            description: getDepartmentDescription(data),
+            status: getDepartmentStatus(data)
+          };
+        });
+
+        departments.sort((a, b) =>
+          String(a.departmentName || "").localeCompare(
+            String(b.departmentName || ""),
+            "id"
+          )
+        );
+
+        updateStatistics();
+        renderDepartments();
+
+      } catch (error) {
+        console.error("Load departments error:", error);
+
+        $("departmentTableBody").innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div class="empty">
+                Gagal membaca data departemen.<br>
+                ${escapeHTML(error.message || error.code || "Terjadi kesalahan")}
+              </div>
+            </td>
+          </tr>`;
+
+        showMessage(
+          "Data departemen belum dapat dimuat. Periksa Firestore Rules. Detail: " +
+          (error.message || error.code || "Unknown error"),
+          "error"
+        );
+      }
+    }
+
+    function openAddModal() {
+      editingId = null;
+      $("departmentForm").reset();
+      $("modalTitle").textContent = "Tambah Departemen";
+      $("departmentId").readOnly = false;
+      $("departmentId").classList.remove("readonly");
+      $("departmentStatus").value = "active";
+      $("departmentModal").classList.add("show");
+    }
+
+    function openEditModal(item) {
+      editingId = item.departmentId;
+
+      $("modalTitle").textContent = "Edit Departemen";
+      $("departmentId").value = item.departmentId;
+      $("departmentId").readOnly = true;
+      $("departmentId").classList.add("readonly");
+      $("departmentName").value = item.departmentName || "";
+      $("description").value = item.description || "";
+      $("departmentStatus").value = item.status || "active";
+
+      $("departmentModal").classList.add("show");
+    }
+
+    function closeModal() {
+      $("departmentModal").classList.remove("show");
+      editingId = null;
+    }
+
+    async function saveDepartment(event) {
+      event.preventDefault();
+
+      if (!canManage) {
+        showToast("Akun kamu tidak memiliki izin mengelola departemen.", "error");
+        return;
+      }
+
+      const button = $("saveButton");
+      button.disabled = true;
+      button.textContent = "Menyimpan...";
+
+      try {
+        const departmentId = $("departmentId").value.trim().toUpperCase();
+        const departmentName = $("departmentName").value.trim();
+        const description = $("description").value.trim();
+        const status = $("departmentStatus").value;
+
+        if (!departmentId || !departmentName) {
+          throw new Error("Department ID dan Nama Departemen wajib diisi.");
+        }
+
+        if (!/^[A-Z0-9_-]+$/.test(departmentId)) {
+          throw new Error(
+            "Department ID hanya boleh berisi huruf, angka, garis bawah, dan tanda hubung."
+          );
+        }
+
+        const departmentRef = doc(db, "departments", departmentId);
+        const existingSnapshot = await getDoc(departmentRef);
+
+        if (!editingId && existingSnapshot.exists()) {
+          throw new Error(
+            "Department ID " + departmentId + " sudah digunakan."
+          );
+        }
+
+        const saveData = {
+          departmentId,
+          departmentName,
+          name: departmentName,
+          description,
+          status,
+          isActive: status === "active",
+          companyId,
+          updatedAt: serverTimestamp(),
+          updatedBy: currentUser.uid
+        };
+
+        if (editingId) {
+          await setDoc(departmentRef, saveData, { merge: true });
+          showToast("Departemen berhasil diperbarui.");
+        } else {
+          saveData.createdAt = serverTimestamp();
+          saveData.createdBy = currentUser.uid;
+
+          await setDoc(departmentRef, saveData);
+          showToast("Departemen berhasil ditambahkan.");
+        }
+
+        closeModal();
+        await loadDepartments();
+
+      } catch (error) {
+        console.error("Save department error:", error);
+        showToast(
+          error.message || error.code || "Gagal menyimpan departemen.",
+          "error"
+        );
+      } finally {
+        button.disabled = false;
+        button.textContent = "Simpan Departemen";
+      }
+    }
+
+    function exportCSV() {
+      if (!departments.length) {
+        showToast("Tidak ada data untuk diekspor.", "info");
+        return;
+      }
+
+      const headers = [
+        "Department ID",
+        "Nama Departemen",
+        "Deskripsi",
+        "Status"
+      ];
+
+      const rows = departments.map(item => [
+        item.departmentId,
+        item.departmentName,
+        item.description,
+        item.status
+      ]);
+
+      const csv = [
+        headers,
+        ...rows
+      ].map(row =>
+        row.map(value =>
+          `"${String(value ?? "").replace(/"/g, '""')}"`
+        ).join(",")
+      ).join("\r\n");
+
+      const blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "ZFSI-HRIS-Departments.csv";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function handleAuthentication(user) {
+      currentUser = user;
+      $("userEmail").textContent = user.email || "Pengguna ZFSI-HRIS";
+
+      try {
+        const profileSnapshot = await getDoc(doc(db, "users", user.uid));
+
+        if (!profileSnapshot.exists()) {
+          showMessage(
+            "Profil pengguna tidak ditemukan pada Firestore: users/" +
+            user.uid + ". Hubungi Administrator HRIS.",
+            "error"
+          );
+
+          $("departmentTableBody").innerHTML = `
+            <tr><td colspan="5"><div class="empty">Profil pengguna belum tersedia.</div></td></tr>`;
+          return;
+        }
+
+        currentProfile = profileSnapshot.data();
+
+        if (
+          currentProfile.status &&
+          String(currentProfile.status).toLowerCase() !== "active"
+        ) {
+          showMessage("Akun pengguna tidak berstatus aktif.", "error");
+          return;
+        }
+
+        if (currentProfile.active === false) {
+          showMessage("Akun pengguna telah dinonaktifkan.", "error");
+          return;
+        }
+
+        companyId = currentProfile.companyId || COMPANY_DEFAULT;
+
+        const permission = checkPermissions(currentProfile);
+
+        if (!permission.view) {
+          showMessage(
+            "Kamu tidak memiliki izin untuk melihat Master Data Departemen.",
+            "error"
+          );
+
+          $("departmentTableBody").innerHTML = `
+            <tr><td colspan="5"><div class="empty">Akses ke modul Departemen tidak diberikan.</div></td></tr>`;
+          return;
+        }
+
+        canManage = permission.manage;
+        $("addButton").disabled = !canManage;
+
+        if (!canManage) {
+          $("permissionNote").style.display = "block";
+        }
+
+        await loadDepartments();
+
+      } catch (error) {
+        console.error("Profile verification error:", error);
+
+        showMessage(
+          "Pemeriksaan profil atau hak akses gagal. Detail: " +
+          (error.message || error.code || "Unknown error"),
+          "error"
+        );
+      }
+    }
+
+    onAuthStateChanged(auth, async user => {
+      if (authHandled) return;
+      authHandled = true;
+
+      if (!user) {
+        location.replace("index.html");
+        return;
+      }
+
+      await handleAuthentication(user);
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        location.replace("index.html");
+      } catch (error) {
+        showMessage(
+          "Gagal logout: " + (error.message || error.code),
+          "error"
+        );
+      }
+    });
+
+    $("addButton").addEventListener("click", () => {
+      if (canManage) openAddModal();
+    });
+
+    $("refreshButton").addEventListener("click", loadDepartments);
+    $("exportButton").addEventListener("click", exportCSV);
+    $("searchInput").addEventListener("input", renderDepartments);
+    $("statusFilter").addEventListener("change", renderDepartments);
+
+    $("departmentForm").addEventListener("submit", saveDepartment);
+    $("closeModalButton").addEventListener("click", closeModal);
+    $("cancelButton").addEventListener("click", closeModal);
+
+    $("departmentTableBody").addEventListener("click", event => {
+      const button = event.target.closest("[data-edit]");
+      if (!button) return;
+
+      const item = departments.find(
+        department => department.departmentId === button.dataset.edit
+      );
+
+      if (item) openEditModal(item);
+    });
+
+    $("departmentModal").addEventListener("click", event => {
+      if (event.target === $("departmentModal")) closeModal();
+    });
+  </script>
+
+</body>
+</html>
